@@ -38,6 +38,29 @@ This folder contains comprehensive presentation materials for the ACOSUS master'
 11. **[10-TeamAndAcknowledgments.md](./10-TeamAndAcknowledgments.md)** - NSF grant, multi-institutional team
 12. **[PRESENTATION-SUMMARY.md](./PRESENTATION-SUMMARY.md)** - One-page quick reference for defense
 
+### Architecture Diagrams
+
+**📁 [diagrams/](./diagrams/)** - 9 comprehensive Mermaid diagrams of ACOSUS V2 architecture
+
+#### Quick Access by Detail Level
+
+**High-Level Diagrams** (Simple overview, 1 slide each):
+- **[01-HighLevel-Integrated.md](./diagrams/01-HighLevel-Integrated.md)** - Single combined flow
+- **[02-HighLevel-SideBySide.md](./diagrams/02-HighLevel-SideBySide.md)** - Prediction | Training parallel
+- **[03-HighLevel-Separate.md](./diagrams/03-HighLevel-Separate.md)** - Two independent diagrams
+
+**Medium-Level Diagrams** (Backend services visible, 1-2 slides each):
+- **[04-MediumLevel-Integrated.md](./diagrams/04-MediumLevel-Integrated.md)** - Backend services integrated
+- **[05-MediumLevel-SideBySide.md](./diagrams/05-MediumLevel-SideBySide.md)** - Prediction | Training with services
+- **[06-MediumLevel-Separate.md](./diagrams/06-MediumLevel-Separate.md)** - Two detailed diagrams
+
+**Detailed Diagrams** (Complete step-by-step, 2-3 slides each):
+- **[07-Detailed-Integrated.md](./diagrams/07-Detailed-Integrated.md)** - All flows combined
+- **[08-Detailed-SideBySide.md](./diagrams/08-Detailed-SideBySide.md)** ⭐ **RECOMMENDED FOR DEFENSE**
+- **[09-Detailed-Separate.md](./diagrams/09-Detailed-Separate.md)** - Two exhaustive diagrams
+
+**Recommendation**: Use **[08-Detailed-SideBySide.md](./diagrams/08-Detailed-SideBySide.md)** for thesis defense presentation (shows prediction and training workflows in parallel with complete technical details)
+
 ---
 
 ## Quick Navigation
@@ -46,6 +69,7 @@ This folder contains comprehensive presentation materials for the ACOSUS master'
 
 - **Problem Statement**: See [01-Introduction.md](./01-Introduction.md) - Slide 2
 - **System Architecture**: See [02-SystemArchitecture.md](./02-SystemArchitecture.md) - Slide 7
+- **Architecture Diagrams**: See [diagrams/](./diagrams/) - 9 Mermaid diagrams (⭐ Use [08-Detailed-SideBySide.md](./diagrams/08-Detailed-SideBySide.md) for defense)
 - **PWRS Formula**: See [03-SurveyMethodology.md](./03-SurveyMethodology.md) - PWRS section
 - **Progressive Learning**: See [04-ProgressiveLearning.md](./04-ProgressiveLearning.md) - All phases
 - **Live Demo**: See [07-DemoScript.md](./07-DemoScript.md)
@@ -78,10 +102,11 @@ This folder contains comprehensive presentation materials for the ACOSUS master'
 
 ### 1 Week Before
 - [ ] Review all presentation files thoroughly
+- [ ] Review architecture diagrams (especially [08-Detailed-SideBySide.md](./diagrams/08-Detailed-SideBySide.md))
 - [ ] Test live demo on acosus.neiu.edu
 - [ ] Prepare backup screenshots
 - [ ] Set up demo accounts (admin + student)
-- [ ] Create visual aids (diagrams, charts)
+- [ ] Export diagrams as PNG/SVG for slides (use https://mermaid.live/)
 
 ### 1 Day Before
 - [ ] Final practice run (30 min timed)
