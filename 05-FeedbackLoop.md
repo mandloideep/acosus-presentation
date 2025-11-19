@@ -2,6 +2,8 @@
 
 ## Slide 10: Intelligent Data Collection Through Active Learning (2 minutes)
 
+**Advisor Benefit**: Reduces survey burden on transfer students while maintaining high-quality data for personalized advising decisions.
+
 ### The Problem with Traditional Approaches
 
 **Traditional ML Systems**:

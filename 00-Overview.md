@@ -2,19 +2,30 @@
 
 ## Presentation Metadata
 
-- **Title**: ACOSUS: Adaptive Course Success Prediction Using Progressive Machine Learning
-- **Subtitle**: Predicting Student Academic Success from Minimal Initial Data Through Progressive Model Evolution
-- **Presenter**: [Your Name]
+- **Title**: ACOSUS: AI-Driven Counseling System for Underrepresented Transfer Students
+- **Subtitle**: Progressive Machine Learning for Transfer Student Success Prediction - System Design & ML Component
+- **Presenter**: Deep Mandloi
+- **Advisor**: Dr. Xiwei Wang (Principal Investigator, NEIU)
 - **Program**: Master's in Computer Science
 - **Institution**: Northeastern Illinois University (NEIU)
 - **Date**: November 18, 2025
 - **Duration**: 30 minutes (20 min presentation + 10 min live demo)
 - **Audience**: Faculty thesis committee
 
+## Project Context
+
+- **NSF Grant**: IIS-2219623 (CISE-MSI)
+- **Project Type**: Multi-institutional research collaboration (5 universities)
+- **NEIU Responsibility**: System design + ML prediction component
+- **Thesis Scope**: Complete system architecture + Progressive ML framework
+- **Target Population**: Underrepresented transfer students in computing majors
+
 ## System Status
 - **Deployment**: 🟢 Live at [acosus.neiu.edu](https://acosus.neiu.edu)
-- **Current Phase**: Bootstrap - Data Collection (0/10 students enrolled)
-- **Model Status**: 🟡 Legacy implementation active, Target+Factor migration in progress
+- **Target Users**: NEIU transfer students (system designed for broader use)
+- **Current Phase**: Bootstrap - Recruiting first 10 transfer students
+- **Enrollment**: 0/10 students (actively recruiting)
+- **Model Status**: 🟡 Legacy implementation active, Progressive ML (KNN→GAN→NN) pending data collection
 
 ---
 
@@ -71,25 +82,33 @@
 
 ## Key Research Contributions
 
-1. **Progressive Learning Framework**
-   - First system to combine KNN → GAN → NN progression for student success prediction
-   - Addresses cold start problem (works with n=10 students)
-   - Automatically scales as enrollment grows
+1. **Advisor-Centric System Design**
+   - Centralizes scattered student data (GPA, financial, personal circumstances) in one platform
+   - Enables personalized advising through customizable surveys
+   - Replaces manual data gathering and note-taking for advisors
 
-2. **Intelligent Feedback Loop with Pseudo-Labeling**
+2. **Progressive Learning Framework for Transfer Students**
+   - First system to combine KNN → GAN → NN progression for transfer student success prediction
+   - Addresses cold start problem (works with n=10 transfer students)
+   - Automatically scales as cohort enrollment grows
+   - Replaces legacy NLP + recommender system approach
+
+3. **Intelligent Feedback Loop with Pseudo-Labeling**
    - Active learning approach reduces survey burden by 50-70%
    - Conditional data collection (only when model uncertain)
    - Continuous model improvement from student feedback
+   - Benefits both students (less time) and advisors (maintains data quality)
 
-3. **GAN-Based Data Augmentation**
-   - Demonstrates GAN effectiveness for small educational datasets
+4. **GAN-Based Data Augmentation for Small Cohorts**
+   - Demonstrates GAN effectiveness for small educational datasets (transfer cohorts)
    - 4× data multiplication with quality validation
    - Enables neural networks with 100 real students instead of 1000+
 
-4. **PWRS Formula (Priority-Weighted Response Scoring)**
+5. **PWRS Formula (Priority-Weighted Response Scoring)**
    - Transparent, configurable success rate calculation
    - Based on Item Response Theory (IRT)
-   - Admin-adjustable without ML expertise
+   - Advisors can adjust priorities without ML expertise
+   - Provides explainable predictions for advising decisions
 
 ---
 
@@ -105,7 +124,11 @@ PresentationPlan/
 ├── 05-FeedbackLoop.md
 ├── 06-ValidationPlan.md
 ├── 07-DemoScript.md
-└── 08-QandA.md
+├── 08-QandA.md
+├── 09-RelatedWork.md (ACOSUS publications & literature)
+├── 10-TeamAndAcknowledgments.md (NSF grant, multi-institutional team)
+├── PRESENTATION-SUMMARY.md (condensed single-file version)
+└── UPDATE-PLAN.md (alignment analysis)
 ```
 
 ---
@@ -117,14 +140,18 @@ PresentationPlan/
 - [ ] Prepare backup screenshots in case of network issues
 - [ ] Have demo accounts ready (admin + student)
 - [ ] Test projector/screen sharing setup
-- [ ] Review Q&A preparation file
+- [ ] Review Q&A preparation file (08-QandA.md)
+- [ ] Review ACOSUS publications for related work discussion
 
 ### During Presentation
-- [ ] Start with high-level problem (retention crisis)
-- [ ] Emphasize novelty: "predict with 10 students, improve to 100+"
+- [ ] Start with transfer student challenges (lower graduation rates, unique obstacles)
+- [ ] Emphasize ACOSUS project context (NSF-funded, multi-institutional)
+- [ ] Clarify thesis scope: "System design + ML component for NEIU"
+- [ ] Frame as advisor tool first: "Centralizes student data for personalized guidance"
+- [ ] Emphasize novelty: "Predict transfer success with 10 students, improve to 100+"
 - [ ] Use real-world analogy: "Like training wheels that automatically remove themselves"
 - [ ] Highlight production deployment (not just prototype)
-- [ ] Be transparent about current status (no validation results yet)
+- [ ] Be transparent about current status (recruiting students, models pending data)
 
 ### Demo Best Practices
 - [ ] Keep browser tabs pre-opened

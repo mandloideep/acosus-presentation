@@ -44,39 +44,43 @@ Student: student_demo@neiu.edu / [password]
 
 ---
 
-## Part 1: Admin Portal (3 minutes)
+## Part 1: Admin Portal - Advisor Perspective (3 minutes)
+
+**Note**: Future enhancement (post-defense) will include dedicated advisor dashboards showing their specific advisee cohort. Current implementation allows advisors to view all student profiles through admin portal.
+
+---
 
 ### Minute 1: Login & Overview (30 seconds)
 
 **Script**:
-> "Let me show you the admin portal where faculty configure ACOSUS. I'm logged in as an administrator."
+> "Let me show you the admin portal where advisors configure ACOSUS. I'm logged in as an advisor/administrator."
 
 **Actions**:
 1. Show admin dashboard homepage
 2. Point out key sections:
-   - Quiz Management
+   - Survey Management (for transfer student data collection)
    - Model Configuration
    - Student Analytics
    - System Status
 
 **Narration**:
-> "Admins can create surveys, configure ML models, and track system performance - all without writing code."
+> "Advisors can create customized surveys to understand transfer student backgrounds - financial support, previous institution experience, commute distance, and more - all centralized in one platform. This replaces the scattered data gathering across SIS, financial aid portals, and manual notes."
 
 ---
 
-### Minute 2: Create Target Survey (1.5 minutes)
+### Minute 2: Create Transfer Student Survey (1.5 minutes)
 
 **Script**:
-> "First, I'll create a target survey to collect success rates. We support two types: single-question for simplicity, or multi-question for comprehensive assessment."
+> "As an advisor, I want to understand my transfer student cohort better. Let me create a survey to collect their success rates and background information."
 
 **Actions**:
 
-1. **Click "Create New Quiz"**
+1. **Click "Create New Survey"**
 2. **Fill in basic info**:
    ```
-   Title: "CS Program Success Assessment"
-   Description: "Self-assessment of academic success likelihood"
-   Quiz Type: [Select: Target]
+   Title: "Transfer Student Success Assessment"
+   Description: "Self-assessment for NEIU transfer students"
+   Survey Type: [Select: Target]
    Target Type: [Select: Single Question]
    ```
 
@@ -86,10 +90,10 @@ Student: student_demo@neiu.edu / [password]
    Input Type: Slider (0-100)
    ```
 
-4. **Click "Save Quiz"**
+4. **Click "Save Survey"**
 
 **Narration**:
-> "For this demo, I'm using a single-question survey for speed. In practice, administrators can create multi-question surveys with the PWRS formula I explained earlier - assigning priority scores and option weightages to each question."
+> "For this demo, I'm using a single-question survey for speed. In practice, advisors can create multi-question surveys asking about academic confidence, financial stress, social integration - all factors specific to transfer student success. The system supports dynamic addition of transfer-specific questions like 'How many credits did you lose during transfer?'"
 
 **Alternative** (if time permits):
 > "Let me briefly show the multi-question option..."
@@ -147,18 +151,18 @@ Student: student_demo@neiu.edu / [password]
 6. **Click "Save & Publish"**
 
 **Narration**:
-> "Notice the priority scores - GPA has priority 9/10 because it's a strong predictor. Family support is 7/10. The model will weight these questions accordingly using the PWRS formula."
+> "Notice the priority scores - for transfer students, we ask about previous GPA, transfer credits, financial support, and commute distance. These factors are weighted based on our ASEE 2023 factor analysis research. Advisors can adjust priorities based on their specific transfer student cohort."
 
-> "Below, I can configure KNN parameters. The system uses sensible defaults, but admins can tune these for their specific context."
+> "Below, I can configure KNN parameters. The system uses sensible defaults optimized for small transfer cohorts, but advisors with ML experience can tune these."
 
 ---
 
 ## Part 2: Student Portal (4 minutes)
 
-### Minute 4: Student Login & Profile (1 minute)
+### Minute 4: Transfer Student Login & Profile (1 minute)
 
 **Script**:
-> "Now let's see the student perspective. I'll log in as a demo student."
+> "Now let's see the transfer student perspective. Before meeting with their advisor, they complete surveys through this portal."
 
 **Actions**:
 
@@ -166,17 +170,18 @@ Student: student_demo@neiu.edu / [password]
 2. **Show student dashboard**:
    - Welcome message
    - Profile completion status
-   - Assigned quizzes (0/2 complete)
+   - Assigned surveys (0/2 complete)
 
 3. **Navigate to Profile section**
 4. **Show demographic fields**:
    ```
-   Name: Jane Doe
+   Name: Jane Doe (Transfer Student)
    Email: student_demo@neiu.edu
    Age Group: 18-22
    Gender: Female
+   Previous Institution: Community College XYZ
    Degree: Bachelor's in Computer Science
-   Start Date: 08/2025
+   Start Date: 08/2025 (Transfer)
    Expected Graduation: 05/2029
    ```
 

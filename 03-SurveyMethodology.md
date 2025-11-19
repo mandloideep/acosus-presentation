@@ -5,7 +5,9 @@
 ### Why Two Survey Types?
 
 **The Innovation**: Most ML systems collect features and outcomes together in ONE survey.
-ACOSUS separates them to enable **progressive learning**.
+ACOSUS separates them to enable **progressive learning** and **advisor-driven data collection**.
+
+**System Context**: Surveys are designed by advisors to gather both ground truth (target) and predictive factors for transfer student success. Current surveys use generic readiness assessments, but the system supports dynamic addition of transfer-specific factors (e.g., previous institution, credit transfer, institutional fit).
 
 ```
 Traditional Approach:
@@ -47,11 +49,15 @@ ACOSUS Approach:
 
 ### Target Survey: Ground Truth Collection
 
-**Purpose**: Collect actual/perceived success rates from students
+**Purpose**: Collect actual/perceived success rates from transfer students
+
+**For Advisors**: Provides baseline understanding of student confidence and readiness before offering guidance
 
 **Frequency**:
-- First 10 students: REQUIRED (everyone takes target survey)
+- First 10 transfer students: REQUIRED (everyone takes target survey)
 - Students 11+: CONDITIONAL (only if prediction rating <4 stars)
+
+**Current Implementation**: See `backend/src/init/data/quiz.json` for actual survey questions (generic readiness assessment with 5 categories: Academic Confidence, Motivation & Career Goals, Personal Attributes, Resources & Support, Self-Assessment)
 
 ---
 

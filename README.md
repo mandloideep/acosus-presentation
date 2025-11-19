@@ -1,5 +1,16 @@
 # ACOSUS Master's Thesis Presentation Plan
 
+## Project Context
+
+**ACOSUS Project**: AI-Driven Counseling System for Underrepresented Transfer Students
+**NSF Grant**: IIS-2219623 (CISE-MSI)
+**Multi-Institutional**: NEIU, SUNY Old Westbury, Cal Poly Humboldt, UH-Victoria, UTEP
+**NEIU Thesis**: System Design + ML Prediction Component (Deep Mandloi, Advisor: Dr. Xiwei Wang)
+
+**Website**: https://cs.neiu.edu/acosus/
+
+---
+
 ## Overview
 
 This folder contains comprehensive presentation materials for the ACOSUS master's thesis defense.
@@ -15,14 +26,17 @@ This folder contains comprehensive presentation materials for the ACOSUS master'
 ### Core Presentation Files
 
 1. **[00-Overview.md](./00-Overview.md)** - Presentation metadata, structure, and logistics
-2. **[01-Introduction.md](./01-Introduction.md)** - Background, motivation, research objectives
-3. **[02-SystemArchitecture.md](./02-SystemArchitecture.md)** - Technical architecture, technology stack
-4. **[03-SurveyMethodology.md](./03-SurveyMethodology.md)** - Target+Factor surveys, PWRS formula, question types
+2. **[01-Introduction.md](./01-Introduction.md)** - Background, motivation, research objectives (transfer student focus)
+3. **[02-SystemArchitecture.md](./02-SystemArchitecture.md)** - Technical architecture, advisor workflow
+4. **[03-SurveyMethodology.md](./03-SurveyMethodology.md)** - Target+Factor surveys, PWRS formula
 5. **[04-ProgressiveLearning.md](./04-ProgressiveLearning.md)** - KNN, GAN, Neural Network progression
 6. **[05-FeedbackLoop.md](./05-FeedbackLoop.md)** - Pseudo-labeling and active learning
 7. **[06-ValidationPlan.md](./06-ValidationPlan.md)** - Expected results and validation methodology
 8. **[07-DemoScript.md](./07-DemoScript.md)** - 10-minute live demo walkthrough
-9. **[08-QandA.md](./08-QandA.md)** - Anticipated questions and answers
+9. **[08-QandA.md](./08-QandA.md)** - Anticipated questions and answers (27 questions)
+10. **[09-RelatedWork.md](./09-RelatedWork.md)** - ACOSUS publications & literature review
+11. **[10-TeamAndAcknowledgments.md](./10-TeamAndAcknowledgments.md)** - NSF grant, multi-institutional team
+12. **[PRESENTATION-SUMMARY.md](./PRESENTATION-SUMMARY.md)** - One-page quick reference for defense
 
 ---
 
@@ -132,19 +146,23 @@ This folder contains comprehensive presentation materials for the ACOSUS master'
 
 ## File Status
 
-| File | Status | Completion |
-|------|--------|------------|
-| 00-Overview.md | ✅ Complete | 100% |
-| 01-Introduction.md | ✅ Complete | 100% |
-| 02-SystemArchitecture.md | ✅ Complete | 100% |
-| 03-SurveyMethodology.md | ✅ Complete | 100% |
-| 04-ProgressiveLearning.md | ✅ Complete | 100% |
-| 05-FeedbackLoop.md | ✅ Complete | 100% |
-| 06-ValidationPlan.md | ✅ Complete | 100% |
-| 07-DemoScript.md | ✅ Complete | 100% |
-| 08-QandA.md | ✅ Complete | 100% |
+| File | Status | Completion | Notes |
+|------|--------|------------|-------|
+| 00-Overview.md | ✅ Complete | 100% | Transfer student context added |
+| 01-Introduction.md | ✅ Complete | 100% | Full rewrite with transfer focus |
+| 02-SystemArchitecture.md | ✅ Complete | 100% | Advisor workflow added |
+| 03-SurveyMethodology.md | ✅ Complete | 100% | Transfer student notes added |
+| 04-ProgressiveLearning.md | ✅ Complete | 100% | Transfer student context added |
+| 05-FeedbackLoop.md | ✅ Complete | 100% | Advisor benefit emphasized |
+| 06-ValidationPlan.md | ✅ Complete | 100% | Transfer-specific validation added |
+| 07-DemoScript.md | ✅ Complete | 100% | Advisor perspective added |
+| 08-QandA.md | ✅ Complete | 100% | 27 questions (7 new transfer/ACOSUS) |
+| 09-RelatedWork.md | ✅ Complete | 100% | All 4 ACOSUS publications |
+| 10-TeamAndAcknowledgments.md | ✅ Complete | 100% | NSF team details |
+| PRESENTATION-SUMMARY.md | ✅ Complete | 100% | One-page quick reference |
+| README.md | ✅ Complete | 100% | Updated with NSF context |
 
-**All presentation files are complete and ready for use!**
+**All 13 presentation files are complete and ready for defense!**
 
 ---
 
@@ -160,6 +178,12 @@ This folder contains comprehensive presentation materials for the ACOSUS master'
 
 ## Acknowledgments
 
-This presentation plan was created to support the ACOSUS master's thesis defense at Northeastern Illinois University (NEIU), Department of Computer Science.
+This presentation plan supports the ACOSUS master's thesis defense at NEIU.
+
+**NSF Grant**: IIS-2219623 (CISE-MSI)
+**Advisor**: Dr. Xiwei Wang (PI, NEIU)
+**Project**: Multi-institutional collaboration (5 universities)
+
+---
 
 **Good luck with your defense!** 🎓

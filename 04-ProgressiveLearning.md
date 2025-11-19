@@ -2,6 +2,8 @@
 
 ## Slide 9: Four-Phase Progressive Model Evolution (4 minutes)
 
+**Context**: This progressive ML approach replaces the legacy NLP + recommender system. The cold start problem is framed as: "How do we predict transfer student success with only 10 students in a new cohort?"
+
 ### Phase Progression Overview
 
 ```
@@ -16,13 +18,15 @@ Training Events:  Bootstrap  Retrain  Transform  Optimize
 
 ## Phase 1: Bootstrap (Students 1-10)
 
-**Duration**: 2-4 weeks (depending on enrollment rate)
+**Duration**: 2-4 weeks (depending on NEIU transfer student enrollment rate)
 
-**Goal**: Collect initial training data
+**Goal**: Collect initial training data from first transfer student cohort
 
 **Model**: None (data collection only)
 
-**Action**: All students complete Target + Factor surveys
+**Action**: All transfer students complete Target + Factor surveys
+
+**Note**: ML models will be trained after 10 NEIU transfer students enroll. Implementation is pending data collection (currently 0/10 students).
 
 **Student Journey**:
 ```

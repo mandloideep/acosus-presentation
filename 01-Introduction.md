@@ -7,17 +7,21 @@
 ┌─────────────────────────────────────────────────────────────┐
 │                                                             │
 │         ACOSUS                                              │
-│         Adaptive Course Success Prediction Using            │
-│         Progressive Machine Learning                        │
+│         AI-Driven Counseling System for                     │
+│         Underrepresented Transfer Students                  │
 │                                                             │
-│         Predicting Student Academic Success from            │
-│         Minimal Initial Data Through Progressive            │
-│         Model Evolution                                     │
+│         Progressive Machine Learning for                    │
+│         Transfer Student Success Prediction                 │
+│         System Design & ML Component                        │
 │                                                             │
-│         [Your Name]                                         │
+│         Deep Mandloi                                        │
 │         Master's in Computer Science                        │
 │         Northeastern Illinois University (NEIU)             │
+│         Advisor: Dr. Xiwei Wang (Principal Investigator)    │
 │         November 18, 2025                                   │
+│                                                             │
+│         NSF Grant IIS-2219623 (CISE-MSI)                    │
+│         Multi-Institutional Research (5 Universities)       │
 │                                                             │
 │         🟢 System Status: Live at acosus.neiu.edu           │
 │                                                             │
@@ -27,166 +31,254 @@
 ```
 
 ### Speaking Points
-- **Opening**: "Good morning/afternoon, committee members. I'm presenting my master's thesis on ACOSUS - an Adaptive Course Success prediction system using progressive machine learning."
-- **Highlight**: "This is not a prototype - the system is deployed live and collecting real student data at acosus.neiu.edu."
-- **Hook**: "What makes ACOSUS unique is that it can start making predictions with just 10 students and progressively improve as enrollment grows to 100, 1000, or more."
+- **Opening**: "Good morning/afternoon, committee members. I'm presenting my master's thesis on ACOSUS - an AI-Driven Counseling System for Underrepresented Transfer Students."
+- **Context**: "This thesis is part of a larger NSF-funded multi-institutional research project. NEIU's responsibility is the system design and ML prediction component, which is the focus of this defense."
+- **Highlight**: "This is not a prototype - the system is deployed live at acosus.neiu.edu and is currently recruiting NEIU transfer students."
+- **Hook**: "What makes ACOSUS unique is that it serves as both an advisor tool - centralizing student data for personalized guidance - and as a predictive system that can work with just 10 transfer students and progressively improve as the cohort grows."
 
 ---
 
-## Slide 2: The Student Success Challenge (2 minutes)
+## Slide 2: The Transfer Student Challenge (2 minutes)
 
-### The Problem: Student Retention Crisis in Higher Education
+### The Problem: Transfer Students Face Unique Challenges
 
-#### Alarming Statistics
-- **40%** of undergraduate students do not complete their degree within 6 years
-- **Early identification** of at-risk students can improve retention by **25-35%**
-- **Traditional intervention** happens too late (after first semester failure)
+#### Alarming Transfer Student Statistics
+- **10-15%** lower graduation rates than native students (NSCRC, 2022)
+- **37%** of transfer students do not return for second year (NSCRC, 2021)
+- **Average 13 credits lost** during transfer process (U.S. GAO, 2017)
+- **"Transfer shock"**: 0.2-0.5 GPA drop in first semester post-transfer (Townsend & Wilson, 2006)
 
-#### Why Current Systems Fail
+#### Underrepresentation in Computing
+- Only **15%** of computing workers are Black/Hispanic
+- Only **25%** of computing workers are female
+- **Community college → university pathway** is critical for diversity in STEM
+- Transfer students often come from underrepresented backgrounds
 
-**1. Data Hunger Problem**
-- Traditional ML systems require **1000+ student records** for accurate predictions
-- New programs/courses have **no historical data**
-- Waiting 3-4 years to collect data means:
-  - ❌ Early cohorts receive no support
-  - ❌ At-risk students fall through cracks
-  - ❌ Intervention opportunities missed
+#### The Advising Challenge
+**Current Pain Points for Advisors**:
+- Student data **scattered across multiple systems**:
+  - SIS (Student Information System) for GPA and course history
+  - Financial aid portal for scholarships and loans
+  - LMS (Learning Management System) for engagement metrics
+  - Manual notes and email conversations
+- **40-60% of advising time** spent gathering information (Wan et al., AMCIS 2023)
+- Difficult to **remember details for 100+ advisees**
+- Hard to provide **personalized guidance** without complete picture
 
-**2. Cold Start Problem**
+**Impact on Transfer Students**:
+- Generic advising that doesn't account for transfer-specific challenges
+- Missed early intervention opportunities
+- Lack of proactive support for at-risk students
+
+---
+
+### The ACOSUS Solution: Three Objectives
+
+#### Objective 1: For Advisors - Centralize Student Data
+**What Advisors Need**:
+- ✅ Single platform with complete student profile
+- ✅ Academic, financial, personal circumstances in one view
+- ✅ Customizable surveys to gather transfer-specific information
+- ✅ Enables personalized advising before meetings
+
+**How ACOSUS Helps**:
 ```
-Scenario: New Computer Science program launches with 10 enrolled students
+Before ACOSUS:
+  1. Check SIS for GPA → 3 minutes
+  2. Check financial aid portal → 2 minutes
+  3. Review LMS for engagement → 3 minutes
+  4. Search emails for notes → 5 minutes
+  5. Prepare for meeting → 10 minutes
+  Total prep time: 23 minutes per student
 
-Traditional Approach:
-  Year 1 (10 students)   → Collect data, no predictions ❌
-  Year 2 (30 students)   → Collect data, no predictions ❌
-  Year 3 (80 students)   → Collect data, no predictions ❌
-  Year 4 (200 students)  → Collect data, no predictions ❌
-  Year 5 (500 students)  → Finally train model, start predictions ✅
-  Result: First 500 students received NO early support
+With ACOSUS:
+  1. Open ACOSUS dashboard → 1 minute
+  2. View complete student profile → 2 minutes
+  3. Review ML prediction & similar students → 1 minute
+  4. Prepare for meeting → 3 minutes
+  Total prep time: 7 minutes per student
+
+Time Saved: 70% reduction
+```
+
+---
+
+#### Objective 2: For Predictions - New Transfer Cohort Problem
+**The Challenge**: Small transfer cohorts each semester
+- Typical NEIU transfer cohort: **10-20 students** per semester in computing
+- Need predictions **immediately**, can't wait years to collect data
+- Traditional ML systems require 1000+ students
+
+**The Cold Start Question**:
+> **"How can we predict underrepresented transfer student success with only 10 students in a new cohort?"**
+
+**Why This Matters**:
+```
+Scenario: Fall 2025 Transfer Cohort - 10 Students
+
+Traditional ML Approach:
+  Fall 2025 (10 students)   → Collect data, no predictions ❌
+  Spring 2026 (8 students)  → Collect data, no predictions ❌
+  Fall 2026 (12 students)   → Collect data, no predictions ❌
+  Spring 2027 (11 students) → Collect data, no predictions ❌
+  Fall 2027 (15 students)   → Still not enough data ❌
+
+  Result: First 56 transfer students received NO early support
 
 ACOSUS Approach:
-  Week 1 (10 students)   → Train KNN model, start predictions ✅
-  Month 3 (30 students)  → Improved KNN predictions ✅
-  Year 1 (100 students)  → Train GAN + Neural Network ✅
-  Year 2+ (200+ students)→ Continuously improving predictions ✅
-  Result: ALL students receive early support
+  Week 2 (10 students)   → Train KNN model, start predictions ✅
+  Week 6 (10 students)   → Predictions for all students ✅
+  Spring 2026 (18 total) → Improved predictions ✅
+  Fall 2026 (30 total)   → Better predictions ✅
+
+  Result: ALL transfer students receive personalized support
 ```
-
-**3. Static Models Cannot Adapt**
-- Models trained once, never updated
-- Cannot leverage new enrollment data
-- Accuracy degrades over time as student populations shift
-
-**4. Survey Fatigue**
-- Comprehensive surveys take **15-20 minutes**
-- Students overwhelmed with repetitive questionnaires
-- **40-60% dropout rate** on lengthy surveys
-- Missing data compromises model accuracy
-
-### The ACOSUS Opportunity
-
-**What if we could:**
-- ✅ Predict success with just **10 students**?
-- ✅ Improve the model **automatically** as more students enroll?
-- ✅ Reduce survey burden by **50-70%** while maintaining accuracy?
-- ✅ Deploy a **production-ready system** that works today, not in 5 years?
-
-### Visual Description
-- **Infographic**: Declining retention rates (bar chart showing 60% → 40% completion)
-- **Comparison Chart**: Traditional ML (needs 1000+ students) vs ACOSUS (starts at 10)
-- **Timeline**: Late intervention (after failure) vs Early intervention (week 1)
 
 ---
 
-## Slide 3: Research Motivation & Core Challenges (2 minutes)
+#### Objective 3: For Students - Reduce Survey Burden
+**The Survey Problem**:
+- Comprehensive surveys take **15-20 minutes**
+- Students overwhelmed with questionnaires
+- **40-60% dropout rate** on lengthy surveys
 
-### Four Core Challenges ACOSUS Addresses
+**ACOSUS Feedback Loop Solution**:
+```
+Transfer Student #11 enrolls:
+  1. Complete factor survey (7 questions, ~4 min) ✅
+  2. ACOSUS predicts success rate: 74%
+  3. Student rates prediction: "How accurate? (1-5 stars)"
 
-#### Challenge 1: The Cold Start Problem
-**Scenario**: A new degree program launches with 10 enrolled students
+  IF student rates ≥4 stars (accurate):
+    → Use prediction as training label (pseudo-label)
+    → Skip target survey ✅ (save 12 minutes)
+    → Total survey time: 4 minutes
 
-**Question**: How do we make predictions with such limited data?
+  IF student rates <4 stars (inaccurate):
+    → Request target survey for correction
+    → Student provides actual success rate
+    → Model learns from mistake ✅
+    → Total survey time: 16 minutes
 
-| Approach | Minimum Samples Needed | Can Start at 10 Students? |
-|----------|------------------------|---------------------------|
-| Traditional ML (SVM, Random Forest) | 100-1000 samples | ❌ No |
+Expected: 50-70% of students rate ≥4 stars
+Average survey time: 8 minutes (vs 18 minutes traditional)
+```
+
+---
+
+### Visual Description
+- **Infographic**: Transfer student challenges (GPA drop, credit loss, lower graduation rates)
+- **Comparison Chart**: Traditional advising (scattered data) vs ACOSUS (centralized)
+- **Timeline**: Late intervention (after failure) vs Early intervention (week 2)
+
+---
+
+## Slide 3: Four Core Challenges ACOSUS Addresses (2 minutes)
+
+### Challenge 1: New Transfer Cohort Problem (The Cold Start)
+
+**The Scenario**:
+- Fall 2025: 10 transfer students enroll in CS program at NEIU
+- Need to predict their success and provide guidance **immediately**
+- No historical transfer student data available
+
+**Why Traditional ML Fails**:
+| Approach | Minimum Samples Needed | Works at 10 Students? |
+|----------|------------------------|----------------------|
 | Deep Neural Networks | 1000-10000 samples | ❌ No |
+| Random Forest, SVM | 100-1000 samples | ❌ No |
+| Existing Systems (Starfish, Civitas) | 500-10000 samples | ❌ No |
 | **ACOSUS (KNN)** | **10 samples** | **✅ Yes** |
 
 **ACOSUS Solution**:
 - Use K-Nearest Neighbors (KNN) - designed for small datasets
 - Instance-based learning (no parameter fitting required)
 - Effective with as few as 10 training samples
-- Interpretable: "You're similar to students #3, #7, #12"
-
----
-
-#### Challenge 2: Data Scarcity in Early Adoption
-
-**The Waiting Game**:
-- Collecting comprehensive student data takes **years**
-- Cannot wait 2-3 years to deploy predictive system
-- Need **immediate feedback** for intervention planning
+- Interpretable: "You're similar to transfer students #3, #7, #12"
 
 **Real-World Impact**:
 ```
 Traditional System:
-  Year 1: Wait... (no predictions)
-  Year 2: Wait... (no predictions)
-  Year 3: Wait... (no predictions)
-  Year 4: Train model → 150 students never got help ❌
+  Academic advisor meets with 10 transfer students
+  No data-driven guidance available
+  Generic recommendations based only on GPA
 
 ACOSUS:
-  Week 3: 10 students enrolled → KNN model trained ✅
-  Month 2: 20 students → Feedback loop active ✅
-  Month 6: 50 students → Improved predictions ✅
-  Year 1: 100 students → Neural network trained ✅
+  Academic advisor meets with 10 transfer students
+  Each has personalized success prediction
+  Recommendations based on similar transfer students
+  Targeted interventions for at-risk students
 ```
-
-**ACOSUS Solution**:
-- Bootstrap phase: Start with KNN at 10 students
-- Progressive evolution: Automatically upgrade to better models
-- Immediate value: Every student gets predictions from day 1
 
 ---
 
-#### Challenge 3: Progressive Accuracy Improvement
+### Challenge 2: Advisor Data Gathering Burden
+
+**Current Advisor Workflow** (Without ACOSUS):
+1. **Check SIS** for GPA, courses, enrollment status → 3 min
+2. **Check Financial Aid Portal** for scholarships, loans → 2 min
+3. **Check LMS** for engagement, assignments → 3 min
+4. **Search email** for previous conversations → 5 min
+5. **Review manual notes** from last meeting → 3 min
+6. **Prepare meeting agenda** → 7 min
+
+**Total**: 23 minutes per student × 100 advisees = **38 hours per week just gathering data**
+
+**ACOSUS Advisor Workflow**:
+1. **Open ACOSUS dashboard** → 1 min
+2. **View complete student profile**:
+   - Academic: GPA, courses, enrollment status
+   - Financial: Scholarships, work hours, family support
+   - Personal: Commute distance, previous institution, confidence levels
+   - ML Prediction: Success rate + similar students
+3. **Prepare personalized guidance** → 3 min
+
+**Total**: 4 minutes per student × 100 advisees = **7 hours per week**
+
+**Time Saved**: 31 hours per week (81% reduction)
+
+---
+
+### Challenge 3: Progressive Accuracy Improvement
 
 **The Dilemma**:
-- Initial model (10 students): Acceptable but **limited accuracy** (MAE ~14)
-- Goal: Automatically improve as enrollment grows (20, 50, 100+ students)
+- Initial model (10 transfer students): Acceptable but **limited accuracy** (MAE ~14)
+- Goal: Automatically improve as transfer cohort grows (20, 50, 100+ students)
 - Challenge: How to transition between models without service interruption?
 
 **ACOSUS Solution**: Progressive Model Evolution
 ```
-Phase 1: KNN Bootstrap (10 students)
+Phase 1: KNN Bootstrap (10 transfer students)
   - MAE: ~14 points
   - R²: ~0.42
   - Inference: <10ms
+  - Use case: Initial cohort predictions
 
-Phase 2: KNN Refinement (11-99 students)
+Phase 2: KNN Refinement (11-99 transfer students)
   - MAE: ~12 points (improving)
   - R²: ~0.54 (improving)
-  - More neighbors → smoother predictions
+  - More transfer students → better neighbor matching
 
-Phase 3: GAN Augmentation (100 students)
-  - Generate 400 synthetic students
+Phase 3: GAN Augmentation (100 transfer students)
+  - Generate 400 synthetic transfer student profiles
   - Total training data: 500 samples
+  - Enables neural network training
 
-Phase 4: Neural Network (100+ students)
+Phase 4: Neural Network (100+ transfer students)
   - MAE: ~9 points (best performance)
   - R²: ~0.71 (best performance)
-  - Captures non-linear relationships
+  - Captures complex transfer-specific patterns
 ```
 
 **Key Innovation**:
-- Automatic model selection based on student count
+- Automatic model selection based on transfer cohort size
 - Seamless transitions (no downtime)
 - Each phase maintains or improves accuracy
+- **Replaces legacy NLP + recommender system approach**
 
 ---
 
-#### Challenge 4: Survey Burden vs. Accuracy
+### Challenge 4: Survey Burden vs. Data Quality
 
 **The Trade-off**:
 ```
@@ -200,33 +292,34 @@ Survey Length vs Completion Rate:
 ```
 
 **Traditional Approach**:
-- Every student completes full survey (20-40 questions)
+- Every transfer student completes full survey (20-40 questions)
 - Result: High dropout, missing data, lower model quality
 
-**ACOSUS Solution**: Feedback Loop with Pseudo-Labeling
+**ACOSUS Feedback Loop** (Pseudo-Labeling + Active Learning):
 ```
-Student #11 enrolls:
-  1. Complete factor survey (5-7 questions, ~3 min) ✅
-  2. Model predicts success rate: 74%
-  3. Show prediction, ask: "How accurate is this? (1-5 stars)"
+Transfer Student #11 enrolls:
+  1. Complete factor survey (questions about background)
+  2. ACOSUS predicts: "Your success rate: 74%"
+  3. Student rates: "How accurate is this? (1-5 stars)"
 
-  IF student rates ≥4 stars (accurate):
-    → Use prediction as training label (pseudo-label)
-    → Skip target survey ✅ (save 10-15 minutes)
-    → Survey burden: 3 minutes
+  IF rating ≥4 stars:
+    → Prediction is accurate enough
+    → Use 74% as training label (pseudo-label)
+    → Skip detailed target survey ✅
+    → Survey time: 4 minutes
 
-  IF student rates <4 stars (inaccurate):
-    → Request target survey for correction
-    → Student provides actual success rate
+  IF rating <4 stars:
+    → Prediction needs correction
+    → Request detailed target survey
     → Model learns from mistake ✅
-    → Survey burden: 13 minutes
+    → Survey time: 16 minutes
 ```
 
 **Expected Impact**:
-- 50-70% of students rate predictions ≥4 stars
-- Survey burden reduced from 18 min → 5 min average
+- 50-70% of transfer students rate predictions ≥4 stars
+- Average survey time: 8 minutes (vs 18 minutes)
+- **Advisor benefit**: Maintains high-quality data for personalized advising
 - Higher completion rates (92% vs 60%)
-- More training data (pseudo-labels are "free")
 
 ---
 
@@ -236,11 +329,12 @@ Student #11 enrolls:
 ```
 ┌──────────────────────┬──────────────────────┐
 │  Challenge 1:        │  Challenge 2:        │
-│  Cold Start          │  Data Scarcity       │
+│  New Transfer Cohort │  Advisor Burden      │
 │                      │                      │
-│  [Icon: Empty DB]    │  [Icon: Hourglass]   │
-│  Need: 10 samples    │  Wait: Years         │
-│  Solution: KNN       │  Solution: Bootstrap │
+│  [Icon: 10 Students] │  [Icon: Scattered    │
+│  Need: Predict with  │        Data]         │
+│        only 10       │  Solution: Centralize│
+│  Solution: KNN       │            Platform  │
 ├──────────────────────┼──────────────────────┤
 │  Challenge 3:        │  Challenge 4:        │
 │  Progressive         │  Survey Fatigue      │
@@ -248,242 +342,135 @@ Student #11 enrolls:
 │  [Icon: Upward       │  [Icon: Frustrated   │
 │   Arrow Chart]       │   Student]           │
 │  Solution: KNN→GAN→NN│  Solution: Pseudo-   │
-│                      │  labeling            │
+│  (10→100→1000+)      │  labeling Feedback   │
 └──────────────────────┴──────────────────────┘
 ```
 
 ---
 
-## Slide 4: Student Lifecycle in ACOSUS (2 minutes)
+## Slide 4: ACOSUS Project Context (1.5 minutes)
 
-### How ACOSUS Works: Student Journey
+### Multi-Institutional NSF-Funded Research
 
-#### Phase 1: Enrollment
-**Student Action**: Enrolls in degree program (e.g., Computer Science BS)
+#### Project Overview
+- **Full Name**: AI-Driven Counseling System for Underrepresented Transfer Students
+- **NSF Grant**: IIS-2219623 (CISE-MSI)
+- **Duration**: 2022-2025
+- **Total Funding**: [Amount from NSF records]
+- **Lead Institution**: Northeastern Illinois University (NEIU)
 
-**Data Collected**:
-- Personal information: Name, email, student ID
-- Demographics: Age group, gender, ethnicity, first-generation status
-- Academic background: High school GPA, SAT/ACT scores, transfer credits
+#### Five Partner Institutions
+1. **Northeastern Illinois University (NEIU)** - Lead
+   - **Responsibility**: System design + ML prediction component
+   - **PI**: Dr. Xiwei Wang
+   - **This Thesis**: Complete system architecture + Progressive ML framework
 
-```typescript
-// Example Student Profile Data
-{
-  studentId: "student_001",
-  name: "Jane Doe",
-  email: "jane.doe@neiu.edu",
-  demographics: {
-    ageGroup: "18-22",
-    gender: "female",
-    ethnicity: "asian",
-    isFirstGeneration: true
-  },
-  academic: {
-    degreeType: "bachelors",
-    major: "Computer Science",
-    studentStatus: "full-time",
-    startDate: "08/2025",
-    expectedGraduation: "05/2029"
-  }
-}
-```
+2. **SUNY College at Old Westbury**
+   - **Responsibility**: NLP analysis of transfer decision factors
+   - **Focus**: Reddit topic modeling, social media influence
 
----
+3. **Cal Poly Humboldt**
+   - **Responsibility**: Personality traits & student success correlation
+   - **Focus**: Psychometric assessments
 
-#### Phase 2: Profile Collection
+4. **University of Houston-Victoria**
+   - **Responsibility**: Student counseling systems survey
+   - **Focus**: Existing system analysis, advisor workflows
 
-**Categories of Data**:
-
-1. **Demographics** (Categorical)
-   - Age group: 18-22, 23-30, 31-40, 40+
-   - Gender: Male, Female, Non-binary, Prefer not to say
-   - Ethnicity: Asian, Black, Hispanic, White, Other
-   - First-generation student: Yes/No
-
-2. **Academic Background** (Ordinal & Continuous)
-   - High school GPA: <2.0, 2.0-3.0, 3.0-3.5, >3.5
-   - SAT/ACT scores: Continuous (400-1600 for SAT)
-   - Transfer credits: 0, 1-30, 31-60, 60+ credits
-   - Previous institution type: None, Community College, University
-
-3. **Socioeconomic Factors** (Categorical & Ordinal)
-   - Family financial support: Yes/No
-   - Work hours per week: 0, 1-10, 11-20, 21-30, 30+ hours
-   - Scholarship status: Full, Partial, None
-
-4. **Temporal Features** (Dates → Duration)
-   - Program start date: MM/YYYY
-   - Expected graduation date: MM/YYYY
-   - Duration calculation: Ideal = 3.5-4.5 years
-
-5. **Psychometric** (Optional, for research)
-   - Personality assessments
-   - Learning style preferences
-   - Self-efficacy scores
+5. **University of Texas at El Paso (UTEP)**
+   - **Responsibility**: Factor analysis on transfer student success
+   - **Focus**: Predictive factors identification
 
 ---
 
-#### Phase 3: Success Rate Definition
+### NEIU's Role: System Design + ML Component (This Thesis)
 
-**What is "Success Rate"?**
+**Thesis Scope**:
+- ✅ **Full-stack system architecture** (Frontend + Backend + Model Server)
+- ✅ **Progressive ML framework** (KNN → GAN → Neural Network)
+- ✅ **Advisor-centric platform** (centralized data, customizable surveys)
+- ✅ **Feedback loop implementation** (pseudo-labeling + active learning)
+- ✅ **Production deployment** at acosus.neiu.edu
+- ✅ **NEIU transfer student pilot** (currently recruiting 10 students)
 
-Success rate is a **composite metric (0-100%)** representing a student's likelihood of excelling in their academic and career journey.
+**What This Thesis DOES Include**:
+- Complete system implementation
+- ML model design and validation strategy
+- Advisor workflow design
+- Survey methodology (dual-survey system)
 
-**Components** (weighted composite):
-```
-Success Rate = Weighted combination of:
-  ✅ Course completion rate        (30% weight)
-  ✅ Cumulative GPA maintenance    (25% weight) - maintaining >3.0
-  ✅ On-time graduation probability(20% weight)
-  ✅ Career readiness              (15% weight) - skills, internships
-  ✅ Academic engagement levels    (10% weight) - attendance, participation
-```
-
-**Two Methods to Obtain Success Rate**:
-
-**Method 1: Self-Reported (Single-Question Target Survey)**
-```
-Question: "On a scale of 0-100%, what is your self-assessed
-likelihood of excelling in your academic and career journey?"
-
-Student Input: [Slider: 0 ────●──── 100]
-                        75%
-
-Direct Success Rate: 75%
-```
-
-**Method 2: Calculated (Multi-Question Target Survey)**
-```
-Q1: "How confident are you in your academic preparation?"
-    Options:
-      - Not confident at all    → weightage: 1
-      - Somewhat confident       → weightage: 4
-      - Very confident           → weightage: 8
-      - Extremely confident      → weightage: 10
-    Priority: 9/10
-
-Q2: "What support systems do you have?"
-    Options:
-      - None                     → weightage: 1
-      - Family only              → weightage: 5
-      - Institutional only       → weightage: 7
-      - Both family & institution→ weightage: 10
-    Priority: 7/10
-
-Q3-Q5: Additional questions...
-
-→ PWRS Formula calculates success rate: 73%
-→ Student also provides presumed rate: 75%
-→ Correlation validation: |73-75| = 2 (excellent agreement)
-```
+**What This Thesis DOES NOT Include**:
+- Multi-institutional deployment (NEIU only)
+- NLP topic modeling (handled by SUNY)
+- Personality trait analysis (handled by Cal Poly Humboldt)
+- Large-scale factor analysis (handled by UTEP)
 
 ---
 
-#### Phase 4: Prediction & Intervention
+### ACOSUS Publications (Building on Prior Work)
 
-**When Student Count ≥ 10**: Model makes predictions
+This thesis builds on findings from four ACOSUS publications:
 
-**Prediction Output Example**:
-```
-┌─────────────────────────────────────────────┐
-│  Your Predicted Success Rate: 74%          │
-│                                             │
-│  ████████████████████░░░░░░░░               │
-│                                             │
-│  This means you have a strong likelihood   │
-│  of excelling in your academic journey.    │
-│                                             │
-│  Similar Students:                          │
-│  • Student #3: 82% (very similar GPA)      │
-│  • Student #7: 71% (similar background)    │
-│  • Student #12: 68% (similar timeline)     │
-│                                             │
-│  How accurate is this prediction?          │
-│  ☆ ☆ ☆ ☆ ☆ (Rate 1-5 stars)                │
-└─────────────────────────────────────────────┘
-```
+1. **"A Survey of Student Counseling Systems"** (AMCIS 2023)
+   - Identifies gaps: scattered data, manual processes, lack of ML
+   - **Informs**: Advisor-centric system design in ACOSUS
 
-**Intervention Strategy** (based on prediction):
+2. **"A Preliminary Factor Analysis on Computing Transfer Students"** (ASEE 2023)
+   - Key predictors: financial support, GPA, institutional fit
+   - **Informs**: Factor survey design and priority scores
 
-| Predicted Success Rate | Risk Level | Intervention Type |
-|------------------------|------------|-------------------|
-| **71-100% (High)** | ✅ Low Risk | • Enrichment opportunities<br>• Peer mentorship roles<br>• Advanced coursework recommendations<br>• Leadership development programs |
-| **41-70% (Medium)** | ⚠️ Moderate Risk | • Standard academic support<br>• Regular check-ins with advisor<br>• Study skills workshops<br>• Time management resources |
-| **0-40% (Low)** | ❌ High Risk | • Intensive tutoring (1-on-1)<br>• Academic counseling (weekly)<br>• Financial aid referrals<br>• Reduced course load recommendations<br>• Early alert to faculty |
+3. **"Personality Traits and Transfer Student Success"** (NCCiT 2023)
+   - Personality factors: adaptability, stress management, self-discipline
+   - **Informs**: Target survey questions (Personal Attributes category)
 
-**Intervention Timeline**:
-```
-Traditional System:
-  Week 1-15: No intervention (waiting for semester to end)
-  Week 16: Semester ends, student fails 2 courses
-  Week 17: Intervention begins ❌ (too late)
+4. **"Reddit Topic Modeling for Transfer Decisions"** (DSI 2024)
+   - NLP analysis of transfer student concerns
+   - **Complements**: This thesis's ML prediction approach
 
-ACOSUS:
-  Week 1: Student enrolls, completes surveys
-  Week 2: Prediction: 35% (high risk)
-  Week 3: Intervention begins ✅
-  Week 4-15: Continuous support, monitoring
-  Week 16: Student passes all courses ✅
-```
+**See [09-RelatedWork.md](./09-RelatedWork.md) for complete literature review**
 
 ---
 
 ### Visual Description
 
-**Circular Diagram: Student Journey in ACOSUS**
+**Multi-Institutional Collaboration Diagram**:
 ```
-         ┌─────────────┐
-         │ Enrollment  │
-         └──────┬──────┘
-                │
-                ▼
-         ┌──────────────┐
-         │   Profile    │
-         │  Collection  │
-         └──────┬───────┘
-                │
-                ▼
-         ┌──────────────┐
-         │  Prediction  │
-         │   (if n≥10)  │
-         └──────┬───────┘
-                │
-                ▼
-         ┌──────────────┐
-         │ Intervention │
-         │  Assignment  │
-         └──────┬───────┘
-                │
-                ▼
-         ┌──────────────┐
-         │   Outcome    │
-         │  Tracking    │
-         └──────────────┘
+┌─────────────────────────────────────────────────────┐
+│         NSF Grant IIS-2219623 (CISE-MSI)            │
+│              ACOSUS Project                         │
+└──────────────────────┬──────────────────────────────┘
+                       │
+        ┌──────────────┼──────────────┐
+        │              │              │
+   ┌────▼────┐    ┌───▼────┐    ┌───▼────┐
+   │  NEIU   │    │  SUNY  │    │ Cal Poly│
+   │ System  │    │  NLP   │    │Personality│
+   │   +ML   │    │Analysis│    │  Traits │
+   └─────────┘    └────────┘    └─────────┘
+        │              │              │
+   ┌────▼────┐    ┌───▼────┐
+   │   UHV   │    │  UTEP  │
+   │Counseling│    │ Factor │
+   │ Systems  │    │Analysis│
+   └──────────┘    └────────┘
 ```
-
-**Success Rate Breakdown (Pie Chart)**:
-- Course Completion: 30%
-- GPA Maintenance: 25%
-- On-Time Graduation: 20%
-- Career Readiness: 15%
-- Academic Engagement: 10%
 
 ---
 
-## Slide 5: The Problem We're Solving (1 minute)
+## Slide 5: The Research Problem (1 minute)
 
 ### Primary Research Question
 
-> **"How can we accurately predict student success rates when only 10 students have enrolled, and progressively improve predictions as enrollment scales to 100+ students?"**
+> **"How can we predict underrepresented transfer student success with only 10 students in a new cohort, and serve advisors with a centralized platform for personalized guidance?"**
 
 ### Problem Decomposition
 
-#### Sub-Problem 1: Minimal Data Training
-**Challenge**: Train a reliable model with only 10 labeled examples
+#### Sub-Problem 1: New Transfer Cohort Prediction
+**Challenge**: Train a reliable model with only 10 transfer student records
 
 **Constraints**:
-- No pre-training data (cold start)
-- No transfer learning (domain-specific)
+- No pre-training data (NEIU-specific cohort)
+- No transfer learning (domain-specific to transfer students)
 - No seed/synthetic data initially
 
 **Success Criteria**:
@@ -493,7 +480,22 @@ ACOSUS:
 
 ---
 
-#### Sub-Problem 2: Progressive Scaling
+#### Sub-Problem 2: Advisor Tool Design
+**Challenge**: Centralize scattered student data for advisors
+
+**Requirements**:
+- Integrate academic, financial, and personal data
+- Customizable surveys for transfer-specific factors
+- Intuitive dashboard for 100+ advisees
+
+**Success Criteria**:
+- Reduce data gathering time by >70%
+- Advisor satisfaction rating >4.0/5.0
+- Survey completion rate >85%
+
+---
+
+#### Sub-Problem 3: Progressive Scaling
 **Challenge**: Seamlessly transition from KNN (10 students) → Neural Network (100+ students)
 
 **Requirements**:
@@ -508,7 +510,7 @@ ACOSUS:
 
 ---
 
-#### Sub-Problem 3: Intelligent Data Collection
+#### Sub-Problem 4: Intelligent Data Collection
 **Challenge**: Reduce redundant surveys through feedback loops
 
 **Approach**:
@@ -519,22 +521,7 @@ ACOSUS:
 **Success Criteria**:
 - 50-70% pseudo-label rate
 - Survey completion rate >90%
-- Average time per student <6 minutes
-
----
-
-#### Sub-Problem 4: Real-World Deployment
-**Challenge**: Deploy functional system in production environment
-
-**Requirements**:
-- Validate with actual student data (not simulated)
-- Handle edge cases (missing data, outliers)
-- Scale to 1000+ students
-
-**Success Criteria**:
-- System uptime >99%
-- Response time <200ms for predictions
-- Data privacy compliance (FERPA, IRB approval)
+- Average time per student <8 minutes
 
 ---
 
@@ -543,22 +530,25 @@ ACOSUS:
 **Side-by-Side Comparison Flowchart**:
 
 ```
-Traditional Approach                ACOSUS Approach
-──────────────────                 ───────────────
+Traditional Approach              ACOSUS Approach
+──────────────────               ───────────────
 
-New CS Program Launches            New CS Program Launches
-         ↓                                  ↓
-   Need 1000 students                  10 students enroll
-         ↓                                  ↓
-    Wait 3-4 years                    Train KNN model
-         ↓                                  ↓
-    Train ML model                    Make predictions
-         ↓                                  ↓
-  Deploy predictions              Continuous improvement
-         ↓                                  ↓
-  Early cohorts missed ❌          All students helped ✅
+New Transfer Cohort Arrives      New Transfer Cohort Arrives
+         ↓                                ↓
+   Need 1000 students              10 transfer students enroll
+         ↓                                ↓
+    Wait 4-5 years                 Advisors create surveys
+         ↓                                ↓
+    Train ML model                 Students complete surveys
+         ↓                                ↓
+  Deploy predictions               Train KNN model (Week 2)
+         ↓                                ↓
+  Early cohorts missed ❌          Make predictions (Week 3)
+                                          ↓
+                                   Personalized advising ✅
 
-Timeline: 4 YEARS                  Timeline: 2 WEEKS
+Timeline: 5 YEARS                Timeline: 3 WEEKS
+First 1000 students: No support  ALL students: Full support
 ```
 
 ---
@@ -567,26 +557,42 @@ Timeline: 4 YEARS                  Timeline: 2 WEEKS
 
 ### Primary Objectives
 
-#### Objective 1: Build a Minimal-Data Prediction System
-**Goal**: Train initial model with only 10 student records
+#### Objective 1: Build Advisor-Centric Data Platform
+**Goal**: Centralize student data for personalized transfer student advising
+
+**Deliverables**:
+- ✅ Admin portal for advisors to create customizable surveys
+- ✅ Student portal for survey completion
+- ✅ Complete student profile dashboard (academic, financial, personal)
+- ✅ Reduce advisor data gathering time by >70%
+
+**Validation**:
+- Advisor feedback surveys (target: >4.0/5.0 satisfaction)
+- Time tracking study (before/after ACOSUS adoption)
+
+---
+
+#### Objective 2: Build Minimal-Data Prediction System
+**Goal**: Train initial model with only 10 transfer student records
 
 **Deliverables**:
 - ✅ KNN model trained on 10 samples
 - ✅ Achieve MAE <15 points, R² >0.4
 - ✅ Provide actionable predictions for students 11+
+- ✅ Explainable predictions (similar transfer students)
 
 **Validation**:
-- 5-fold cross-validation on 10 students
+- 5-fold cross-validation on 10 transfer students
 - Compare against baseline (random prediction: MAE ~25)
 
 ---
 
-#### Objective 2: Implement Progressive Learning Architecture
-**Goal**: Automatic model evolution as enrollment grows
+#### Objective 3: Implement Progressive Learning Architecture
+**Goal**: Automatic model evolution as transfer cohort grows
 
 **Stages**:
-- **Stage 1** (10-99 students): K-Nearest Neighbors
-- **Stage 2** (100+ students): GAN-augmented Neural Network
+- **Stage 1** (10-99 transfer students): K-Nearest Neighbors
+- **Stage 2** (100+ transfer students): GAN-augmented Neural Network
 - **Automatic trigger**: Model selection based on enrollment count
 
 **Deliverables**:
@@ -594,9 +600,13 @@ Timeline: 4 YEARS                  Timeline: 2 WEEKS
 - ✅ Performance improvement at each stage
 - ✅ Model versioning and rollback capability
 
+**Validation**:
+- Longitudinal tracking of MAE/R² as cohort grows
+- A/B testing during model transitions
+
 ---
 
-#### Objective 3: Intelligent Feedback Loop System
+#### Objective 4: Intelligent Feedback Loop System
 **Goal**: Reduce survey burden by 50-70%
 
 **Mechanism**:
@@ -608,11 +618,17 @@ Timeline: 4 YEARS                  Timeline: 2 WEEKS
 - ✅ Feedback loop UI (student rates predictions)
 - ✅ Pseudo-label integration into training pipeline
 - ✅ Target 50-70% reduction in survey time
+- ✅ Advisor benefit: Maintains data quality for guidance
+
+**Validation**:
+- Measure pseudo-label rate vs target (50-70%)
+- Survey completion rate before/after feedback loop
+- Average survey time tracking
 
 ---
 
-#### Objective 4: Production Deployment & Validation
-**Goal**: Deploy full-stack system and collect real data
+#### Objective 5: Production Deployment & NEIU Pilot
+**Goal**: Deploy full-stack system and recruit NEIU transfer students
 
 **Components**:
 - ✅ Frontend: React + TypeScript (Admin + Student portals)
@@ -622,23 +638,48 @@ Timeline: 4 YEARS                  Timeline: 2 WEEKS
 
 **Deliverables**:
 - ✅ Public access via acosus.neiu.edu
-- ✅ Real student data collection (not simulated)
-- ✅ Validation against actual outcomes (longitudinal study)
+- ✅ Recruit 10 NEIU transfer students (0/10 currently)
+- ✅ Validation against actual outcomes (longitudinal study planned)
+- ✅ FERPA compliance and IRB approval
 
 ---
 
 ### Success Metrics by Phase
 
-| Phase | Students | Model | MAE Target | R² Target | Avg Feedback |
-|-------|----------|-------|------------|-----------|--------------|
+| Phase | Transfer Students | Model | MAE Target | R² Target | Avg Feedback |
+|-------|------------------|-------|------------|-----------|--------------|
 | **Bootstrap** | 10 | KNN | <15 | >0.4 | >3.0/5.0 |
 | **Growth** | 20-99 | KNN | <12 | >0.5 | >3.5/5.0 |
 | **Mature** | 100+ | Neural Net | <10 | >0.6 | >4.0/5.0 |
 
 **Current Status** (as of Nov 18, 2025):
-- Phase: Bootstrap (0/10 students)
-- Model: None (collecting data)
-- Validation: Pending enrollment
+- Phase: Bootstrap (0/10 NEIU transfer students)
+- Recruitment: Active (targeting Spring 2026 enrollment)
+- Model: Pending data collection
+- Validation: Planned for Spring-Fall 2026
+
+---
+
+### Current System Status
+
+**What's Deployed**:
+- ✅ Full system architecture (Frontend + Backend + Model Server)
+- ✅ Dual-survey system (Target + Factor surveys)
+- ✅ Admin portal for advisors
+- ✅ Student portal with feedback loop UI
+- ✅ Survey questions based on ASEE 2023 factor analysis
+- ✅ PWRS formula implementation
+
+**Current Surveys** (see `backend/src/init/data/quiz.json`):
+- Target survey: 5 categories (Academic Confidence, Motivation, Personal Attributes, Resources, Self-Assessment)
+- Factor survey: 5 categories (Academic Background, Program Timeline, Financial Support, Logistics, Interest)
+- **Note**: Current surveys use generic readiness assessments; system supports dynamic addition of transfer-specific factors
+
+**What's Pending**:
+- ⏳ 10 NEIU transfer student enrollments
+- ⏳ KNN model training (after 10 students)
+- ⏳ Validation results (Spring-Fall 2026)
+- ⏳ Success rate definition refinement (may include GPA maintenance, on-time graduation, career readiness, or composite metric)
 
 ---
 
@@ -646,12 +687,22 @@ Timeline: 4 YEARS                  Timeline: 2 WEEKS
 
 **Key Messages to Emphasize**:
 
-1. **Cold Start Innovation**: "We can start predicting with just 10 students - something traditional ML cannot do."
+1. **NSF Project Context**: "This thesis is part of a larger multi-institutional NSF project. NEIU's responsibility is the system design and ML component."
 
-2. **Progressive Evolution**: "The system automatically gets smarter as more students enroll - from KNN to Neural Networks."
+2. **Dual Purpose**: "ACOSUS serves two objectives: a centralized platform for advisors AND a predictive system for transfer students."
 
-3. **Student-Centric**: "We reduce survey burden by 50-70% through intelligent feedback loops."
+3. **Transfer Student Focus**: "We specifically target underrepresented transfer students in computing - a population with 10-15% lower graduation rates and unique challenges."
 
-4. **Production Ready**: "This is deployed and running live - not a research prototype."
+4. **Cold Start Innovation**: "We can start predicting with just 10 transfer students - something existing systems like Starfish and Civitas cannot do."
 
-5. **Validation Plan**: "We have clear metrics and a longitudinal study planned to validate predictions against real outcomes."
+5. **Progressive Evolution**: "The system automatically evolves from KNN to Neural Networks as the transfer cohort grows, replacing the legacy NLP + recommender approach."
+
+6. **Advisor Tool First**: "In the short-term, this is an advisor tool for centralizing data. Mid-term: ML predictions inform advising. Long-term: Automated student recommendations."
+
+7. **Production Ready**: "This is deployed and running live at acosus.neiu.edu - not a research prototype."
+
+8. **Validation Plan**: "We're currently recruiting 10 NEIU transfer students. Validation is planned for Spring-Fall 2026 with longitudinal tracking."
+
+9. **Transparency**: "The ML models are not yet trained - we have 0/10 students enrolled. The system is ready, and we're actively recruiting."
+
+10. **System Flexibility**: "While designed for transfer students, the system architecture supports any student population."

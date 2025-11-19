@@ -6,7 +6,199 @@ This document contains anticipated questions from the thesis committee and prepa
 
 ---
 
-## Category 1: Survey Methodology
+## Category 1: Transfer Student & ACOSUS Project Questions
+
+### Q1: "Why focus specifically on transfer students instead of all students?"
+
+**Prepared Answer**:
+> "Transfer students face unique challenges that native students don't:
+>
+> **Statistical Reality**:
+> - 10-15% lower graduation rates than native students (NSCRC, 2022)
+> - 37% don't return for second year (vs 25% for native students)
+> - Average 13 credits lost during transfer (U.S. GAO, 2017)
+> - "Transfer shock": 0.2-0.5 GPA drop in first semester post-transfer
+>
+> **Underrepresentation in Computing**:
+> - Only 15% of computing workers are Black/Hispanic
+> - Only 25% are female
+> - Community college → university pathway is critical for diversity in STEM
+> - Transfer students disproportionately come from underrepresented backgrounds
+>
+> **Advisor Challenge**:
+> - Transfer students need different support than native students (credit articulation, social integration, institutional fit)
+> - Generic advising systems don't account for transfer-specific factors
+> - Small transfer cohorts (10-20 per semester) make traditional ML impractical
+>
+> **System Flexibility**: While ACOSUS is designed for transfer students, the architecture supports any student population. Advisors can customize surveys for their specific context."
+
+**Reference**: [01-Introduction.md](./01-Introduction.md) - Slide 2: "The Transfer Student Challenge"
+
+---
+
+### Q2: "What makes transfer students different from native students for prediction purposes?"
+
+**Prepared Answer**:
+> "Transfer students have unique predictive factors:
+>
+> **Transfer-Specific Variables**:
+> - Credits lost during transfer (affects time-to-degree)
+> - GPA change from previous institution (transfer shock indicator)
+> - Previous institution type (community college vs university)
+> - Institutional fit perception (connection to new university)
+> - Social integration challenges (starting mid-cohort)
+>
+> **Standard Academic Variables**:
+> - Current GPA
+> - Course load
+> - Financial support
+>
+> **Our ASEE 2023 factor analysis** identified these transfer-specific factors as significant predictors. ACOSUS is designed to capture both standard and transfer-specific variables through customizable surveys."
+
+**Reference**: [09-RelatedWork.md](./09-RelatedWork.md) - "A Preliminary Factor Analysis on Computing Transfer Students"
+
+---
+
+### Q3: "How does your thesis fit into the larger ACOSUS project?"
+
+**Prepared Answer**:
+> "ACOSUS is an NSF-funded multi-institutional project (IIS-2219623) involving 5 universities. Each institution has a specific research focus:
+>
+> **NEIU's Responsibility** (This Thesis):
+> - System design + ML prediction component
+> - Full-stack implementation (Frontend + Backend + Model Server)
+> - Progressive learning framework (KNN → GAN → Neural Network)
+> - Advisor-centric platform design
+> - NEIU-only deployment and validation
+>
+> **Other Institutions**:
+> - SUNY Old Westbury: NLP analysis of transfer decisions (Reddit topic modeling)
+> - Cal Poly Humboldt: Personality traits & student success correlation
+> - UH-Victoria: Student counseling systems survey
+> - UTEP: Factor analysis on transfer student success
+>
+> **This thesis builds on** the factor analysis (ASEE 2023) and counseling systems survey (AMCIS 2023) to implement a working system. We're **not** doing NLP or personality analysis - those are handled by other institutions."
+
+**Reference**: [01-Introduction.md](./01-Introduction.md) - Slide 4: "ACOSUS Project Context"
+
+**See Also**: [10-TeamAndAcknowledgments.md](./10-TeamAndAcknowledgments.md) for full team details
+
+---
+
+### Q4: "Why not deploy across all 5 institutions instead of just NEIU?"
+
+**Prepared Answer**:
+> "Thesis scope is intentionally focused on NEIU for several reasons:
+>
+> **Scope Management**:
+> - Multi-institutional deployment adds complexity (IRB approvals, data sharing agreements, institutional differences)
+> - NEIU deployment allows faster iteration and validation
+> - Other institutions have their own research focuses
+>
+> **Technical Feasibility**:
+> - Each institution has different student information systems (SIS)
+> - Integration with 5 different systems is beyond thesis scope
+> - NEIU deployment proves the concept works
+>
+> **Future Work**:
+> - After successful NEIU validation, system can be extended to partner institutions
+> - Architecture is designed for multi-institutional deployment (institution-specific customization)
+> - Data sharing protocols can be added post-defense
+>
+> The goal is to prove ACOSUS works at one institution first, then scale."
+
+**Reference**: [01-Introduction.md](./01-Introduction.md) - "What This Thesis DOES NOT Include"
+
+---
+
+### Q5: "How does this help advisors specifically?"
+
+**Prepared Answer**:
+> "ACOSUS directly addresses advisor pain points:
+>
+> **Problem**: Advisors spend 40-60% of time gathering student data from:
+> - SIS (Student Information System) for GPA
+> - Financial aid portal for scholarships
+> - LMS for engagement metrics
+> - Email for previous conversations
+> - Manual notes
+>
+> **ACOSUS Solution**: Centralized platform
+> - Single dashboard with complete transfer student profile
+> - Academic: GPA, courses, previous institution
+> - Financial: Scholarships, work hours, family support
+> - Personal: Commute distance, confidence levels, career goals
+> - Predictive: ML-generated success rate + similar students
+>
+> **Impact**:
+> - 70% reduction in data gathering time (23 min → 7 min per student)
+> - Personalized advising based on complete picture
+> - Early intervention for at-risk transfer students
+>
+> **Short-term value** (current): Advisor tool for data centralization
+> **Mid-term value** (Fall 2026): ML predictions inform advising decisions
+> **Long-term value** (2027+): Automated student recommendations"
+
+**Reference**: [02-SystemArchitecture.md](./02-SystemArchitecture.md) - "System Purpose for Advisors"
+
+---
+
+### Q6: "What if advisors don't trust ML predictions?"
+
+**Prepared Answer**:
+> "Trust is built through transparency and advisor control:
+>
+> **Explainable Predictions**:
+> - PWRS formula is transparent (administrators can see exactly how success rate is calculated)
+> - KNN shows similar students: 'You're like students #3, #7, #12'
+> - Advisors see which factors contributed most to prediction
+>
+> **Advisor Always Has Final Say**:
+> - Predictions are advisory, not prescriptive
+> - Advisors use predictions to inform decisions, not replace judgment
+> - System provides data-driven insights; advisors provide human context
+>
+> **Gradual Adoption**:
+> - Short-term: Use system for data centralization only (no ML dependency)
+> - Mid-term: View predictions as additional data point
+> - Long-term: Trust builds as predictions prove accurate
+>
+> **Validation Transparency**:
+> - Advisors see prediction accuracy metrics (MAE, R²)
+> - System flags low-confidence predictions
+> - Admin can disable ML features and use platform for data only"
+
+**Reference**: [01-Introduction.md](./01-Introduction.md) - "Future Vision: Short-term → Long-term"
+
+---
+
+### Q7: "Does your system work for non-transfer students?"
+
+**Prepared Answer**:
+> "Yes, the system architecture is flexible:
+>
+> **Current Focus**: Transfer students for ACOSUS project
+> - Surveys based on ASEE 2023 transfer student factor analysis
+> - Designed for small cohorts (10-20 transfer students per semester)
+>
+> **System Flexibility**:
+> - Advisors can create any surveys they want
+> - Questions can target native students, graduate students, online students, etc.
+> - ML models work for any student population with ≥10 samples
+>
+> **Example Use Cases**:
+> - Predicting first-year student retention
+> - International student success prediction
+> - Online vs in-person student performance
+> - Graduate student completion rates
+>
+> The progressive learning framework (KNN → NN) works for any small cohort, not just transfers."
+
+**Reference**: [01-Introduction.md](./01-Introduction.md) - "System Flexibility" section
+
+---
+
+## Category 2: Survey Methodology
 
 ### Q1: "Why use two separate surveys instead of one comprehensive survey?"
 
@@ -443,9 +635,88 @@ This document contains anticipated questions from the thesis committee and prepa
 
 ---
 
-## Category 5: Validation & Results
+## Category 5: System Design Questions
 
-### Q15: "You mentioned no validation results yet - how can you present this work?"
+### Q15: "Why build from scratch instead of using existing systems like Starfish or Civitas?"
+
+**Prepared Answer**:
+> "Excellent question - I evaluated existing systems:
+>
+> **Starfish**:
+> - Requires 500-10,000 students minimum for predictions
+> - Cost: $50K-$200K/year licensing
+> - Designed for large institutions (10,000+ students)
+> - Does not support cold start scenarios
+>
+> **Civitas Learning**:
+> - Requires 10,000+ students across multiple institutions
+> - Proprietary black-box models
+> - Cost prohibitive for small institutions ($100K+/year)
+>
+> **ACOSUS Advantages**:
+> - Works with as few as 10 transfer students
+> - Open-source architecture (institution can self-host)
+> - Transparent ML models (PWRS formula, KNN interpretability)
+> - Customizable for transfer-specific factors
+> - Designed for resource-constrained institutions
+>
+> **Transfer Student Focus**:
+> - Existing systems treat all students uniformly
+> - ACOSUS captures transfer-specific factors (credit loss, transfer shock, institutional fit)
+> - Advisors can create surveys targeted to transfer challenges
+>
+> **Cost Comparison**:
+> ```
+> Starfish:     $50K/year × 5 years = $250K
+> Civitas:      $100K/year × 5 years = $500K
+> ACOSUS:       $0 (open-source) + server costs ~$5K/year
+> ```
+>
+> For NEIU and similar institutions with small transfer cohorts, commercial systems are not feasible."
+
+**Reference**: [09-RelatedWork.md](./09-RelatedWork.md) - Section "Existing Advising Systems"
+
+---
+
+### Q16: "What about the ACOSUS publications? How do they relate to this thesis?"
+
+**Prepared Answer**:
+> "ACOSUS has 4 publications that inform this thesis:
+>
+> **1. 'A Survey of Student Counseling Systems' (AMCIS 2023)**
+> - Reviewed 50+ existing advising systems
+> - Finding: Data scattered across systems, manual processes dominant, minimal ML
+> - **Informs**: Advisor-centric platform design in this thesis
+>
+> **2. 'Factor Analysis on Computing Transfer Students' (ASEE 2023)**
+> - Identified key predictors: financial support, GPA, institutional fit
+> - Sample: 127 transfer students across 3 institutions
+> - **Informs**: Factor survey questions and priority scores in ACOSUS
+>
+> **3. 'Personality Traits and Transfer Student Success' (NCCiT 2023)**
+> - Correlated Big 5 personality traits with retention
+> - Findings: Adaptability and self-discipline significant predictors
+> - **Informs**: Target survey Personal Attributes category
+>
+> **4. 'Reddit Topic Modeling for Transfer Decisions' (DSI 2024)**
+> - NLP analysis of 10,000+ Reddit posts about transfer decisions
+> - Identified concerns: credit transfer, financial aid, institutional fit
+> - **Complements**: This thesis's ML prediction (different research focus)
+>
+> **This Thesis's Contribution**:
+> - **System Implementation**: Full-stack platform (Publications 1-3 were research studies)
+> - **ML Framework**: Progressive learning (Publications didn't implement ML)
+> - **Validation Plan**: Real deployment at NEIU
+>
+> We build on their findings, but this is a distinct engineering contribution."
+
+**Reference**: [09-RelatedWork.md](./09-RelatedWork.md) - All ACOSUS publication sections
+
+---
+
+## Category 6: Validation & Results
+
+### Q17: "You mentioned no validation results yet - how can you present this work?"
 
 **Prepared Answer**:
 > "Excellent point. This is a **system design and implementation thesis**, not a validation study. Here's what we've accomplished:
@@ -482,7 +753,7 @@ This document contains anticipated questions from the thesis committee and prepa
 
 ---
 
-### Q16: "What if the system performs poorly in validation? Does the thesis fail?"
+### Q18: "What if the system performs poorly in validation? Does the thesis fail?"
 
 **Prepared Answer**:
 > "No - negative results are still valuable scientific contributions. Our thesis success criteria:
@@ -519,7 +790,7 @@ This document contains anticipated questions from the thesis committee and prepa
 
 ---
 
-### Q17: "How do you compare ACOSUS to existing student success prediction systems?"
+### Q19: "How do you compare ACOSUS to existing student success prediction systems?"
 
 **Prepared Answer**:
 > "Great question. Here's a comparison table:
@@ -564,9 +835,9 @@ This document contains anticipated questions from the thesis committee and prepa
 
 ---
 
-## Category 6: Future Work & Extensions
+## Category 7: Future Work & Extensions
 
-### Q18: "What are your plans after thesis completion?"
+### Q20: "What are your plans after thesis completion?"
 
 **Prepared Answer**:
 > "The thesis establishes the foundation. Future work spans three timelines:
@@ -602,7 +873,7 @@ This document contains anticipated questions from the thesis committee and prepa
 
 ---
 
-### Q19: "Could this system be used for other domains beyond student success?"
+### Q21: "Could this system be used for other domains beyond student success?"
 
 **Prepared Answer**:
 > "Absolutely. The progressive learning framework generalizes to any domain with:
@@ -643,7 +914,7 @@ This document contains anticipated questions from the thesis committee and prepa
 
 ---
 
-### Q20: "What ethical considerations have you addressed?"
+### Q22: "What ethical considerations have you addressed?"
 
 **Prepared Answer**:
 > "Critical question. We've considered several ethical dimensions:
@@ -690,9 +961,9 @@ This document contains anticipated questions from the thesis committee and prepa
 
 ---
 
-## Category 7: Demo-Specific Questions
+## Category 8: Demo-Specific Questions
 
-### Q21: "Can you show the multi-question PWRS formula in action during the demo?"
+### Q23: "Can you show the multi-question PWRS formula in action during the demo?"
 
 **Prepared Answer**:
 > "Absolutely. Let me navigate to the quiz builder and walk through a multi-question example.
@@ -733,7 +1004,7 @@ This document contains anticipated questions from the thesis committee and prepa
 
 ---
 
-### Q22: "What happens if the live demo encounters a bug or network issue?"
+### Q24: "What happens if the live demo encounters a bug or network issue?"
 
 **Prepared Answer**:
 > "Great question - I have a backup plan:
@@ -770,9 +1041,9 @@ This document contains anticipated questions from the thesis committee and prepa
 
 ---
 
-## Category 8: Clarifications & Edge Cases
+## Category 9: Clarifications & Edge Cases
 
-### Q23: "What if students don't complete surveys or provide incomplete data?"
+### Q25: "What if students don't complete surveys or provide incomplete data?"
 
 **Prepared Answer**:
 > "Data quality is critical. We handle incomplete data with several strategies:
@@ -814,7 +1085,7 @@ This document contains anticipated questions from the thesis committee and prepa
 
 ---
 
-### Q24: "Can administrators change question priorities or weightages after students have responded?"
+### Q26: "Can administrators change question priorities or weightages after students have responded?"
 
 **Prepared Answer**:
 > "Yes, but with constraints:
@@ -866,7 +1137,7 @@ This document contains anticipated questions from the thesis committee and prepa
 
 ---
 
-### Q25: "How long does each phase take in real time?"
+### Q27: "How long does each phase take in real time?"
 
 **Prepared Answer**:
 > "Timeline depends on enrollment rate. Here are scenarios:
@@ -960,6 +1231,6 @@ Use this during defense to track questions asked:
 
 ---
 
-**Total Questions Prepared**: 25 core questions + 3 closing remarks + emergency templates
+**Total Questions Prepared**: 27 core questions + 3 closing remarks + emergency templates
 
 **Estimated Coverage**: 80-90% of likely committee questions

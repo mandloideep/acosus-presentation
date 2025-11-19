@@ -22,9 +22,24 @@
 
 ---
 
+## Current Status Note
+
+**Important**: ACOSUS is currently recruiting the first 10 NEIU transfer students. The system is deployed and ready, but ML models are not yet trained due to pending data collection (0/10 students enrolled as of Nov 18, 2025).
+
+**Success Rate Definition**: The definition of "success rate" requires further study and validation. It may include:
+- GPA maintenance (e.g., >3.0 throughout program)
+- On-time graduation likelihood
+- Career readiness indicators
+- Composite metric combining academic and career outcomes
+
+This definition will be refined based on advisor feedback and empirical validation during the first cohort.
+
+---
+
 ## Phase 1: Bootstrap Validation (Current - Students 1-10)
 
-**Status**: 🟡 In Progress (0/10 students enrolled as of Nov 18, 2025)
+**Status**: 🟡 In Progress (0/10 NEIU transfer students enrolled as of Nov 18, 2025)
+**Estimated Timeline**: Spring 2026 (targeting NEIU transfer student enrollment)
 
 ### Objectives
 
@@ -37,8 +52,8 @@
 ### 1.1 System Usability Testing
 
 **Participants**:
-- 2 administrators (faculty/staff)
-- 10 students (first bootstrap cohort)
+- 2 administrators (NEIU advisors/faculty)
+- 10 NEIU transfer students (first bootstrap cohort)
 
 **Method**: Think-aloud protocol + System Usability Scale (SUS)
 
@@ -166,7 +181,8 @@ async function validateDataQuality(studentId) {
 
 ## Phase 2: KNN Model Validation (Students 10-20)
 
-**Status**: 🔴 Pending (awaits 10 student enrollment)
+**Status**: 🔴 Pending (awaits 10 NEIU transfer student enrollment)
+**Estimated Timeline**: Summer-Fall 2026
 
 ### Objectives
 
@@ -326,7 +342,8 @@ response = await fetch('http://model-server/api/v1/calculate_correlation', {
 
 ## Phase 3: Neural Network Validation (Students 100+)
 
-**Status**: 🔴 Pending (projected: 6-12 months)
+**Status**: 🔴 Pending (projected: Fall 2026 - Spring 2027)
+**Estimated Timeline**: After 100 NEIU transfer students enroll
 
 ### Objectives
 
@@ -484,9 +501,10 @@ print(f"T-test p-value: {p_value:.4f}")
 
 ---
 
-## Phase 4: Long-Term Impact Validation (6-12 months)
+## Phase 4: Long-Term Impact Validation (Transfer Student Outcomes)
 
 **Status**: 🔴 Pending (future work)
+**Estimated Timeline**: 2027-2028 (longitudinal tracking)
 
 ### Objectives
 
@@ -499,9 +517,10 @@ print(f"T-test p-value: {p_value:.4f}")
 ### 4.1 Predictive Validity (Longitudinal Study)
 
 **Timeline**: After 1-2 semesters
+**Focus**: Transfer student-specific validation
 
 ```
-Student Enrollment (Week 1)
+Transfer Student Enrollment (Week 1)
     ↓
 Prediction Made (Week 2)
     ↓
@@ -510,9 +529,10 @@ Intervention Assigned (Week 3)
 Semester 1 Ends (Week 16)
     ↓
 Collect Actual Outcomes:
-  - Semester GPA
+  - Semester GPA (track for "transfer shock")
   - Course completion rate
-  - Retention (still enrolled?)
+  - Retention (still enrolled? - critical for transfer students)
+  - Transfer-specific metrics: GPA change from community college
     ↓
 Calculate Actual Success Rate
     ↓
@@ -576,19 +596,28 @@ def calculate_actual_success_rate(student):
 
 ### 4.2 Intervention Effectiveness
 
-**Study Design**: Compare intervention vs. control groups
+**Study Design**: Compare transfer student intervention vs. control groups
 
 ```
 Group A (Intervention):
-  - Students with ACOSUS predictions
+  - Transfer students with ACOSUS predictions
   - Risk-based support assignments
   - Early intervention (Week 3)
+  - Transfer-specific resources (e.g., credit transfer advising)
 
 Group B (Control):
-  - Historical data (previous cohorts)
+  - Historical transfer student data (previous cohorts)
   - Standard advising only
   - Late intervention (after midterm failures)
 ```
+
+**Additional Transfer-Specific Validation**:
+- Compare transfer vs. native student prediction accuracy
+- Validate on transfer-specific metrics:
+  - Retention post-transfer (37% of transfers don't return for year 2)
+  - GPA change (transfer shock: 0.2-0.5 GPA drop)
+  - Time-to-degree from transfer point
+- Test advisor satisfaction with centralized transfer student data platform
 
 **Metrics**:
 | Outcome | Intervention Group | Control Group | Improvement | Statistical Test |
@@ -616,15 +645,18 @@ Group B (Control):
 | **Mature** | 100+ | NN | <10 | >0.6 | >4.0/5.0 | 🔴 Pending |
 | **Longitudinal** | 100+ | NN | <15 | >0.35 | N/A | 🔴 Future |
 
-### Validation Timeline
+### Validation Timeline (NEIU Transfer Students)
 
 ```
-Nov 2025: Phase 1 - Usability testing (in progress)
-Jan 2026: Phase 2 - KNN validation (10 students enrolled)
-Mar 2026: Phase 2 - Feedback loop analysis (20 students)
-Sep 2026: Phase 3 - NN validation (100 students)
-Mar 2027: Phase 4 - Long-term impact (6-month outcomes)
+Nov 2025:        System deployed, recruiting transfer students (0/10)
+Spring 2026:     Phase 1 - Usability testing (target: 10 transfer students)
+Summer 2026:     Phase 2 - KNN validation (10-20 transfer students enrolled)
+Fall 2026:       Phase 2 - Feedback loop analysis (20-50 transfer students)
+Spring 2027:     Phase 3 - NN validation (target: 100 transfer students)
+Fall 2027-2028:  Phase 4 - Long-term impact (longitudinal outcomes)
 ```
+
+**Note**: Timeline depends on NEIU transfer student enrollment rates. Estimates assume 10-20 transfer students per semester in computing programs.
 
 ---
 
