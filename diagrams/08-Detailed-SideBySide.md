@@ -55,14 +55,14 @@ graph TB
 
         P_CONVERT[PWRS Calculator<br/>Convert to 0-100%<br/>Success Rate]
 
-        P_DISPLAY[Display Prediction<br/>"Your predicted success rate: 74%"<br/>Similar students: #3, #7, #12<br/>Confidence: 82%]
+        P_DISPLAY[Display Prediction<br/>Your predicted success rate: 74%<br/>Similar students: #3, #7, #12<br/>Confidence: 82%]
 
-        P_RATE[Rating UI<br/>⭐⭐⭐⭐⭐<br/>"How accurate is this?"]
+        P_RATE[Rating UI<br/>⭐⭐⭐⭐⭐<br/>How accurate is this?]
 
         subgraph FeedbackLoop["Feedback Loop Logic"]
             P_RATING{Rating<br/>Threshold}
 
-            P_RATING -->|≥4 stars<br/>High Confidence| P_PSEUDO[Create Pseudo-label<br/>studentId: 12345<br/>factors: [8,7,6,9,7,8,7]<br/>predictedSuccess: 74<br/>isPseudoLabel: true<br/>rating: 4.5]
+            P_RATING -->|≥4 stars<br/>High Confidence| P_PSEUDO[Create Pseudo-label<br/>studentId: 12345<br/>factors: 8,7,6,9,7,8,7<br/>predictedSuccess: 74<br/>isPseudoLabel: true<br/>rating: 4.5]
 
             P_RATING -->|<4 stars<br/>Low Confidence| P_TARGET[Request Target Survey<br/>Collect Actual Success Rate<br/>5-10 questions, ~10 min]
         end
@@ -97,7 +97,7 @@ graph TB
         P_OPENAI -.-> P_DISPLAY
 
         %% Metrics annotation
-        P_METRICS[Survey Burden Reduction:<br/>- Path A (≥4★): 50-70% of students, ~5 min<br/>- Path B (<4★): 30-50% of students, ~15 min<br/>- Average: ~8-10 min vs 15 min baseline]
+        P_METRICS[Survey Burden Reduction:<br/>- Path A with 4+ stars: 50-70% of students, ~5 min<br/>- Path B with fewer stars: 30-50% of students, ~15 min<br/>- Average: ~8-10 min vs 15 min baseline]
         P_RATING -.-> P_METRICS
     end
 
@@ -106,7 +106,7 @@ graph TB
 
         T_START([Admin Portal<br/>Survey Builder])
 
-        T_CREATE[Create Surveys<br/>- Target Survey (measures success)<br/>- Factor Survey (predicts success)<br/>- Set priority weights<br/>- Transfer-specific questions]
+        T_CREATE[Create Surveys<br/>- Target Survey: measures success<br/>- Factor Survey: predicts success<br/>- Set priority weights<br/>- Transfer-specific questions]
 
         T_STORE[Backend: Survey Management<br/>POST /api/surveys<br/>Store templates in MongoDB]
 
@@ -125,7 +125,7 @@ graph TB
         end
 
         subgraph ModelServerTrain["Model Server - Training Engine"]
-            T_QUEUE[Training Queue Manager<br/>- Async job queue (FIFO)<br/>- Status tracking<br/>- Single job at a time]
+            T_QUEUE[Training Queue Manager<br/>- Async job queue with FIFO<br/>- Status tracking<br/>- Single job at a time]
 
             T_PHASE{Enrollment<br/>Count}
 
@@ -138,11 +138,11 @@ graph TB
             end
 
             subgraph Phase2["Phase 2: GAN (100+ students)"]
-                T_GAN_TRAIN[GAN Trainer<br/>Generator: Latent(100)→Dense(128)→Dense(64)→7<br/>Discriminator: 7→Dense(64)→Dense(32)→1<br/>Adversarial training: 10K epochs]
+                T_GAN_TRAIN[GAN Trainer<br/>Generator: Latent100→Dense128→Dense64→7<br/>Discriminator: 7→Dense64→Dense32→1<br/>Adversarial training: 10K epochs]
 
                 T_GAN_GEN[Generate Synthetic<br/>100 real → 400 synthetic<br/>Total: 500 students]
 
-                T_GAN_VAL[Validate GAN Quality<br/>- KS test: p>0.05 (all features)<br/>- Correlation: diff<0.2<br/>- Visual inspection]
+                T_GAN_VAL[Validate GAN Quality<br/>- KS test: p>0.05 for all features<br/>- Correlation: diff<0.2<br/>- Visual inspection]
 
                 T_GAN_PASS{Validation<br/>Passed?}
 
@@ -156,9 +156,9 @@ graph TB
 
                 T_NN_SPLIT[CRITICAL Split:<br/>Train: 80 real + 320 synthetic<br/>Validation: 20 real + 0 synthetic<br/>TEST REAL ONLY]
 
-                T_NN_TRAIN[NN Trainer<br/>Architecture: Input(7)→Dense(64,ReLU)→<br/>Dropout(0.3)→Dense(32,ReLU)→Output(1,Sigmoid)<br/>Loss: MSE, Optimizer: Adam<br/>Epochs: 100, Early stopping: patience 10]
+                T_NN_TRAIN[NN Trainer<br/>Architecture: Input7→Dense64-ReLU→<br/>Dropout0.3→Dense32-ReLU→Output1-Sigmoid<br/>Loss: MSE, Optimizer: Adam<br/>Epochs: 100, Early stopping: patience 10]
 
-                T_NN_VAL[Validation (REAL ONLY)<br/>- MAE: Target <10<br/>- R²: Target >0.60<br/>- RMSE: Target <13]
+                T_NN_VAL[Validation REAL ONLY<br/>- MAE: Target <10<br/>- R²: Target >0.60<br/>- RMSE: Target <13]
 
                 T_NN_MODEL[NN Model Ready<br/>+ Metadata]
             end
