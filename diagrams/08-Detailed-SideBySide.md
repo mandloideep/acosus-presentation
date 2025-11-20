@@ -130,11 +130,13 @@ graph TB
             T_PHASE{Enrollment<br/>Count}
 
             subgraph Phase1["Phase 1: KNN (10-99 students)"]
-                T_KNN_TRAIN[KNN Trainer<br/>1. Store all labeled samples<br/>2. k=3, distance-weighted<br/>3. Euclidean distance<br/>4. 5-fold cross-validation]
+                T_KNN_STORE[Store Labeled Samples<br/>Save all factor+target pairs<br/>No weight training needed<br/>Lazy learner approach]
 
-                T_KNN_VAL[Validation Metrics<br/>- MAE: Target <15<br/>- R²: Target >0.40<br/>- RMSE: Target <18]
+                T_KNN_CONFIG[Set Hyperparameters<br/>k=3 or sqrt of n<br/>Distance: Euclidean<br/>Weighting: Distance-weighted]
 
-                T_KNN_MODEL[KNN Model Ready<br/>+ Metadata]
+                T_KNN_VAL[Cross-Validation Test<br/>5-fold CV on stored samples<br/>- MAE: Target <15<br/>- R²: Target >0.40<br/>- RMSE: Target <18]
+
+                T_KNN_META[Save Metadata Only<br/>No model file needed<br/>modelId, sampleCount, k value<br/>validation metrics, filePath to samples]
             end
 
             subgraph Phase2["Phase 2: GAN (100+ students)"]
@@ -187,10 +189,11 @@ graph TB
         T_API --> T_QUEUE
         T_QUEUE --> T_PHASE
 
-        T_PHASE -->|10≤n<100| T_KNN_TRAIN
-        T_KNN_TRAIN --> T_KNN_VAL
-        T_KNN_VAL --> T_KNN_MODEL
-        T_KNN_MODEL --> T_VERSION
+        T_PHASE -->|10≤n<100| T_KNN_STORE
+        T_KNN_STORE --> T_KNN_CONFIG
+        T_KNN_CONFIG --> T_KNN_VAL
+        T_KNN_VAL --> T_KNN_META
+        T_KNN_META --> T_VERSION
 
         T_PHASE -->|n≥100| T_GAN_TRAIN
         T_GAN_TRAIN --> T_GAN_GEN
@@ -249,10 +252,10 @@ graph TB
     class BACKEND,P_API1,P_PWRS,P_CONVERT,T_STORE,T_TRB,T_API shared
     class P_CHECK,P_SEL_DEC,P_RATING,T_PHASE,T_GAN_PASS,T_COMPARE decision
     class P_DB1,T_DB2,DB_MAIN database
-    class P_PSEUDO,P_TARGET,T_SRC1,T_SRC2,T_SRC3,T_KNN_MODEL,T_GAN_STORE,T_NN_MODEL,T_DEPLOY,T_KEEP process
+    class P_PSEUDO,P_TARGET,T_SRC1,T_SRC2,T_SRC3,T_KNN_META,T_GAN_STORE,T_NN_MODEL,T_DEPLOY,T_KEEP process
     class P_METRICS,P_OPENAI,T_PROG,T_VAL_NOTE annotation
     class P_OPENAI future
-    class T_KNN_TRAIN,T_KNN_VAL,T_GAN_TRAIN,T_GAN_GEN,T_GAN_VAL,T_NN_PREP,T_NN_SPLIT,T_NN_TRAIN,T_NN_VAL phase
+    class T_KNN_STORE,T_KNN_CONFIG,T_KNN_VAL,T_GAN_TRAIN,T_GAN_GEN,T_GAN_VAL,T_NN_PREP,T_NN_SPLIT,T_NN_TRAIN,T_NN_VAL phase
 ```
 
 ---
@@ -425,17 +428,19 @@ Steps 1-5 identical to High Confidence Path, then:
 
 ## Right Side: Training Workflow - Complete Walkthrough
 
-### Phase 1: KNN Training (10-99 students)
+### Phase 1: KNN Setup (10-99 students)
 
 **Trigger**: 10th student completes surveys OR manual trigger by admin
 
 **Example Scenario**: 25 students enrolled (15 with Target Survey, 10 with pseudo-labels)
 
+**IMPORTANT**: KNN is a lazy learner - there is NO traditional "training" with weight updates. Instead, we store data and validate performance.
+
 1. **Admin Initiation** (if manual):
    - Admin logs into Admin Portal
    - Navigates to "Model Training" section
-   - Clicks "Train New Model"
-   - **POST /api/train**: Trigger training request
+   - Clicks "Prepare KNN Model"
+   - **POST /api/train**: Trigger KNN setup request
 
 2. **Training Request Builder** (10 seconds):
    - **Query MongoDB** for all labeled data:
@@ -460,7 +465,7 @@ Steps 1-5 identical to High Confidence Path, then:
        ],
        "labels": [74, 82, 65, 71, 78, ...],  // 25 success rates
        "phase": "KNN",
-       "requestId": "train-20260115-001"
+       "requestId": "knn-setup-20260115-001"
      }
      ```
 
@@ -469,7 +474,7 @@ Steps 1-5 identical to High Confidence Path, then:
    - **Job Tracking**:
      ```json
      {
-       "jobId": "train-20260115-001",
+       "jobId": "knn-setup-20260115-001",
        "status": "in_progress",
        "phase": "KNN",
        "studentCount": 25,
@@ -477,20 +482,39 @@ Steps 1-5 identical to High Confidence Path, then:
      }
      ```
 
-4. **KNN Trainer** (2-5 minutes):
-   - **Store Samples**: Save all 25 labeled samples (lazy learning)
-   - **Set Hyperparameters**:
-     - k = 3 (number of neighbors)
-     - Distance metric = Euclidean
-     - Weighting = Distance-weighted
+4. **KNN Setup - Store Samples** (<1 second):
+   - **NO TRAINING HAPPENS** - KNN is instance-based/lazy learner
+   - **Store all 25 labeled samples** in MongoDB or pickle file:
+     ```python
+     # knn_samples.pkl or MongoDB collection
+     {
+       "samples": [
+         {"features": [8.75, 7.0, 3.75, 2.5, 9.0, 8.0, 7.0], "label": 74},
+         {"features": [6.0, 8.0, 7.5, 5.0, 6.0, 9.0, 8.0], "label": 82},
+         ... // All 25 students
+       ],
+       "count": 25
+     }
+     ```
+   - **Why so fast?** No weight optimization, gradient descent, or epochs - just data storage
+
+5. **Set Hyperparameters** (<1 second):
+   - **k = 3** (number of neighbors) or **k = sqrt(25) ≈ 5**
+   - **Distance metric = Euclidean**: sqrt(Σ(x₁ - x₂)²)
+   - **Weighting = Distance-weighted**: Closer neighbors have higher influence
+   - **No model parameters to learn** - these are just configuration values
+
+6. **Cross-Validation Test** (1-2 minutes):
+   - **Purpose**: Validate that stored samples can produce accurate predictions
+   - **NOT TRAINING** - just testing prediction accuracy with current data
    - **5-Fold Cross-Validation**:
      - Split 25 students into 5 folds of 5 students each
-     - **Fold 1**: Train on students 1-20, validate on students 21-25
-       - For each validation student, find k=3 nearest neighbors in training set
+     - **Fold 1**: Use students 1-20 as "training" (lookup table), validate on students 21-25
+       - For each validation student, find k=3 nearest neighbors in the 20-student lookup
        - Predict using distance-weighted average
        - Calculate error: |predicted - actual|
        - Fold 1 MAE: 13.8
-     - **Fold 2**: Train on students 6-25 + 1-5 (excluding 6-10), validate on students 6-10
+     - **Fold 2**: Use students 6-25 + 1-5 (excluding 6-10) as lookup, validate on students 6-10
        - Fold 2 MAE: 12.1
      - **Fold 3**: MAE: 14.2
      - **Fold 4**: MAE: 11.9
@@ -502,12 +526,14 @@ Steps 1-5 identical to High Confidence Path, then:
      - R² = 108.4 / 180 = 0.60 (60% variance explained)
    - **Calculate RMSE**: √(Σ(predicted - actual)² / n) = 16.5
 
-5. **Model Versioning** (<1 second):
-   - **Create Model Record**:
+7. **Save Metadata Only** (<1 second):
+   - **NO MODEL FILE NEEDED** - KNN just needs the samples + hyperparameters
+   - **Create Metadata Record**:
      ```json
      {
        "modelId": "knn-20260115-001",
        "phase": "KNN",
+       "isActive": true,
        "studentCount": 25,
        "realStudents": 15,
        "pseudoLabels": 10,
@@ -522,24 +548,33 @@ Steps 1-5 identical to High Confidence Path, then:
          "R2": 0.60,
          "RMSE": 16.5
        },
-       "trainingDate": "2026-01-15T14:05:00Z",
-       "filePath": "/models/knn_samples_25.pkl"
+       "setupDate": "2026-01-15T14:05:00Z",
+       "filePath": "/models/knn_samples_25.pkl"  // Points to stored samples
      }
      ```
+   - **What gets stored?**
+     - Samples data (features + labels)
+     - Hyperparameters (k, distance metric, weighting)
+     - Validation metrics (MAE, R², RMSE)
+     - NO trained weights (because KNN has no weights!)
 
-6. **Performance Comparison** (<1 second):
-   - Load previous KNN model (if exists): No previous model (first training)
-   - Decision: Deploy new model (first model, no comparison needed)
+8. **Performance Comparison** (<1 second):
+   - Load previous KNN metadata (if exists): No previous model (first setup)
+   - Decision: Deploy new KNN (first model, no comparison needed)
 
-7. **Deployment** (<5 seconds):
-   - Store model file and metadata in MongoDB
-   - Update `isActive` flag: New model = true, old models = false
-   - Send notification to Backend: "KNN model trained, MAE=13.1, R²=0.60"
-   - Model Selector automatically loads new model for next prediction
+9. **Deployment** (<5 seconds):
+   - Store samples file and metadata in MongoDB
+   - Update `isActive` flag: New KNN = true, old KNN = false
+   - Send notification to Backend: "KNN ready, MAE=13.1, R²=0.60"
+   - Model Selector automatically uses new KNN samples for next prediction
 
-**Total Training Time**: ~5 minutes
+**Total Setup Time**: ~2 minutes (vs 30-60 min for NN training)
 
-**Result**: KNN model ready, predictions available for students 26+
+**Result**: KNN ready, predictions available for students 26+
+
+**Key Difference from NN**:
+- NN: Train weights → Save trained model → Load model for prediction
+- KNN: Store samples → Load samples for prediction → Calculate distances at inference time
 
 ---
 
@@ -864,7 +899,7 @@ Steps 1-5 identical to High Confidence Path, then:
 
 > "Data collection combines three sources: Factor responses from all students, Target responses from bootstrap and corrections, and pseudo-labels from high-confidence predictions. By combining all three, we maximize training data while minimizing survey burden."
 
-> "At 10-99 transfer students, we train a K-Nearest Neighbors model. It's simple, interpretable, and works with small datasets. We use 5-fold cross-validation to ensure accuracy despite limited data. Expected performance: MAE around 13 points, R² around 0.50."
+> "At 10-99 transfer students, we use K-Nearest Neighbors - a lazy learner that requires no traditional training. Instead of learning weights, KNN simply stores all labeled samples. When a new student requests a prediction, KNN finds the 3 most similar students and averages their success rates. This is incredibly fast to set up - under 2 minutes - because there's no weight optimization or gradient descent. We validate using 5-fold cross-validation to ensure the stored samples produce accurate predictions. Expected performance: MAE around 13 points, R² around 0.50."
 
 > "At 100+ transfer students, we activate GAN-based data augmentation. The GAN learns the distribution of real transfer students and generates 400 synthetic students. We validate rigorously using KS tests and correlation checks to ensure synthetic students are realistic."
 
@@ -902,7 +937,18 @@ Steps 1-5 identical to High Confidence Path, then:
 
 ### Q: "Why not just use the Neural Network from the start?"
 
-**A**: "Neural Networks require substantial training data - typically 1000+ students. With transfer cohorts of 10-20 per semester, we'd wait 5+ years before making any predictions. KNN works with just 10 students, providing immediate value. Progressive learning balances immediate utility with long-term accuracy."
+**A**: "Neural Networks require substantial training data - typically 1000+ students. With transfer cohorts of 10-20 per semester, we'd wait 5+ years before making any predictions. KNN works with just 10 students because it's a lazy learner - it doesn't learn patterns, it just memorizes examples. When a new student arrives, KNN finds similar past students and averages their outcomes. This provides immediate value with minimal data. Progressive learning balances immediate utility with long-term accuracy."
+
+---
+
+### Q: "You say KNN has no training - so what happens during the 'KNN setup' phase?"
+
+**A**: "Great observation! KNN is instance-based, meaning there's no traditional training with weight optimization or gradient descent. The 'setup' phase does three things:
+1. **Store samples**: Save all labeled student data (features + success rates) in a database or pickle file
+2. **Set hyperparameters**: Configure k value, distance metric, and weighting scheme - these are just settings, not learned parameters
+3. **Cross-validation test**: Verify that the stored samples produce accurate predictions by testing on different data splits
+
+The entire process takes under 2 minutes because we're just organizing data, not training a model. The actual 'learning' happens at prediction time, when KNN calculates distances to find similar students."
 
 ---
 
