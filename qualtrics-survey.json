@@ -1,0 +1,348 @@
+[
+  {
+    "id": "Q1",
+    "question": "Using this AI counseling system in my academic planning enables me to accomplish tasks more quickly than other advising methods.",
+    "type": "Likert",
+    "options": [
+      "Strongly disagree",
+      "Somewhat disagree",
+      "Neither agree nor disagree",
+      "Somewhat agree",
+      "Strongly agree"
+    ]
+  },
+  {
+    "id": "Q2",
+    "question": "Using this AI counseling system improves my academic planning performance.",
+    "type": "Likert",
+    "options": [
+      "Strongly disagree",
+      "Somewhat disagree",
+      "Neither agree nor disagree",
+      "Somewhat agree",
+      "Strongly agree"
+    ]
+  },
+  {
+    "id": "Q3",
+    "question": "Using this AI counseling system in my academic planning increases my productivity.",
+    "type": "Likert",
+    "options": [
+      "Strongly disagree",
+      "Somewhat disagree",
+      "Neither agree nor disagree",
+      "Somewhat agree",
+      "Strongly agree"
+    ]
+  },
+  {
+    "id": "Q4",
+    "question": "Using this AI counseling system enhances my effectiveness in transfer planning.",
+    "type": "Likert",
+    "options": [
+      "Strongly disagree",
+      "Somewhat disagree",
+      "Neither agree nor disagree",
+      "Somewhat agree",
+      "Strongly agree"
+    ]
+  },
+  {
+    "id": "Q5",
+    "question": "Using this AI counseling system makes it easier to plan my academic path.",
+    "type": "Likert",
+    "options": [
+      "Strongly disagree",
+      "Somewhat disagree",
+      "Neither agree nor disagree",
+      "Somewhat agree",
+      "Strongly agree"
+    ]
+  },
+  {
+    "id": "Q6",
+    "question": "I have found this AI counseling system useful for my transfer journey.",
+    "type": "Likert",
+    "options": [
+      "Strongly disagree",
+      "Somewhat disagree",
+      "Neither agree nor disagree",
+      "Somewhat agree",
+      "Strongly agree"
+    ]
+  },
+  {
+    "id": "Q7",
+    "question": "Learning to operate this AI counseling system was easy for me.",
+    "type": "Likert",
+    "options": [
+      "Strongly disagree",
+      "Somewhat disagree",
+      "Neither agree nor disagree",
+      "Somewhat agree",
+      "Strongly agree"
+    ]
+  },
+  {
+    "id": "Q8",
+    "question": "I found it easy to get this AI counseling system to do what I want it to do.",
+    "type": "Likert",
+    "options": [
+      "Strongly disagree",
+      "Somewhat disagree",
+      "Neither agree nor disagree",
+      "Somewhat agree",
+      "Strongly agree"
+    ]
+  },
+  {
+    "id": "Q9",
+    "question": "My interaction with this AI counseling system has been clear and understandable.",
+    "type": "Likert",
+    "options": [
+      "Strongly disagree",
+      "Somewhat disagree",
+      "Neither agree nor disagree",
+      "Somewhat agree",
+      "Strongly agree"
+    ]
+  },
+  {
+    "id": "Q10",
+    "question": "I found this AI counseling system to be flexible to interact with.",
+    "type": "Likert",
+    "options": [
+      "Strongly disagree",
+      "Somewhat disagree",
+      "Neither agree nor disagree",
+      "Somewhat agree",
+      "Strongly agree"
+    ]
+  },
+  {
+    "id": "Q11",
+    "question": "It was easy for me to become skillful at using this AI counseling system.",
+    "type": "Likert",
+    "options": [
+      "Strongly disagree",
+      "Somewhat disagree",
+      "Neither agree nor disagree",
+      "Somewhat agree",
+      "Strongly agree"
+    ]
+  },
+  {
+    "id": "Q12",
+    "question": "I found this AI counseling system easy to use.",
+    "type": "Likert",
+    "options": [
+      "Strongly disagree",
+      "Somewhat disagree",
+      "Neither agree nor disagree",
+      "Somewhat agree",
+      "Strongly agree"
+    ]
+  },
+  {
+    "id": "Q13",
+    "question": "The AI counseling system accurately understood my specific needs as a transfer student.",
+    "type": "Likert",
+    "options": [
+      "Strongly disagree",
+      "Somewhat disagree",
+      "Neither agree nor disagree",
+      "Somewhat agree",
+      "Strongly agree"
+    ]
+  },
+  {
+    "id": "Q14",
+    "question": "The process of inputting my information into the system was straightforward.",
+    "type": "Likert",
+    "options": [
+      "Strongly disagree",
+      "Somewhat disagree",
+      "Neither agree nor disagree",
+      "Somewhat agree",
+      "Strongly agree"
+    ]
+  },
+  {
+    "id": "Q15",
+    "question": "The system interface was intuitive and easy to navigate.",
+    "type": "Likert",
+    "options": [
+      "Strongly disagree",
+      "Somewhat disagree",
+      "Neither agree nor disagree",
+      "Somewhat agree",
+      "Strongly agree"
+    ]
+  },
+  {
+    "id": "Q16",
+    "question": "What specific elements of the interface were difficult to navigate or understand?",
+    "type": "Open-Ended",
+    "options": []
+  },
+  {
+    "id": "Q17",
+    "question": "Did you experience any technical issues while using the system?",
+    "type": "Single Choice",
+    "options": ["Yes", "Maybe", "No"]
+  },
+  {
+    "id": "Q18",
+    "question": "What technical issue you faced while using this system?",
+    "type": "Open-Ended",
+    "options": []
+  },
+  {
+    "id": "Q19",
+    "question": "How accurate did you find the system's assessment of your academic success factors?",
+    "type": "Likert",
+    "options": [
+      "Not accurate at all",
+      "Slightly accurate",
+      "Moderately accurate",
+      "Very accurate",
+      "Extremely accurate"
+    ]
+  },
+  {
+    "id": "Q20",
+    "question": "Did the success probability estimates align with your own assessment of your academic situation?",
+    "type": "Likert",
+    "options": [
+      "Not at all aligned",
+      "Slightly aligned",
+      "Moderately aligned",
+      "Very aligned",
+      "Perfectly aligned"
+    ]
+  },
+  {
+    "id": "Q21",
+    "question": "How relevant were the recommendations provided by the system to your specific situation?",
+    "type": "Likert",
+    "options": [
+      "Not relevant at all",
+      "Slightly relevant",
+      "Moderately relevant",
+      "Very relevant",
+      "Extremely relevant"
+    ]
+  },
+  {
+    "id": "Q22",
+    "question": "How actionable were the recommendations provided?",
+    "type": "Likert",
+    "options": [
+      "Not actionable at all",
+      "Slightly actionable",
+      "Moderately actionable",
+      "Very actionable",
+      "Easily actionable"
+    ]
+  },
+  {
+    "id": "Q23",
+    "question": "What was the most helpful feature of the system?",
+    "type": "Open-Ended",
+    "options": []
+  },
+  {
+    "id": "Q24",
+    "question": "What feature or capability was missing that would have improved your experience?",
+    "type": "Open-Ended",
+    "options": []
+  },
+  {
+    "id": "Q25",
+    "question": "How likely are you to continue using this system for academic planning?",
+    "type": "Likert",
+    "options": [
+      "Extremely unlikely",
+      "Somewhat unlikely",
+      "Neither likely nor unlikely",
+      "Somewhat likely",
+      "Extremely likely"
+    ]
+  },
+  {
+    "id": "Q26",
+    "question": "How likely are you to recommend this system to other transfer students?",
+    "type": "Likert",
+    "options": [
+      "Extremely unlikely",
+      "Somewhat unlikely",
+      "Neither likely nor unlikely",
+      "Somewhat likely",
+      "Extremely likely"
+    ]
+  },
+  {
+    "id": "Q27",
+    "question": "What devices did you primarily use to access the system? (Select all that apply)",
+    "type": "Multiple Choice (Multi)",
+    "options": [
+      "Desktop computer",
+      "Laptop computer",
+      "Tablet (iPad, Android tablet, etc.)",
+      "Smartphone (iPhone, Android phone, etc.)",
+      "School/University computer lab",
+      "Library computer",
+      "Other (please specify):"
+    ]
+  },
+  {
+    "id": "Q28",
+    "question": "Did you encounter any accessibility issues while using the system?",
+    "type": "Likert",
+    "options": [
+      "Definitely not",
+      "Probably not",
+      "Might or might not",
+      "Probably yes",
+      "Definitely yes"
+    ]
+  },
+  {
+    "id": "Q29",
+    "question": "Can you specify what accessibility issue was there in the system?",
+    "type": "Open-Ended",
+    "options": []
+  },
+  {
+    "id": "Q30",
+    "question": "What additional features would make this system more valuable to transfer students?",
+    "type": "Open-Ended",
+    "options": []
+  },
+  {
+    "id": "Q31",
+    "question": "Would you prefer a system that provides more standardized advice or one that's more personalized?",
+    "type": "Likert",
+    "options": [
+      "Highly standardized",
+      "Moderately standardized",
+      "Slightly standardized",
+      "Neutral",
+      "Slightly personalized",
+      "Moderately personalized",
+      "Highly personalized"
+    ]
+  },
+  {
+    "id": "Q32",
+    "question": "If you could redesign one aspect of the system, what would it be?",
+    "type": "Open-Ended",
+    "options": []
+  },
+  {
+    "id": "Q33",
+    "question": "Please provide any additional feedback or suggestions that could help improve the system for future students.",
+    "type": "Open-Ended",
+    "options": []
+  }
+]
