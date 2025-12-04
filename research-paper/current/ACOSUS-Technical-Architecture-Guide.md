@@ -563,27 +563,34 @@ flowchart TD
 The system progresses through three phases as data accumulates.
 
 ```mermaid
-stateDiagram-v2
-    [*] --> Bootstrap: System Deploy
+flowchart LR
+    Start(("Deploy")) --> Bootstrap
 
-    Bootstrap: Phase 1: Bootstrap
-    Bootstrap: N < 10 students
-    Bootstrap: No predictions
-    Bootstrap: Collect Target + Factor
+    subgraph Bootstrap["Phase 1: Bootstrap"]
+        B1["N < 10 students"]
+        B2["No predictions"]
+        B3["Collect Target + Factor"]
+    end
 
-    KNN: Phase 2: Instance-Based
-    KNN: 10 ≤ N < 100
-    KNN: KNN predictions
-    KNN: Factor only + Feedback
+    subgraph KNN["Phase 2: Instance-Based"]
+        K1["10 ≤ N < 100"]
+        K2["KNN predictions"]
+        K3["Factor only + Feedback"]
+    end
 
-    Neural: Phase 3: Neural Network
-    Neural: N ≥ 100
-    Neural: GAN augmentation
-    Neural: NN predictions
+    subgraph Neural["Phase 3: Neural Network"]
+        N1["N ≥ 100"]
+        N2["GAN augmentation"]
+        N3["NN predictions"]
+    end
 
-    Bootstrap --> KNN: 10th student enrolled
-    KNN --> Neural: 100th student enrolled
-    Neural --> KNN: NN underperforms (fallback)
+    Bootstrap -->|"10th student"| KNN
+    KNN -->|"100th student"| Neural
+    Neural -.->|"NN underperforms"| KNN
+
+    style Bootstrap fill:#fff3e0
+    style KNN fill:#e3f2fd
+    style Neural fill:#e8f5e9
 ```
 
 **Figure 11.** Progressive learning phase state diagram.
