@@ -1,0 +1,235 @@
+{
+  "quizPairs": [
+    {
+      "target": {
+        "metadata": {
+          "title": "Direct Readiness Self-Assessment",
+          "slug": "readiness-direct",
+          "targetType": "single-question",
+          "description": "Self-assessment of academic preparation, resources, circumstances, and goals for program readiness",
+          "customQuestionIDsToIncludeInTraining": [],
+          "isPublished": true
+        },
+        "categories": [
+          {
+            "name": "Self-Assessment",
+            "slug": "self-assessment",
+            "description": "Direct self-assessment of program readiness",
+            "order": 1,
+            "questions": [
+              {
+                "question": "Based on your current academic preparation, resources, circumstances, and goals, what is your own assessment of your readiness score/success rate for this program? Rate yourself from 0 to 100, where 0 means completely unprepared and 100 means fully prepared for success.",
+                "slug": "readiness-direct",
+                "questionType": "multiple-choice",
+                "questionTypeForModel": "string",
+                "dataTypeForModel": "ordinal",
+                "description": "Direct self-assessment of overall program readiness on 0-100 scale",
+                "priorityScore": 10,
+                "order": 1,
+                "isRequired": false,
+                "isActive": false,
+                "shouldIncludeInTraining": false,
+                "isCustomProfileQuestion": false,
+                "restrictions": {
+                  "minNum": 0,
+                  "maxNum": 100
+                },
+                "options": [
+                  {
+                    "optionType": "radio",
+                    "optionValue": "0-20: Not ready - Significant gaps in preparation and major challenges",
+                    "optionWeightage": 1,
+                    "optionOrder": 1,
+                    "isCorrect": false
+                  },
+                  {
+                    "optionType": "radio",
+                    "optionValue": "21-40: Minimally ready - Substantial concerns about preparation",
+                    "optionWeightage": 3,
+                    "optionOrder": 2,
+                    "isCorrect": false
+                  },
+                  {
+                    "optionType": "radio",
+                    "optionValue": "41-60: Moderately ready - Average preparation with some concerns",
+                    "optionWeightage": 6,
+                    "optionOrder": 3,
+                    "isCorrect": false
+                  },
+                  {
+                    "optionType": "radio",
+                    "optionValue": "61-80: Well prepared - Strong readiness with minor gaps",
+                    "optionWeightage": 8,
+                    "optionOrder": 4,
+                    "isCorrect": false
+                  },
+                  {
+                    "optionType": "radio",
+                    "optionValue": "81-100: Fully prepared - Excellent readiness across all areas",
+                    "optionWeightage": 10,
+                    "optionOrder": 5,
+                    "isCorrect": false
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "target": {
+        "metadata": {
+          "title": "Success Rate Estimation",
+          "slug": "success-rate",
+          "targetType": "single-question",
+          "description": "Personal estimation of success probability considering preparation, motivation, resources, and challenges",
+          "customQuestionIDsToIncludeInTraining": [],
+          "isPublished": true
+        },
+        "categories": [
+          {
+            "name": "Success Prediction",
+            "slug": "success-prediction",
+            "description": "Estimate personal success rate for program completion",
+            "order": 1,
+            "questions": [
+              {
+                "question": "What do you estimate is your personal readiness score/success rate for this program? Consider all factors—your preparation, motivation, resources, and challenges—and rate from 0% to 100%, where 0% means you will definitely not succeed and 100% means you will definitely succeed.",
+                "slug": "success-rate",
+                "questionType": "multiple-choice",
+                "questionTypeForModel": "string",
+                "dataTypeForModel": "ordinal",
+                "description": "Estimated probability of success considering all relevant factors",
+                "priorityScore": 10,
+                "order": 1,
+                "isRequired": false,
+                "isActive": false,
+                "shouldIncludeInTraining": false,
+                "isCustomProfileQuestion": false,
+                "restrictions": {
+                  "minNum": 0,
+                  "maxNum": 100
+                },
+                "options": [
+                  {
+                    "optionType": "radio",
+                    "optionValue": "0-20%: Very unlikely to succeed",
+                    "optionWeightage": 1,
+                    "optionOrder": 1,
+                    "isCorrect": false
+                  },
+                  {
+                    "optionType": "radio",
+                    "optionValue": "21-40%: Unlikely to succeed",
+                    "optionWeightage": 3,
+                    "optionOrder": 2,
+                    "isCorrect": false
+                  },
+                  {
+                    "optionType": "radio",
+                    "optionValue": "41-60%: Moderate chance of success",
+                    "optionWeightage": 6,
+                    "optionOrder": 3,
+                    "isCorrect": false
+                  },
+                  {
+                    "optionType": "radio",
+                    "optionValue": "61-80%: Likely to succeed",
+                    "optionWeightage": 8,
+                    "optionOrder": 4,
+                    "isCorrect": false
+                  },
+                  {
+                    "optionType": "radio",
+                    "optionValue": "81-100%: Very likely to succeed",
+                    "optionWeightage": 10,
+                    "optionOrder": 5,
+                    "isCorrect": false
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "target": {
+        "metadata": {
+          "title": "Completion & Performance Readiness",
+          "slug": "completion-performance",
+          "targetType": "single-question",
+          "description": "Assessment of readiness to complete program and perform at a level that supports career aspirations",
+          "customQuestionIDsToIncludeInTraining": [],
+          "isPublished": true
+        },
+        "categories": [
+          {
+            "name": "Performance Assessment",
+            "slug": "performance-assessment",
+            "description": "Rate readiness for program completion and career-level performance",
+            "order": 1,
+            "questions": [
+              {
+                "question": "On a scale from 0 to 100, rate your overall readiness to not only complete this program, but to perform at a level that will help you achieve your career aspirations.",
+                "slug": "completion-performance",
+                "questionType": "multiple-choice",
+                "questionTypeForModel": "string",
+                "dataTypeForModel": "ordinal",
+                "description": "Readiness for completion and career-oriented performance",
+                "priorityScore": 10,
+                "order": 1,
+                "isRequired": false,
+                "isActive": false,
+                "shouldIncludeInTraining": false,
+                "isCustomProfileQuestion": false,
+                "restrictions": {
+                  "minNum": 0,
+                  "maxNum": 100
+                },
+                "options": [
+                  {
+                    "optionType": "radio",
+                    "optionValue": "0-20: Not ready - Serious preparation gaps and challenges",
+                    "optionWeightage": 1,
+                    "optionOrder": 1,
+                    "isCorrect": false
+                  },
+                  {
+                    "optionType": "radio",
+                    "optionValue": "21-40: Somewhat ready - Multiple areas of concern",
+                    "optionWeightage": 3,
+                    "optionOrder": 2,
+                    "isCorrect": false
+                  },
+                  {
+                    "optionType": "radio",
+                    "optionValue": "41-60: Moderately ready - Average preparation with manageable challenges",
+                    "optionWeightage": 6,
+                    "optionOrder": 3,
+                    "isCorrect": false
+                  },
+                  {
+                    "optionType": "radio",
+                    "optionValue": "61-80: Very ready - Well-prepared with minor concerns",
+                    "optionWeightage": 8,
+                    "optionOrder": 4,
+                    "isCorrect": false
+                  },
+                  {
+                    "optionType": "radio",
+                    "optionValue": "81-100: Completely ready - Excellent preparation across all areas",
+                    "optionWeightage": 10,
+                    "optionOrder": 5,
+                    "isCorrect": false
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}
