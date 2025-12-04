@@ -18,6 +18,33 @@ ACOSUS addresses these challenges through a "Small Data" design philosophy. Rath
 
 3. **Burden Minimization**: Data collection must respect students' time constraints, particularly given that transfer students often juggle employment, family responsibilities, and academic demands [6].
 
+#### 3.1.1 The Advisor Data Fragmentation Problem
+
+Beyond student-facing prediction, ACOSUS addresses a critical operational challenge: academic advisors lack unified access to the information they need to support transfer students effectively. Prior research documents that advisors spend 40–60% of their time gathering student information from disparate sources before they can provide meaningful guidance [9]. This data fragmentation manifests across multiple institutional systems:
+
+- **Student Information Systems (SIS)**: GPA, course history, enrollment status, credits transferred
+- **Financial Aid Portals**: Scholarship status, loan amounts, work-study eligibility
+- **Learning Management Systems (LMS)**: Assignment completion, course engagement metrics
+- **Email and Manual Notes**: Prior conversation history, documented concerns, intervention records
+
+For a typical advising session, this fragmented landscape requires advisors to navigate five or more separate systems, consuming approximately 20–25 minutes per student in data gathering alone before substantive advising can begin. With caseloads often exceeding 100 advisees, advisors may spend 30+ hours per week simply locating and synthesizing information. `[CHECK WITH PROFESSOR: Confirm time estimates—presentation cites ~23 min/student, 38 hours/week]`
+
+Critically, even after consulting all available systems, advisors still lack access to **latent factors** that research identifies as highly predictive of transfer student success [1], [2], [5]:
+
+| Traditional Institutional Systems | Transfer-Specific Latent Factors (Missing) |
+|-----------------------------------|-------------------------------------------|
+| GPA, courses (SIS) | Transfer shock severity, credits lost in articulation |
+| Financial aid status (Portal) | Work hours, family support perception, financial anxiety |
+| LMS engagement metrics | Social integration, belonging uncertainty |
+| Enrollment status (SIS) | Previous institution type, institutional fit perception |
+| — | Career clarity, time-to-degree expectations |
+
+**Table 1.** Comparison of data available in traditional institutional systems versus transfer-specific latent factors that predict success but remain uncaptured.
+
+These latent factors—belonging uncertainty, transfer shock indicators, perceived institutional fit—are precisely the variables that distinguish transfer student risk profiles from native students. Without systematic collection mechanisms, advisors must rely on ad-hoc conversations to surface this information, leading to inconsistent data quality and missed intervention opportunities.
+
+ACOSUS addresses this gap by serving a dual function: it collects features for machine learning prediction while simultaneously providing advisors with a **unified data collection and visualization platform** that captures transfer-specific factors unavailable elsewhere. The Factor Surveys described in Section 3.2.2 thus serve not only as ML feature vectors but as structured instruments that systematize the information-gathering conversations advisors would otherwise conduct informally.
+
 ### 3.2 The Dual-Survey Architecture
 
 A fundamental tension exists in predictive modeling for student success: the features that predict outcomes (academic preparation, financial stability, social support) differ from the outcomes themselves (graduation, GPA, career placement). Moreover, measuring outcomes requires either waiting years for ground truth or relying on proxy measures that students can self-report. ACOSUS resolves this tension through a Dual-Survey Architecture that cleanly separates feature collection from label collection.
@@ -48,7 +75,25 @@ Factor Surveys collect the independent variables—the features used to predict 
 
 Factor Surveys are designed for efficiency, typically comprising 10–15 objective questions completable in approximately 5 minutes. Unlike Target Surveys, which measure latent constructs, Factor Surveys collect observable facts amenable to direct machine learning ingestion.
 
-#### 3.2.3 Survey Linkage and Study Configuration
+#### 3.2.3 Factor Surveys as Advisor Data Collection Tools
+
+Beyond their role as ML feature vectors, Factor Surveys serve a critical function for advisors: they **systematize the collection of transfer-specific information** that advisors would otherwise gather through lengthy, inconsistent interviews. Prior to ACOSUS, an advisor seeking to understand a transfer student's financial situation, support systems, and institutional fit would need to conduct a 15–20 minute intake conversation—and the resulting information would exist only in personal notes, unavailable to other advisors or institutional systems.
+
+Factor Surveys transform this ad-hoc process into structured data collection with several benefits for advising practice:
+
+1. **Consistency**: Every transfer student answers the same questions, enabling meaningful cohort-level comparisons and ensuring no critical risk factors are overlooked.
+
+2. **Accessibility**: Survey responses are immediately available in the advisor dashboard, eliminating the need to search emails, notes, or schedule follow-up conversations.
+
+3. **Longitudinal Tracking**: As students complete Factor Surveys across semesters, advisors can observe changes in financial stability, confidence levels, and social integration over time.
+
+4. **Informed Intervention**: Advisors can review a student's complete profile—including ML-generated predictions and similar student comparisons—before meetings, enabling more targeted and efficient advising sessions.
+
+The advisor portal provides a unified interface where advisors can search for students, view complete profiles organized by category (academic, financial, personal), and manage survey completion. Advisors can also complete surveys on behalf of students during in-person advising sessions through an "Act-As" capability, ensuring that valuable information shared in conversation is captured systematically rather than lost in informal notes.
+
+This dual-purpose design—serving both ML prediction and advisor information needs—addresses the data fragmentation problem described in Section 3.1.1. Early estimates suggest that centralizing student information in ACOSUS reduces advisor preparation time from approximately 23 minutes to 7 minutes per student, a 70% reduction that allows advisors to spend more time on substantive guidance rather than data gathering. `[CHECK WITH PROFESSOR: Confirm time savings estimates]`
+
+#### 3.2.4 Survey Linkage and Study Configuration
 
 The system architecture permits flexible study configurations through survey linkage. A single Target Survey may be associated with multiple Factor Surveys, enabling researchers to investigate how different feature sets predict the same outcome measure. For example, one Factor Survey might focus exclusively on academic variables while another emphasizes psychosocial factors; both can predict against the same Target Survey's success rate. This design supports iterative refinement of predictive models as researchers identify which feature domains contribute most to prediction accuracy.
 
@@ -200,7 +245,7 @@ The base score is transformed to a final success rate (0–100%) through a calib
 | **Logistic** (recommended) | $\text{SR} = \frac{100}{1 + e^{-k(\text{Base} - 0.5)}}$ | S-curve; realistic uncertainty at extremes |
 | **Sigmoid** | $\text{SR} = 20 + \frac{70}{1 + e^{-k(\text{Base} - 0.5)}}$ | Compressed range (20–90%); conservative |
 
-**Table 1.** Calibration curve options for PWRS score transformation. The steepness parameter k defaults to 6 for logistic and 4 for sigmoid curves.
+**Table 2.** Calibration curve options for PWRS score transformation. The steepness parameter k defaults to 6 for logistic and 4 for sigmoid curves.
 
 The logistic calibration is recommended for most contexts because it naturally models the inherent uncertainty in student success prediction: even well-prepared students face challenges, and even underprepared students can succeed with effort and support. The S-curve prevents overconfident predictions at the extremes.
 
@@ -427,7 +472,32 @@ The ACOSUS platform is implemented as a three-tier web application separating pr
 | Authentication | JWT | Stateless session management |
 | Deployment | Docker, Nginx | Containerization, reverse proxy |
 
-**Table 2.** Technology stack for the ACOSUS platform.
+**Table 3.** Technology stack for the ACOSUS platform.
+
+### 4.4 Advisor Portal Implementation
+
+The advisor portal represents a key component of ACOSUS, providing the unified data access layer that addresses the fragmentation problem described in Section 3.1.1. The implementation includes:
+
+**Student Search and Discovery**: Advisors can search for students by name, email, or student ID. Search results display key summary information, enabling quick identification and navigation to detailed profiles.
+
+**Unified Profile Dashboard**: Each student's profile is organized into tabbed categories:
+- **Account**: Basic demographic and contact information
+- **Personal**: Personal circumstances, support systems, living situation
+- **Academic**: GPA history, credits transferred, enrollment status
+- **Dynamic Categories**: Additional tabs generated from Factor Survey responses, displaying financial circumstances, technical preparation, and other domain-specific factors
+
+This tabbed organization mirrors the Factor Survey structure, ensuring that advisors can quickly locate specific information categories without scrolling through lengthy forms.
+
+**Survey Management**: Advisors can view all surveys assigned to a student, track completion status, and review individual responses. The interface displays completion timestamps, modification history, and identifies which responses were entered by students versus advisors.
+
+**Act-As Capability**: During in-person advising sessions, advisors can complete surveys on behalf of students. This feature addresses scenarios where:
+- Students prefer verbal discussion over form completion
+- Technical barriers prevent student self-service
+- Time constraints require advisor-assisted data entry
+
+The system tracks which responses were entered by advisors versus students, maintaining audit trails for research validity.
+
+**Copy and Edit Workflow**: For iterative data refinement, advisors can duplicate existing survey attempts and modify specific responses. This creates a new versioned record while preserving the original, supporting scenarios where student circumstances change or initial responses require clarification.
 
 ---
 
@@ -526,7 +596,7 @@ This validation will establish the **true predictive accuracy** of ACOSUS models
 
 ### 6.1 Summary of Contributions
 
-This paper presents ACOSUS, an AI-driven advising system that addresses the unique challenges of supporting transfer students through three architectural innovations:
+This paper presents ACOSUS, an AI-driven advising system that addresses the unique challenges of supporting transfer students through four architectural innovations:
 
 1. **Progressive Learning Framework**: A phased approach that delivers immediate value with zero training data (Phase 1), transitions to instance-based prediction with minimal observations (Phase 2), and scales to neural network inference through generative augmentation (Phase 3). This framework solves the "cold start" problem that renders conventional machine learning infeasible for small transfer cohorts.
 
@@ -534,7 +604,9 @@ This paper presents ACOSUS, an AI-driven advising system that addresses the uniq
 
 3. **Feedback-Driven Pseudo-Labeling**: An active learning mechanism that reduces respondent burden by 60–70% while maintaining data quality through selective ground-truth collection when predictions diverge from student expectations.
 
-These contributions are grounded in prior research on transfer student success factors [1], [2], [5], [6], [7] and address documented gaps in existing advising systems, which rarely account for transfer-specific variables such as credit articulation, transfer shock, and belonging uncertainty [3], [4].
+4. **Advisor-Centric Data Centralization**: Beyond student-facing prediction, ACOSUS provides advisors with a unified platform that consolidates fragmented student data and captures transfer-specific latent factors—such as transfer shock indicators, belonging uncertainty, and financial anxiety—that are unavailable in traditional SIS, LMS, and financial aid systems. By systematizing information collection through Factor Surveys, the platform reduces advisor preparation time by an estimated 70% while ensuring consistent, longitudinal data capture across the advising relationship.
+
+These contributions are grounded in prior research on transfer student success factors [1], [2], [5], [6], [7] and address documented gaps in existing advising systems, which rarely account for transfer-specific variables such as credit articulation, transfer shock, and belonging uncertainty [3], [4]. The advisor-centric design responds to findings that advisors spend 40–60% of their time gathering information from disparate systems [9], time that could otherwise support substantive student guidance.
 
 ### 6.2 Limitations
 
@@ -556,7 +628,7 @@ Several limitations frame the current work:
 
 **Cross-Institutional Deployment**: The modular architecture supports multi-institutional deployment, enabling larger-scale validation and potentially federated learning approaches that share model improvements without sharing raw student data.
 
-**Advisor Interface Development**: While the current implementation focuses on student-facing features, planned enhancements include advisor dashboards for cohort-level analytics and early-alert integration.
+**Advisor Dashboard Enhancements**: The current advisor portal provides individual student profile management and survey administration. Future enhancements will extend this foundation to include cohort-level analytics (aggregate risk distributions, completion rate tracking), early-alert integration (automatic notifications when students exhibit risk indicators), and intervention tracking (documenting advisor actions and correlating them with student outcomes).
 
 ---
 
@@ -578,27 +650,35 @@ Several limitations frame the current work:
 
 [8] F. B. Baker and S.-H. Kim, *Item Response Theory: Parameter Estimation Techniques*, 2nd ed. New York: Marcel Dekker, 2004.
 
+[9] Y. Wan, X. Wang, S. Rayana, S. Bogle, and P. Aggarwal, "A Survey of Student Counseling Systems in Higher Education," in *Proc. Americas Conference on Information Systems (AMCIS)*, 2023. `[CHECK WITH PROFESSOR: Verify citation details for AMCIS 2023 paper on counseling systems]`
+
 ---
 
 ## Notes and Placeholders for Review
 
 The following items require verification or additional information:
 
-1. **Section 3.3.1** - Bootstrap threshold of 10 students: Is this threshold correct and should it be configurable per study?
+1. **Section 3.1.1** - Time estimates for advisor data gathering: Presentation cites ~23 min/student, 38 hours/week. Confirm these figures.
 
-2. **Section 3.3.3** - GAN augmentation ratio (100 real → 400-500 synthetic): Confirm specific ratio and validation metrics for synthetic data quality (e.g., Kolmogorov-Smirnov test, correlation preservation).
+2. **Section 3.2.3** - Advisor time savings (23 min → 7 min, 70% reduction): Confirm these estimates or adjust language.
 
-3. **Section 3.3.3** - Neural network architecture details: Pending finalization based on empirical tuning.
+3. **Section 3.3.1** - Bootstrap threshold of 10 students: Is this threshold correct and should it be configurable per study?
 
-4. **Section 3.5.2** - Estimated percentage of high-rating feedback (50-70%): Confirm based on pilot data or adjust to "expected" rather than estimated.
+4. **Section 3.3.3** - GAN augmentation ratio (100 real → 400-500 synthetic): Confirm specific ratio and validation metrics for synthetic data quality (e.g., Kolmogorov-Smirnov test, correlation preservation).
 
-5. **Section 3.7** - Performance metrics for model validation: Likely MAE, RMSE, R² but confirm preferred metrics.
+5. **Section 3.3.3** - Neural network architecture details: Pending finalization based on empirical tuning.
 
-6. **Section 5.1.2** - Institution name and compensation details for pilot study.
+6. **Section 3.5.2** - Estimated percentage of high-rating feedback (50-70%): Confirm based on pilot data or adjust to "expected" rather than estimated.
 
-7. **Section 5.4** - Timeline and specific outcome measures for longitudinal validation.
+7. **Section 3.7** - Performance metrics for model validation: Likely MAE, RMSE, R² but confirm preferred metrics.
 
-8. **Section 6.3** - Specific GAN research directions for future work.
+8. **Section 5.1.2** - Institution name and compensation details for pilot study.
+
+9. **Section 5.4** - Timeline and specific outcome measures for longitudinal validation.
+
+10. **Section 6.3** - Specific GAN research directions for future work.
+
+11. **Reference [9]** - Verify citation details for AMCIS 2023 paper on counseling systems (Wan et al.).
 
 ---
 
