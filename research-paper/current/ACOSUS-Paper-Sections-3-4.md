@@ -31,34 +31,43 @@ Beyond their role as machine learning feature vectors, Factor Surveys serve a cr
 
 ### 3.3 The Progressive Learning Framework
 
-The defining innovation of ACOSUS is its Progressive Learning Framework, which structures the system's predictive intelligence into three developmental phases that activate automatically as data accumulates. In **Phase 1 (Bootstrap, N < 10)**, the system operates in data-collection mode where students complete both Target and Factor Surveys to seed the dataset with high-quality labeled observations; no predictions are generated. In **Phase 2 (Instance-Based, 10 ≤ N < 100)**, the system transitions to active prediction using K-Nearest Neighbors regression, where students complete only the Factor Survey, receive a prediction, and provide feedback. In **Phase 3 (Neural Network, N ≥ 100)**, the system enables neural network training augmented by synthetic data generation to overcome the small-sample limitation, with validation performed exclusively on real student data.
+The defining innovation of ACOSUS is its Progressive Learning Framework (Figure 1), which structures the system's predictive intelligence into three developmental phases that activate automatically as data accumulates. In **Phase 1 (Bootstrap, N < 10)**, the system operates in data-collection mode where students complete both Target and Factor Surveys to seed the dataset with high-quality labeled observations; no predictions are generated, and labels are stored for future training. In **Phase 2 (Instance-Based, 10 ≤ N < 100)**, the system transitions to active prediction using K-Nearest Neighbors regression with k = √N; students complete only the Factor Survey, receive a prediction, provide feedback, and either accept the prediction as a pseudo-label or complete the Target Survey for ground-truth correction. In **Phase 3 (Neural Network, N ≥ 100)**, the system enables neural network training augmented by GAN-generated synthetic data to overcome the small-sample limitation, with validation performed exclusively on real student data and continuous model improvement.
+
+![Figure 1](./acosus-progressive-learning-framework.png)
 
 ```mermaid
 flowchart LR
     subgraph Phase1["Phase 1: Bootstrap"]
-        P1a["N < 10 students"]
-        P1b["Data collection only"]
-        P1c["No predictions"]
+        P1head["N < 10 Students"]
+        P1box["• Data Collection Only<br/>• No Predictions"]
+        P1student["Student completes<br/>Target + Factor Surveys"]
+        P1outcome["Label stored for<br/>future training"]
     end
 
     subgraph Phase2["Phase 2: Instance-Based"]
-        P2a["10 ≤ N < 100"]
-        P2b["KNN predictions"]
-        P2c["Feedback collection"]
+        P2head["10 ≤ N ≤ 100 Students"]
+        P2box["• KNN Prediction +<br/>Feedback Loop<br/>• k = √N"]
+        P2student["Student completes<br/>Factor Surveys only"]
+        P2outcome["Prediction displayed<br/>Feedback requested<br/>Pseudo-label or correct"]
     end
 
     subgraph Phase3["Phase 3: Neural Network"]
-        P3a["N ≥ 100"]
-        P3b["NN predictions"]
-        P3c["Synthetic augmentation"]
+        P3head["N ≥ 100 Students"]
+        P3box["• Neural Network +<br/>GAN Augment<br/>• Synthetic Data"]
+        P3student["Student completes<br/>Factor Surveys only"]
+        P3outcome["NN prediction<br/>Feedback requested<br/>Continuous improve"]
     end
 
     Phase1 -->|"10th student"| Phase2
     Phase2 -->|"100th student"| Phase3
     Phase3 -.->|"NN underperforms"| Phase2
+
+    style P1box fill:#d4edda,stroke:#28a745,stroke-dasharray: 5 5
+    style P2box fill:#cce5ff,stroke:#007bff,stroke-dasharray: 5 5
+    style P3box fill:#ffe5d0,stroke:#fd7e14,stroke-dasharray: 5 5
 ```
 
-**Figure 1.** The Progressive Learning Framework transitions through three phases as data accumulates, with automatic fallback if neural network performance does not exceed the instance-based baseline.
+**Figure 1.** The Progressive Learning Framework transitions through three phases as data accumulates. Each phase specifies what students complete, how predictions are generated, and how the system learns from feedback.
 
 ### 3.4 Priority-Weighted Response Scoring
 
