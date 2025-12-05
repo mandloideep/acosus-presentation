@@ -12,7 +12,7 @@ The transfer student population presents a unique challenge for predictive analy
 
 The dominant paradigm in educational data mining favors large-scale approaches: aggregate registrar feeds, learning management system clickstreams, and institutional research databases containing tens of thousands of student records [14]. Such approaches are poorly suited to transfer-student advising for three reasons. First, transfer cohorts are inherently small—a computing department may admit thirty to fifty transfer students per year, yielding insufficient observations for deep learning architectures. Second, the variables most predictive of transfer success—credit articulation outcomes, "transfer shock" severity, belonging uncertainty, and financial precarity—are seldom captured in standard institutional systems [3], [5], [6]. Third, academic advisors lack unified access to the information they need to support transfer students effectively; prior research documents that advisors spend significant time gathering student information from disparate sources before they can provide meaningful guidance [8], [17].
 
-ACOSUS addresses these challenges through a "Small Data" design philosophy built on three principles: (1) **Immediate Utility**—the system must provide meaningful feedback to the very first user, even with zero historical data, using expert-defined heuristics; (2) **Graceful Evolution**—as the dataset grows, the system must seamlessly transition from heuristic scoring to instance-based learning to neural network inference without requiring manual intervention; and (3) **Burden Minimization**—data collection must respect students' time constraints, particularly given that transfer students often juggle employment, family responsibilities, and academic demands [6], [12].
+ACOSUS addresses these challenges through a "Small Data" design philosophy built on three principles: (1) **Immediate Utility**—even before predictions are available, the system provides value through structured data collection; advisors gain immediate access to organized student profiles, and the Bootstrap phase seeds high-quality labeled data for future model training; (2) **Graceful Evolution**—as the dataset grows, the system seamlessly transitions from data collection to instance-based learning to neural network inference without requiring manual intervention; and (3) **Burden Minimization**—data collection must respect students' time constraints, particularly given that transfer students often juggle employment, family responsibilities, and academic demands [6], [12].
 
 ### 3.2 The Dual-Survey Architecture
 
@@ -84,52 +84,69 @@ The ACOSUS platform is implemented as a three-tier web application separating pr
 
 ### 4.1 High-Level Architecture
 
-The system comprises four primary layers connected through well-defined interfaces. The **Client Layer** provides role-specific interfaces through a React-based Single Page Application, with distinct portals for students (survey completion, prediction viewing, feedback submission), advisors (student search, unified profile viewing, survey management), and administrators (survey configuration, model training triggers). The **Application Layer** orchestrates all business logic through a Node.js/Express backend, handling authentication via JSON Web Tokens, survey workflow management, PWRS calculation, and communication with the ML layer. The **Data Layer** uses MongoDB for flexible document storage, accommodating evolving survey instruments without migration overhead. The **ML Layer** operates as a separate Python/Flask service handling computationally intensive tasks—feature normalization, KNN prediction, GAN training, and neural network inference—with asynchronous job queues preventing long-running training tasks from blocking the main application.
+The system comprises four primary layers connected through well-defined interfaces (Figure 2). The **Presentation Layer** provides role-specific interfaces through a React-based Single Page Application with TypeScript and Tailwind CSS, with distinct portals for students (profile, survey completion, prediction viewing, feedback submission), advisors (student search, unified profile viewing, survey management), and administrators (survey configuration, model training triggers, analytics). The **Business Logic Layer** orchestrates all business logic through a Node.js/Express backend, with core services for authentication, survey management, PWRS calculation, and training triggers. The **Data Layer** uses MongoDB for flexible document storage—users, surveys (Target and Factor), responses, model metadata, and feedback records—accommodating evolving survey instruments without migration overhead. The **ML Layer** operates as a separate Python/Flask service (Model Server) handling computationally intensive tasks: data normalization, KNN implementation, GAN training pipeline, neural network inference, and model versioning—with asynchronous job queues preventing long-running training tasks from blocking the main application.
+
+![Figure 2](./acosus-architecture.png)
 
 ```mermaid
 flowchart TB
-    subgraph Client["Client Layer"]
-        subgraph Portals["Role-Based Portals"]
-            Student["Student Portal<br/>Survey · Prediction · Feedback"]
-            Advisor["Advisor Portal<br/>Search · Profile · Manage"]
-            Admin["Admin Portal<br/>Configure · Train · Analytics"]
+    subgraph Presentation["PRESENTATION LAYER (Frontend)"]
+        direction LR
+        Tech1["React + TypeScript + Tailwind CSS"]
+        subgraph Portals[" "]
+            direction LR
+            Student["Student Portal<br/>Profile | Survey |<br/>Prediction | Feedback"]
+            Advisor["Advisor Portal<br/>Search | Profile | Manage"]
+            Admin["Admin Portal<br/>Configure Survey | Train |<br/>Analytics"]
         end
     end
 
-    subgraph App["Application Layer"]
-        API["REST API<br/>(Node.js/Express)"]
-        subgraph Services["Core Services"]
-            Auth["Auth<br/>(JWT)"]
-            Survey["Survey<br/>Manager"]
+    subgraph Business["BUSINESS LOGIC LAYER (Backend)"]
+        Tech2["Node.js + Express"]
+        subgraph Services[" "]
+            direction LR
+            Auth["Auth"]
+            SurveyMgmt["Survey<br/>Management"]
             PWRSEngine["PWRS<br/>Engine"]
+            TrainTrigger["Training<br/>Trigger"]
         end
     end
 
-    subgraph Data["Data Layer"]
-        DB[("MongoDB<br/>Users · Surveys<br/>Responses · Models")]
-    end
-
-    subgraph ML["ML Layer"]
-        subgraph MLServices["Model Services (Python/Flask)"]
-            Predict["Prediction<br/>Service"]
-            Train["Training<br/>Service"]
+    subgraph DataLayer["DATA LAYER"]
+        MongoDB["MongoDB"]
+        subgraph DataItems[" "]
+            direction TB
+            D1["• Users"]
+            D2["• Surveys (Target + Factor)"]
+            D3["• Responses"]
+            D4["• Model Metadata"]
+            D5["• Feedback Records"]
         end
-        Models[("Model<br/>Storage")]
     end
 
-    Client --> API
-    API --> Services
-    Services --> DB
-    API <--> MLServices
-    MLServices <--> Models
+    subgraph MLLayer["ML LAYER (Model Server)"]
+        Tech3["Python + Flask"]
+        subgraph MLServices[" "]
+            direction TB
+            M1["• Data Normalizer"]
+            M2["• KNN Implementation"]
+            M3["• GAN Training Pipeline"]
+            M4["• Neural Network Inference"]
+            M5["• Model Versioning"]
+        end
+    end
 
-    style Client fill:#e3f2fd
-    style App fill:#fff3e0
-    style Data fill:#e8f5e9
-    style ML fill:#fce4ec
+    Presentation -->|"HTTPS / REST API"| Business
+    Business --> DataLayer
+    Business --> MLLayer
+
+    style Presentation fill:#e3f2fd
+    style Business fill:#fff3e0
+    style DataLayer fill:#e8f5e9
+    style MLLayer fill:#fce4ec
 ```
 
-**Figure 2.** ACOSUS system architecture showing the separation of concerns across client, application, data, and machine learning layers, with data flows between components.
+**Figure 2.** ACOSUS system architecture showing the separation of concerns across presentation, business logic, data, and machine learning layers.
 
 ### 4.2 Component Overview
 
