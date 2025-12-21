@@ -10,9 +10,87 @@ The transfer student population presents a unique challenge for predictive analy
 
 ### 3.1 Architectural Philosophy: Small Data by Design
 
-The dominant paradigm in educational data mining favors large-scale approaches: aggregate registrar feeds, learning management system clickstreams, and institutional research databases containing tens of thousands of student records [14]. Such approaches are poorly suited to transfer-student advising for three reasons. First, transfer cohorts are inherently small—a computing department may admit thirty to fifty transfer students per year, yielding insufficient observations for deep learning architectures. Second, the variables most predictive of transfer success—credit articulation outcomes, "transfer shock" severity, belonging uncertainty, and financial precarity—are seldom captured in standard institutional systems [3], [5], [6]. Third, academic advisors lack unified access to the information they need to support transfer students effectively; prior research documents that advisors spend significant time gathering student information from disparate sources before they can provide meaningful guidance [8], [17].
+The dominant paradigm in educational data mining favors large-scale approaches: aggregate registrar feeds, learning management system clickstreams, and institutional research databases containing tens of thousands of student records [14]. Such approaches are poorly suited to transfer-student advising for three reasons. First, transfer cohorts are inherently small—a computing department may admit thirty to fifty transfer students per year, yielding insufficient observations for conventional predictive architectures. Second, the variables most predictive of transfer success—credit articulation outcomes, "transfer shock" severity, belonging uncertainty, and financial precarity—are seldom captured in standard institutional systems [3], [5], [6]. Third, academic advisors lack unified access to the information they need to support transfer students effectively; prior research documents that advisors spend significant time gathering student information from disparate sources before they can provide meaningful guidance [8], [17].
 
-ACOSUS addresses these challenges through a "Small Data" design philosophy built on three principles: (1) **Immediate Utility**—even before predictions are available, the system provides value through structured data collection; advisors gain immediate access to organized student profiles, and the Bootstrap phase seeds high-quality labeled data for future model training; (2) **Graceful Evolution**—as the dataset grows, the system seamlessly transitions from data collection to instance-based learning to neural network inference without requiring manual intervention; and (3) **Burden Minimization**—data collection must respect students' time constraints, particularly given that transfer students often juggle employment, family responsibilities, and academic demands [6], [12].
+ACOSUS addresses these challenges through a modular, compartmentalized, and scalable framework designed explicitly for data-scarce environments. The architecture embodies three foundational tenets: (1) **Immediate Utility**—even before predictive capabilities emerge, the system delivers value through structured data acquisition; advisors gain immediate access to organized student profiles, while the initial data collection phase seeds high-quality labeled observations for subsequent model development; (2) **Progressive Sophistication**—as the corpus of observations expands, the system's predictive intelligence matures automatically, transitioning through increasingly capable inference mechanisms without requiring manual reconfiguration; and (3) **Burden Minimization**—data collection instruments must respect students' temporal constraints, particularly given that transfer students often navigate concurrent employment, familial responsibilities, and academic demands [6], [12].
+
+Central to this philosophy is the concept of **algorithm-agnostic design**. ACOSUS functions as a pluggable framework where each computational component can be substituted without disrupting the overall system architecture. This modularity enables researchers and practitioners to adapt the platform to institutional contexts, swap inference algorithms as methodological advances emerge, and validate alternative approaches through controlled experimentation.
+
+#### The Three-Stage Progressive Pipeline
+
+To overcome the data scarcity inherent in small cohort populations, ACOSUS implements a **three-stage progressive pipeline** that systematically builds predictive capability as observations accumulate:
+
+**Stage 1: Foundation (Data Acquisition & Initial Inference).** During the foundational phase, the system prioritizes the collection of high-quality labeled observations. Students complete comprehensive survey instruments that capture both outcome measures and predictive features. Once a minimal viable corpus is established, the system activates lightweight inference mechanisms that leverage similarity-based reasoning to generate initial predictions. This stage employs computationally efficient methods that perform reliably with limited training samples.
+
+**Stage 2: Augmentation (Synthetic Data Generation).** The augmentation phase addresses the fundamental limitation of small sample sizes by employing generative modeling techniques to synthesize additional training observations. These methods learn the underlying distributional characteristics of the real data and produce synthetic samples that expand the training corpus while preserving statistical properties. The augmented dataset provides sufficient volume to support more sophisticated learning algorithms.
+
+**Stage 3: Refinement (Deep Representation Learning).** With an adequately sized training corpus—comprising both authentic and synthetically generated observations—the system transitions to advanced non-linear modeling approaches capable of capturing complex relationships between predictive features and success outcomes. This phase leverages deep representation learning to extract hierarchical feature abstractions and produce refined predictions. Continuous feedback mechanisms enable ongoing model improvement as new authentic observations become available.
+
+<!-- VERSION A: Moderately Abstract Terminology
+Stage 1 uses "instance-based learning" for similarity-based inference
+Stage 2 uses "generative data augmentation" for synthetic sample generation
+Stage 3 uses "deep representation learning" for non-linear function approximation
+-->
+
+<!-- VERSION B: Highly Abstract Terminology
+Stage 1 uses "similarity-based inference" for initial predictions
+Stage 2 uses "synthetic sample generation" for corpus expansion
+Stage 3 uses "non-linear function approximation" for refined predictions
+-->
+
+The framework's modularity ensures that each stage operates as an **interchangeable component**. Alternative inference algorithms may be substituted at Stage 1 (any similarity-based or instance-based method), alternative generative techniques may be employed at Stage 2 (oversampling strategies, distributional modeling, or adversarial generation), and alternative architectures may be deployed at Stage 3 (any deep learning topology suited to the prediction task). This architectural flexibility positions ACOSUS not merely as a specific implementation, but as a generalizable framework adaptable to diverse educational prediction contexts.
+
+```mermaid
+flowchart TB
+    subgraph Framework["ACOSUS PROGRESSIVE LEARNING FRAMEWORK"]
+        direction TB
+
+        subgraph Stage1["STAGE 1: FOUNDATION"]
+            S1Title["Data Acquisition & Initial Inference"]
+            S1Desc["• Collect labeled observations<br/>• Establish ground truth corpus<br/>• Activate lightweight inference"]
+            S1Plug["⚙️ Pluggable Component:<br/>Any similarity-based method"]
+        end
+
+        subgraph Stage2["STAGE 2: AUGMENTATION"]
+            S2Title["Synthetic Data Generation"]
+            S2Desc["• Learn distributional characteristics<br/>• Generate synthetic samples<br/>• Expand training corpus"]
+            S2Plug["⚙️ Pluggable Component:<br/>Any generative technique"]
+        end
+
+        subgraph Stage3["STAGE 3: REFINEMENT"]
+            S3Title["Deep Representation Learning"]
+            S3Desc["• Train on augmented corpus<br/>• Extract feature abstractions<br/>• Produce refined predictions"]
+            S3Plug["⚙️ Pluggable Component:<br/>Any deep learning architecture"]
+        end
+    end
+
+    subgraph Input["DATA INPUT"]
+        Surveys["Survey Responses<br/>(Features X, Labels Y)"]
+    end
+
+    subgraph Output["PREDICTION OUTPUT"]
+        Score["Readiness Score<br/>(0-1 continuous)"]
+    end
+
+    subgraph Feedback["FEEDBACK LOOP"]
+        FB["Student Feedback<br/>→ Continuous Improvement"]
+    end
+
+    Input --> Stage1
+    Stage1 -->|"Corpus threshold met"| Stage2
+    Stage2 -->|"Augmented corpus ready"| Stage3
+    Stage3 --> Output
+    Output --> Feedback
+    Feedback -.->|"New authentic data"| Stage1
+    Feedback -.->|"Model refinement"| Stage3
+
+    style Stage1 fill:#d4edda,stroke:#28a745
+    style Stage2 fill:#fff3cd,stroke:#ffc107
+    style Stage3 fill:#cce5ff,stroke:#007bff
+    style Framework fill:#f8f9fa,stroke:#6c757d
+```
+
+**Figure 4.** The Three-Stage Progressive Pipeline. Each stage represents a pluggable component that can be substituted with alternative algorithms. The framework progresses from data acquisition through augmentation to refined prediction, with feedback loops enabling continuous improvement.
 
 ### 3.2 The Dual-Survey Architecture
 
