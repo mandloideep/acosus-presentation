@@ -16,9 +16,70 @@ ACOSUS addresses these challenges through a "Small Data" design philosophy built
 
 ### 3.2 The Dual-Survey Architecture
 
-A fundamental tension exists in predictive modeling for student success: the features that predict outcomes (academic preparation, financial stability, social support) differ from the outcomes themselves (graduation, GPA, career placement). ACOSUS resolves this tension through a Dual-Survey Architecture that cleanly separates feature collection from label collection. **Target Surveys** capture the dependent variable—the "success rate" that serves as the prediction target—either through a single direct self-assessment question or through multiple items measuring constructs such as academic confidence, time management self-efficacy, and social belonging. **Factor Surveys** collect the independent variables used for prediction, including academic background (pre-transfer GPA, credits transferred, prior institution type), financial circumstances (employment intensity, perceived financial security), logistical factors (commute time, caregiving responsibilities), technical preparation (programming experience for computing majors), and temporal factors (expected time to degree).
+Prior research on transfer student success has identified multiple dimensions that contribute to successful degree completion, including academic self-efficacy, institutional commitment, social integration, and career goal clarity [2], [3], [5]. Our earlier factor analysis work identified clusters of social-cognitive variables—academic confidence, time management, financial stability, and support systems—that distinguish successful transfer students from those who struggle [REF: 2023 Factor Analysis Paper]. Building on these findings, ACOSUS operationalizes "success" as a **Readiness Score (Y)**—a continuous variable in the range [0, 1] representing the student's self-assessed likelihood of academic success across these dimensions. The system then learns to predict Y from a set of observable features **X** (academic background, financial circumstances, logistical factors) through the function Y = f(X).
 
-Beyond their role as machine learning feature vectors, Factor Surveys serve a critical function for advisors: they systematize the collection of transfer-specific information that advisors would otherwise gather through lengthy, inconsistent interviews. This dual-purpose design addresses the data fragmentation problem—every transfer student answers the same questions, enabling meaningful cohort-level comparisons while ensuring no critical risk factors are overlooked. Survey responses are immediately available in the advisor dashboard, eliminating the need to search emails, notes, or schedule follow-up conversations. The system architecture permits flexible study configurations through survey linkage, where a single Target Survey may be associated with multiple Factor Surveys, enabling researchers to investigate how different feature sets predict the same outcome measure.
+ACOSUS implements this predictive framework through a Dual-Survey Architecture that cleanly separates label collection from feature collection. **Target Surveys** capture the dependent variable Y—the readiness/success rate—through two supported modes: (1) a single direct self-assessment question where students rate their readiness on a 0–100 scale, or (2) a multi-question instrument measuring constructs such as academic confidence, commitment, time management self-efficacy, and career motivation, which are aggregated into a single score via Priority-Weighted Response Scoring (Section 3.4). **Factor Surveys** collect the independent variables X used for prediction, organized into categories: academic background (pre-transfer GPA, credits transferred, standardized test scores), financial circumstances (scholarship status, family support, employment intensity), logistical factors (commute distance, work hours), and interest/experience indicators (career aspiration, prior subject experience).
+
+Beyond their role as machine learning feature vectors, Factor Surveys serve a critical function for advisors: they systematize the collection of transfer-specific information that advisors would otherwise gather through lengthy, inconsistent interviews. This dual-purpose design addresses the data fragmentation problem—every transfer student answers the same questions, enabling meaningful cohort-level comparisons while ensuring no critical risk factors are overlooked. Survey responses are immediately available in the advisor dashboard, eliminating the need to search emails, notes, or schedule follow-up conversations.
+
+The system architecture permits flexible study configurations through **survey linkage**, where Target Surveys and Factor Surveys are connected through explicit associations. A single Target Survey (measuring Y) may be linked to multiple Factor Surveys (measuring different feature sets X₁, X₂, X₃), enabling researchers to investigate which feature combinations best predict success. This linkage architecture provides several research advantages: (1) **comparative feature analysis**—researchers can deploy alternative Factor Surveys to the same cohort and compare predictive validity across different feature sets; (2) **longitudinal adaptability**—as research identifies new predictors of transfer success (e.g., post-pandemic factors, emerging transfer shock indicators), new Factor Surveys can be added without disrupting existing data collection or invalidating historical comparisons; (3) **cohort customization**—different academic programs can deploy program-specific Factor Surveys (e.g., technical preparation for computing majors) while maintaining a common outcome measure; and (4) **instrument validation**—multiple Target Survey formulations (single-question vs. multi-question) can be linked to the same Factor Surveys to compare how different operationalizations of success affect prediction accuracy.
+
+```mermaid
+flowchart TB
+    subgraph TargetSurveys["TARGET SURVEYS (Label: Y)"]
+        direction TB
+        TS1["Single-Question<br/>Direct 0-100 Scale"]
+        TS2["Multi-Question<br/>PWRS Aggregated"]
+    end
+
+    subgraph FactorSurveys["FACTOR SURVEYS (Features: X)"]
+        direction TB
+        FS1["Academic Background<br/>GPA, SAT, Credits"]
+        FS2["Financial Support<br/>Scholarship, Family Income"]
+        FS3["Logistics & Commitment<br/>Distance, Work Hours"]
+        FS4["Interest & Experience<br/>Career Goals, Prior Experience"]
+        FS5["[Future Surveys]<br/>Adaptable to New Predictors"]
+    end
+
+    subgraph Processing["DATA PROCESSING"]
+        direction LR
+        Norm["Feature<br/>Normalization<br/>(0-10 scale)"]
+        PWRS["PWRS<br/>Calculation<br/>(if multi-Q)"]
+    end
+
+    subgraph Output["ML MODEL"]
+        direction TB
+        Model["Y = f(X)<br/>Predict Readiness"]
+        Score["Readiness Score<br/>(0-1 continuous)"]
+    end
+
+    %% Linkage connections
+    TS1 -.->|"linkage"| FS1
+    TS1 -.->|"linkage"| FS2
+    TS1 -.->|"linkage"| FS3
+    TS2 -.->|"linkage"| FS1
+    TS2 -.->|"linkage"| FS3
+    TS2 -.->|"linkage"| FS4
+
+    %% Data flow
+    FS1 --> Norm
+    FS2 --> Norm
+    FS3 --> Norm
+    FS4 --> Norm
+    TS2 --> PWRS
+
+    Norm --> Model
+    PWRS --> Model
+    TS1 --> Model
+    Model --> Score
+
+    style TargetSurveys fill:#fff3e0
+    style FactorSurveys fill:#e3f2fd
+    style Processing fill:#f3e5f5
+    style Output fill:#e8f5e9
+```
+
+**Figure 3.** Dual-Survey Architecture with survey linkage. Target Surveys collect the label (Y), Factor Surveys collect features (X). Dashed lines show linkage relationships enabling flexible study configurations.
 
 **Table 1.** Comparison of data available in traditional institutional systems versus transfer-specific latent factors captured by ACOSUS.
 
