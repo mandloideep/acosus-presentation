@@ -10,15 +10,15 @@ Four transfer students (N=4) from Northeastern Illinois University participated 
 
 #### Procedure
 
-Participants completed the full ACOSUS workflow, which consisted of three phases:
+This evaluation was conducted during the foundation phase of the progressive learning pipeline (see Section 3.2), when the system was actively collecting labeled observations to establish the initial training corpus. At this stage, no predictive model had yet been trained—the system's primary function was structured data collection rather than prediction generation.
+
+Participants completed the ACOSUS data collection workflow, which consisted of two phases:
 
 1. **Factor Survey Completion**: Participants completed the Factor Survey instrument capturing academic background, financial circumstances, and logistical factors (see Section 3.1).
 
-2. **Target Survey Completion**: Participants completed a Target Survey providing self-assessed success indicators, which were processed through the priority-weighted aggregation described in Section 4.1.
+2. **Target Survey Completion**: Participants completed a Target Survey providing self-assessed success indicators, which were processed through the priority-weighted aggregation described in Section 4.1 to generate their success label.
 
-3. **System Interaction**: Participants reviewed their generated readiness scores and system-provided recommendations.
-
-Following system interaction, participants completed a post-hoc feedback survey administered through Qualtrics. The feedback survey was designed based on the Technology Acceptance Model (TAM) framework [Davis, 1989] and included additional items assessing system-specific functionality. The study protocol received Institutional Review Board (IRB) approval prior to data collection.
+Following survey completion, participants completed a post-hoc feedback survey administered through Qualtrics. The feedback survey was designed based on the Technology Acceptance Model (TAM) framework [Davis, 1989] and included additional items assessing system-specific functionality. The study protocol received Institutional Review Board (IRB) approval prior to data collection.
 
 #### Data Collection Period
 
@@ -45,8 +45,8 @@ The post-hoc feedback survey comprised 25 analyzed items across six categories. 
 | **Perceived Usefulness (PU)** | 6 | "Using this AI counseling system enables me to accomplish tasks more quickly than other advising methods." |
 | **Perceived Ease of Use (PEOU)** | 6 | "Learning to operate this AI counseling system was easy for me." |
 | **Interface Assessment** | 3 | "The system interface was intuitive and easy to navigate." |
-| **System Accuracy** | 2 | "How accurate did you find the system's assessment of your academic success factors?" |
-| **Recommendation Quality** | 2 | "How relevant were the recommendations provided by the system to your specific situation?" |
+| **Data Capture Accuracy** | 2 | "How accurate did you find the system's assessment of your academic success factors?" |
+| **Survey Quality** | 2 | "How relevant were the questions to your specific situation?" |
 | **Behavioral Intention** | 2 | "How likely are you to continue using this system for academic planning?" |
 
 Open-ended questions captured qualitative feedback on interface difficulties, helpful features, missing capabilities, and redesign suggestions.
@@ -64,9 +64,9 @@ Analysis of the TAM-based constructs revealed strong positive perceptions across
 | Perceived Usefulness (PU) | 4.46 | 0.85 | 3 | 5 |
 | Perceived Ease of Use (PEOU) | 5.00 | 0.00 | 5 | 5 |
 | Interface Assessment | 4.75 | 0.50 | 4 | 5 |
-| System Accuracy | 4.50 | 0.58 | 4 | 5 |
-| Probability Alignment | 4.50 | 0.58 | 4 | 5 |
-| Recommendation Relevance | 4.25 | 0.96 | 3 | 5 |
+| Data Capture Accuracy | 4.50 | 0.58 | 4 | 5 |
+| PWRS Alignment | 4.50 | 0.58 | 4 | 5 |
+| Survey Relevance | 4.25 | 0.96 | 3 | 5 |
 | Actionability | 4.50 | 1.00 | 3 | 5 |
 | Likelihood to Continue | 4.75 | 0.50 | 4 | 5 |
 | Likelihood to Recommend | 4.25 | 1.50 | 2 | 5 |
@@ -77,13 +77,13 @@ Analysis of the TAM-based constructs revealed strong positive perceptions across
 
 Perceived Ease of Use achieved a perfect mean score (M=5.00, SD=0.00), indicating that all participants found the system straightforward to learn and operate. Perceived Usefulness was rated highly (M=4.46, SD=0.85), though with greater variance reflecting individual differences in how participants valued the system's utility for their specific situations.
 
-#### 5.3.2 System Evaluation Metrics
+#### 5.3.2 Data Capture and Survey Quality
 
-![Figure 8. System evaluation metrics including accuracy, probability alignment, and recommendation quality.](../04-evaluation/figs/fig2_system_evaluation.png)
+![Figure 8. System evaluation metrics including data capture accuracy and survey quality.](../04-evaluation/figs/fig2_system_evaluation.png)
 
-**Figure 8.** System evaluation metrics. All dimensions received ratings of 4.25 or higher, with system accuracy and probability alignment rated identically (M=4.50).
+**Figure 8.** Data capture and survey quality metrics. All dimensions received ratings of 4.25 or higher.
 
-System Accuracy (M=4.50, SD=0.58) and Probability Alignment (M=4.50, SD=0.58) received identical ratings, suggesting that the priority-weighted success rate calculations aligned with participants' self-perceptions of their academic situations. Recommendation Relevance showed the most variance (M=4.25, SD=0.96), reflecting the inherent difficulty of providing universally applicable guidance across diverse student circumstances.
+Data Capture Accuracy (M=4.50, SD=0.58) assessed whether the survey instruments adequately captured participants' academic situations. Probability Alignment (M=4.50, SD=0.58) measured whether the priority-weighted success rate calculation (derived from Target Survey responses) resonated with participants' self-perceptions—an important validation given that these calculated scores will serve as training labels. Survey Relevance showed the most variance (M=4.25, SD=0.96), reflecting individual differences in how applicable specific questions were to diverse transfer circumstances. Actionability (M=4.50, SD=1.00) assessed whether participants felt the data collection process provided useful self-reflection about their academic situation.
 
 #### 5.3.3 Interface Assessment
 
@@ -178,7 +178,7 @@ The pilot study provides preliminary evidence supporting the usability and perce
 
 1. **Ease of Use**: The perfect PEOU score (M=5.00) and consistent qualitative praise for interface design suggest the system successfully balances functionality with accessibility—a critical requirement for adoption among time-constrained transfer students.
 
-2. **Perceived Accuracy**: System accuracy (M=4.50) and probability alignment (M=4.50) ratings indicate that the priority-weighted success rate calculations produced results that resonated with participants' self-assessments, supporting the validity of the PWRS approach.
+2. **Label Validity**: Probability alignment (M=4.50) ratings indicate that the priority-weighted success rate calculations produced results that resonated with participants' self-assessments. This is critical validation for the foundation phase, as these calculated scores will serve as training labels—participant agreement suggests the PWRS approach generates meaningful ground truth.
 
 3. **Adoption Intent**: High likelihood to continue (M=4.75) suggests participants saw ongoing value in the system, supporting the sustainability of the advising approach.
 
