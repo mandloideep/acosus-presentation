@@ -30,9 +30,9 @@ Data were collected over a 16-day period from December 2–18, 2025. Mean survey
 
 Participants completed both core ACOSUS instruments prior to the feedback survey:
 
-- **Factor Survey**: 11 questions capturing academic background (GPA, credits transferred), financial circumstances (scholarship status, family support), and logistical factors (commute distance, work hours). All responses were normalized to a 0–10 scale using the type-aware processing described in Section 4.1.
+- **Factor Survey**: Captures academic background (GPA, credits transferred), financial circumstances (scholarship status, family support), and logistical factors (commute distance, work hours). All responses were normalized to a 0–10 scale using the type-aware processing described in Section 4.1.
 
-- **Target Survey**: 30 questions (21 active) measuring success-related constructs including academic confidence, institutional commitment, time management self-efficacy, and career motivation. Responses were aggregated via priority-weighted scoring to produce a single readiness label.
+- **Target Survey**: Measures success-related constructs including academic confidence, institutional commitment, time management self-efficacy, and career motivation. Responses were aggregated via priority-weighted scoring to produce a single readiness label.
 
 #### 5.2.2 TAM-Based Feedback Survey
 
@@ -40,14 +40,14 @@ The post-hoc feedback survey comprised 25 analyzed items across six categories. 
 
 **Table 4.** Feedback survey constructs and items.
 
-| Construct | # Items | Example Item |
-|-----------|---------|--------------|
-| **Perceived Usefulness (PU)** | 6 | "Using this AI counseling system enables me to accomplish tasks more quickly than other advising methods." |
-| **Perceived Ease of Use (PEOU)** | 6 | "Learning to operate this AI counseling system was easy for me." |
-| **Interface Assessment** | 3 | "The system interface was intuitive and easy to navigate." |
-| **Data Capture Accuracy** | 2 | "How accurate did you find the system's assessment of your academic success factors?" |
-| **Survey Quality** | 2 | "How relevant were the questions to your specific situation?" |
-| **Behavioral Intention** | 2 | "How likely are you to continue using this system for academic planning?" |
+| Construct                        | # Items | Example Item                                                                                               |
+| -------------------------------- | ------- | ---------------------------------------------------------------------------------------------------------- |
+| **Perceived Usefulness (PU)**    | 6       | "Using this AI counseling system enables me to accomplish tasks more quickly than other advising methods." |
+| **Perceived Ease of Use (PEOU)** | 6       | "Learning to operate this AI counseling system was easy for me."                                           |
+| **Interface Assessment**         | 3       | "The system interface was intuitive and easy to navigate."                                                 |
+| **Data Capture Accuracy**        | 2       | "How accurate did you find the system's assessment of your academic success factors?"                      |
+| **Survey Quality**               | 2       | "How relevant were the questions to your specific situation?"                                              |
+| **Behavioral Intention**         | 2       | "How likely are you to continue using this system for academic planning?"                                  |
 
 Open-ended questions captured qualitative feedback on interface difficulties, helpful features, missing capabilities, and redesign suggestions.
 
@@ -59,17 +59,17 @@ Analysis of the TAM-based constructs revealed strong positive perceptions across
 
 **Table 5.** Summary statistics for evaluation metrics (5-point Likert scale).
 
-| Metric | Mean | SD | Min | Max |
-|--------|------|-----|-----|-----|
-| Perceived Usefulness (PU) | 4.46 | 0.85 | 3 | 5 |
-| Perceived Ease of Use (PEOU) | 5.00 | 0.00 | 5 | 5 |
-| Interface Assessment | 4.75 | 0.50 | 4 | 5 |
-| Data Capture Accuracy | 4.50 | 0.58 | 4 | 5 |
-| PWRS Alignment | 4.50 | 0.58 | 4 | 5 |
-| Survey Relevance | 4.25 | 0.96 | 3 | 5 |
-| Actionability | 4.50 | 1.00 | 3 | 5 |
-| Likelihood to Continue | 4.75 | 0.50 | 4 | 5 |
-| Likelihood to Recommend | 4.25 | 1.50 | 2 | 5 |
+| Metric                       | Mean | SD   | Min | Max |
+| ---------------------------- | ---- | ---- | --- | --- |
+| Perceived Usefulness (PU)    | 4.46 | 0.85 | 3   | 5   |
+| Perceived Ease of Use (PEOU) | 5.00 | 0.00 | 5   | 5   |
+| Interface Assessment         | 4.75 | 0.50 | 4   | 5   |
+| Data Capture Accuracy        | 4.50 | 0.58 | 4   | 5   |
+| PWRS Alignment               | 4.50 | 0.58 | 4   | 5   |
+| Survey Relevance             | 4.25 | 0.96 | 3   | 5   |
+| Actionability                | 4.50 | 1.00 | 3   | 5   |
+| Likelihood to Continue       | 4.75 | 0.50 | 4   | 5   |
+| Likelihood to Recommend      | 4.25 | 1.50 | 2   | 5   |
 
 ![Figure 7. TAM construct scores showing Perceived Usefulness and Perceived Ease of Use.](../04-evaluation/figs/fig1_tam_metrics.png)
 
@@ -147,12 +147,12 @@ Thematic analysis of open-ended responses revealed four primary themes.
 
 **Table 6.** Qualitative themes and representative responses.
 
-| Theme | Count | Representative Quote |
-|-------|-------|---------------------|
-| **Usability** | 3 | "UI navigation is very user friendly"; "User interface was easy to understand and navigate" |
-| **Satisfaction** | 3 | "No feature was missing, experience was great"; "None, everything was clear" |
-| **Efficiency** | 1 | "Faster and more compatible" |
-| **Personalization** | 1 | "Make it tailored more towards individual users" |
+| Theme               | Count | Representative Quote                                                                        |
+| ------------------- | ----- | ------------------------------------------------------------------------------------------- |
+| **Usability**       | 3     | "UI navigation is very user friendly"; "User interface was easy to understand and navigate" |
+| **Satisfaction**    | 3     | "No feature was missing, experience was great"; "None, everything was clear"                |
+| **Efficiency**      | 1     | "Faster and more compatible"                                                                |
+| **Personalization** | 1     | "Make it tailored more towards individual users"                                            |
 
 #### Usability Theme
 
@@ -209,4 +209,4 @@ The pilot findings support proceeding to larger-scale evaluation with the follow
 
 ---
 
-*End of Section 5*
+_End of Section 5_
