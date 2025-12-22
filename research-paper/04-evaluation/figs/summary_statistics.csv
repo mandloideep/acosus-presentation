@@ -1,0 +1,10 @@
+Metric Category,Mean,Std Dev,Min,Max,N
+Perceived Usefulness (PU),4.458333333333333,0.8520212743559316,3,5,4
+Perceived Ease of Use (PEOU),5.0,0.0,5,5,4
+Interface Assessment,4.75,0.5,4,5,4
+System Accuracy,4.5,0.5773502691896257,4,5,4
+Probability Alignment,4.5,0.5773502691896257,4,5,4
+Recommendation Relevance,4.25,0.9574271077563381,3,5,4
+Actionability,4.5,1.0,3,5,4
+Likelihood to Continue,4.75,0.5,4,5,4
+Likelihood to Recommend,4.25,1.5,2,5,4
