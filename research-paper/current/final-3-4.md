@@ -132,3 +132,151 @@ flowchart TB
 ```
 
 **Figure 4.** The Three-Stage Progressive Pipeline. Each stage represents a pluggable component that can be substituted with alternative algorithms. The framework progresses from data acquisition through augmentation to refined prediction, with feedback loops enabling continuous improvement.
+
+---
+
+## 4 System Implementation
+
+The ACOSUS platform translates the architectural principles described in Section 3 into a functional system. This section details how survey instruments capture and process heterogeneous student data (§4.1), the layered system architecture that supports both prediction and advising workflows (§4.2), and the configuration flexibility that enables researchers to adapt the framework to diverse institutional contexts (§4.3).
+
+### 4.1 Survey Data Processing
+
+The survey instruments described in Section 3.1 synthesize information collected from students into feature vectors suitable for predictive modeling. Each survey question serves as a proxy for an underlying success factor identified in prior research—our factor analysis work established mappings between observable indicators (e.g., scholarship status, commute distance) and latent constructs (e.g., financial stability, institutional commitment) that predict transfer student outcomes [REF: 2023 Factor Analysis Paper]. This literature-grounded design ensures that the data collection process captures theoretically meaningful variables rather than arbitrary demographics.
+
+#### Priority Weighting
+
+Not all factors contribute equally to student success. Research on transfer student outcomes consistently identifies certain variables—academic self-efficacy, financial stability, institutional fit—as more predictive than others [2], [5], [6]. ACOSUS operationalizes this differential importance through **priority scores**: each question receives an expert-assigned weight (1–10 scale) reflecting its relative contribution to the success construct. These priorities are informed by three sources: (1) effect sizes from prior quantitative studies on transfer student persistence, (2) factor loadings from our preliminary factor analysis, and (3) calibration feedback from academic advisors who observe these patterns in practice.
+
+The priority-weighted aggregation follows a straightforward formulation. For a survey with *n* questions, where question *i* has priority score *p_i*, the student selects an option with weightage *w_i^selected* from a maximum possible *w_i^max*:
+
+$$
+S = \frac{\sum_{i=1}^{n} \left(\frac{w_i^{selected}}{w_i^{max}} \times p_i\right)}{\sum_{i=1}^{n} p_i}
+$$
+
+This yields a normalized score in [0, 1] that accounts for both response quality and question importance. A logistic calibration curve is then applied to prevent overconfident predictions at the extremes.
+
+**Table 2.** Example priority score assignments based on literature-informed importance.
+
+| Factor Category | Example Question | Priority | Rationale |
+|-----------------|------------------|----------|-----------|
+| Academic Self-Efficacy | "How confident in your ability to succeed?" | 9 | Strong predictor of persistence (Bandura, 1997) |
+| Financial Stability | "Expected financial stress impact?" | 8 | Financial precarity affects retention [6] |
+| Institutional Commitment | "How committed to completing this program?" | 9 | Persistence indicator (Tinto, 1993) |
+| Logistics | "Commute distance to university?" | 6 | Practical barrier, moderate impact |
+
+This priority-weighted approach offers an additional advantage: the weights can serve as informative priors in probabilistic modeling frameworks. When the system transitions to more sophisticated prediction methods, priority scores provide a principled initialization—features with higher priorities receive greater initial influence, which the model can then refine based on observed data. This connection between expert knowledge and learned parameters supports Bayesian inference approaches where priority weights inform prior distributions over feature importance.
+
+#### Data Type Handling
+
+Survey responses encompass heterogeneous data types that require type-aware normalization before model ingestion. The distinction between **ordinal** and **cardinal** data is particularly important: ordinal responses (e.g., "Not confident" < "Somewhat confident" < "Very confident") carry inherent ordering that must be preserved, while cardinal responses (e.g., career aspiration categories) represent nominal distinctions without implied ranking.
+
+**Table 3.** Normalization strategies for different data types.
+
+| Data Type | Example | Normalization Method |
+|-----------|---------|---------------------|
+| **Ordinal** | GPA range: "3.0–3.5" | Direct option weightage (e.g., 8/10) |
+| **Cardinal** | Career: "Industry/Corporate" | Equal weightage or domain-specific mapping |
+| **Continuous** | SAT score: 1250 | Min-max scaling: $(x - min)/(max - min)$ |
+
+This type-aware processing ensures that the semantic meaning of responses is preserved during feature engineering—ordinal relationships remain ordered, nominal categories are not spuriously ranked, and continuous values are appropriately scaled.
+
+```mermaid
+flowchart LR
+    subgraph Collection["SURVEY COLLECTION"]
+        Q1["Question 1<br/>(Ordinal)"]
+        Q2["Question 2<br/>(Cardinal)"]
+        Q3["Question 3<br/>(Continuous)"]
+    end
+
+    subgraph Processing["DATA PROCESSING"]
+        direction TB
+        PW["Priority<br/>Weighting"]
+        TN["Type-Aware<br/>Normalization"]
+    end
+
+    subgraph Output["MODEL INPUT"]
+        FV["Normalized<br/>Feature Vector<br/>(0-10 scale)"]
+    end
+
+    Q1 --> PW
+    Q2 --> PW
+    Q3 --> PW
+    PW --> TN
+    TN --> FV
+
+    style Collection fill:#e3f2fd
+    style Processing fill:#fff3e0
+    style Output fill:#e8f5e9
+```
+
+**Figure 5.** Survey data processing pipeline. Raw responses undergo priority weighting and type-aware normalization to produce standardized feature vectors for model ingestion.
+
+### 4.2 System Architecture
+
+The ACOSUS platform implements a four-layer architecture that separates concerns across presentation, business logic, data persistence, and machine learning (Figure 6). This separation enables independent scaling of each layer and supports the system's dual purpose: serving student-facing predictions while centralizing advisor-facing information.
+
+The **Presentation Layer** provides role-specific interfaces through a web-based single-page application. Students access survey completion workflows, view predictions, and submit feedback. Advisors access a unified dashboard that consolidates student profiles—organized by the same categories as Factor Surveys—eliminating the need to gather information from disparate sources. Administrators configure survey instruments, trigger model training, and monitor system analytics.
+
+The **Business Logic Layer** orchestrates application workflows, enforcing the progressive learning framework's phase transitions and managing the feedback-driven pseudo-labeling process. This layer ensures students encounter appropriate interfaces based on current system state—data collection only during the foundation phase, prediction with feedback during subsequent phases.
+
+The **Data Layer** provides flexible document storage for users, surveys, responses, and model metadata. The schema-flexible design accommodates researcher-defined survey instruments without requiring database migrations as questions evolve.
+
+The **Model Layer** operates as a separate service handling computationally intensive tasks: data normalization, prediction inference across all three pipeline stages, and model training. Asynchronous job queues prevent long-running training tasks from blocking prediction requests. Model versioning ensures that only validated improvements reach production—new models must demonstrate improved accuracy on held-out real student data before deployment.
+
+```mermaid
+flowchart TB
+    subgraph Presentation["PRESENTATION LAYER"]
+        direction LR
+        Student["Student Portal<br/>Survey | Prediction | Feedback"]
+        Advisor["Advisor Portal<br/>Search | Profile | Dashboard"]
+        Admin["Admin Portal<br/>Configure | Train | Analytics"]
+    end
+
+    subgraph Business["BUSINESS LOGIC LAYER"]
+        direction LR
+        Auth["Authentication"]
+        Survey["Survey<br/>Management"]
+        Workflow["Phase<br/>Orchestration"]
+        Trigger["Training<br/>Triggers"]
+    end
+
+    subgraph Data["DATA LAYER"]
+        DB["Document Storage"]
+        Collections["Users | Surveys | Responses | Models | Feedback"]
+    end
+
+    subgraph ML["MODEL LAYER"]
+        direction LR
+        Norm["Data<br/>Normalizer"]
+        Predict["Prediction<br/>Service"]
+        Train["Training<br/>Pipeline"]
+        Version["Model<br/>Versioning"]
+    end
+
+    Presentation -->|"REST API"| Business
+    Business --> Data
+    Business -->|"Async"| ML
+
+    style Presentation fill:#e3f2fd
+    style Business fill:#fff3e0
+    style Data fill:#e8f5e9
+    style ML fill:#fce4ec
+```
+
+**Figure 6.** ACOSUS system architecture. Four layers separate presentation, business logic, data persistence, and machine learning concerns, enabling independent scaling and clear separation of responsibilities.
+
+### 4.3 Model Configuration Flexibility
+
+The algorithm-agnostic design described in Section 3.2 manifests in a configuration system that allows researchers to adapt the framework without modifying core infrastructure. Three categories of configuration support this flexibility:
+
+**Phase Transition Thresholds.** Administrators specify the observation counts that trigger transitions between pipeline stages. Default thresholds (foundation → augmentation at N=10, augmentation → refinement at N=100) are based on statistical considerations for the respective algorithm families, but institutions with different enrollment patterns can adjust these boundaries. A computing department expecting 200 transfers annually might lower thresholds; a smaller program might raise them.
+
+**Algorithm Selection.** Each pipeline stage accepts any algorithm conforming to the expected interface. The foundation stage requires a predictor that operates effectively with minimal training data—any similarity-based or instance-based method satisfies this constraint. The augmentation stage requires a generative model capable of synthesizing observations that preserve distributional properties. The refinement stage accepts any supervised learning architecture capable of capturing non-linear relationships. This modularity enables empirical comparison: researchers can evaluate alternative algorithms on their specific student population rather than accepting default choices.
+
+**Hyperparameter Tuning.** Within each algorithm, configurable parameters allow fine-tuning for institutional context. Distance metrics, neighbor counts, generation multipliers, network architectures, and training schedules are all exposed as configuration options. The system logs all configuration choices alongside model performance metrics, enabling systematic comparison across settings.
+
+This configuration flexibility supports the framework's positioning as a generalizable architecture rather than a fixed implementation. As methodological advances emerge—improved few-shot learning techniques, more effective data augmentation strategies, novel neural architectures—institutions can integrate these improvements by updating configuration rather than reengineering the system.
+
+---
+
+*End of Sections 3 and 4*
