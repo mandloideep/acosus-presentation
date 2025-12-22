@@ -36,18 +36,15 @@ Participants completed both core ACOSUS instruments prior to the feedback survey
 
 #### 5.2.2 TAM-Based Feedback Survey
 
-The post-hoc feedback survey comprised 25 analyzed items across six categories. All Likert-scale items used a 5-point scale unless otherwise noted.
+The post-hoc feedback survey comprised numerous analyzed items across three categories. All Likert-scale items used a 5-point scale unless otherwise noted.
 
 **Table 4.** Feedback survey constructs and items.
 
-| Construct                        | # Items | Example Item                                                                                               |
-| -------------------------------- | ------- | ---------------------------------------------------------------------------------------------------------- |
-| **Perceived Usefulness (PU)**    | 6       | "Using this AI counseling system enables me to accomplish tasks more quickly than other advising methods." |
-| **Perceived Ease of Use (PEOU)** | 6       | "Learning to operate this AI counseling system was easy for me."                                           |
-| **Interface Assessment**         | 3       | "The system interface was intuitive and easy to navigate."                                                 |
-| **Data Capture Accuracy**        | 2       | "How accurate did you find the system's assessment of your academic success factors?"                      |
-| **Survey Quality**               | 2       | "How relevant were the questions to your specific situation?"                                              |
-| **Behavioral Intention**         | 2       | "How likely are you to continue using this system for academic planning?"                                  |
+| Construct                        | Example Item                                                                                               |
+| -------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| **Perceived Usefulness (PU)**    | "Using this AI counseling system enables me to accomplish tasks more quickly than other advising methods." |
+| **Perceived Ease of Use (PEOU)** | "Learning to operate this AI counseling system was easy for me."                                           |
+| **Behavioral Intention**         | "How likely are you to continue using this system for academic planning?"                                  |
 
 Open-ended questions captured qualitative feedback on interface difficulties, helpful features, missing capabilities, and redesign suggestions.
 
