@@ -10,35 +10,29 @@ The transfer student population presents a unique challenge for predictive analy
 
 ### 3.1 Architectural Philosophy: Small Data by Design
 
-The dominant paradigm in educational data mining favors large-scale approaches: aggregate registrar feeds, learning management system clickstreams, and institutional research databases containing tens of thousands of student records [14]. Such approaches are poorly suited to transfer-student advising for three reasons. First, transfer cohorts are inherently small—a computing department may admit thirty to fifty transfer students per year, yielding insufficient observations for conventional predictive architectures. Second, the variables most predictive of transfer success—credit articulation outcomes, "transfer shock" severity, belonging uncertainty, and financial precarity—are seldom captured in standard institutional systems [3], [5], [6]. Third, academic advisors lack unified access to the information they need to support transfer students effectively; prior research documents that advisors spend significant time gathering student information from disparate sources before they can provide meaningful guidance [8], [17].
+The dominant paradigm in educational data mining favors large-scale approaches: aggregate registrar feeds, learning management system clickstreams, and institutional research databases containing tens of thousands of student records [14]. Such approaches are poorly suited to transfer-student advising for three reasons. First, transfer cohorts are inherently small—a computing department may admit thirty to fifty transfer students per year, yielding insufficient observations for conventional predictive architectures. Second, conventional deep learning approaches require thousands of labeled samples to achieve reliable performance—fundamentally incompatible with departmental-level enrollment figures. Third, transfer advising requires architectural patterns that can bootstrap predictive capability from minimal observations while improving as more data becomes available.
 
-ACOSUS addresses these challenges through a modular, compartmentalized, and scalable framework designed explicitly for data-scarce environments. The architecture embodies three foundational tenets: (1) **Immediate Utility**—even before predictive capabilities emerge, the system delivers value through structured data acquisition; advisors gain immediate access to organized student profiles, while the initial data collection phase seeds high-quality labeled observations for subsequent model development; (2) **Progressive Sophistication**—as the corpus of observations expands, the system's predictive intelligence matures automatically, transitioning through increasingly capable inference mechanisms without requiring manual reconfiguration; and (3) **Burden Minimization**—data collection instruments must respect students' temporal constraints, particularly given that transfer students often navigate concurrent employment, familial responsibilities, and academic demands [6], [12].
+ACOSUS addresses these challenges through a modular and scalable framework designed for data-scarce environments. The architecture follows three guiding principles:
 
-Central to this philosophy is the concept of **algorithm-agnostic design**. ACOSUS functions as a pluggable framework where each computational component can be substituted without disrupting the overall system architecture. This modularity enables researchers and practitioners to adapt the platform to institutional contexts, swap inference algorithms as methodological advances emerge, and validate alternative approaches through controlled experimentation.
+1. **Immediate Utility** — The system provides value from day one. Advisors gain access to organized student profiles immediately, while the data collection phase builds high-quality training observations for later model development.
+
+2. **Progressive Sophistication** — As data accumulates, the system's predictive capability matures automatically, transitioning through increasingly capable methods without manual intervention.
+
+3. **Burden Minimization** — Data collection respects students' time constraints, recognizing that transfer students often balance employment, family, and academics [6], [12].
+
+Central to this design is **algorithm-agnostic modularity**. Each computational component can be substituted without disrupting the system. Researchers can swap inference algorithms as new methods emerge, adapt the platform to institutional contexts, and validate alternative approaches through experimentation.
 
 #### The Three-Stage Progressive Pipeline
 
-To overcome the data scarcity inherent in small cohort populations, ACOSUS implements a **three-stage progressive pipeline** that systematically builds predictive capability as observations accumulate:
+To overcome data scarcity, ACOSUS implements a **three-stage pipeline** that builds predictive capability as observations accumulate:
 
-**Stage 1: Foundation (Data Acquisition & Initial Inference).** During the foundational phase, the system prioritizes the collection of high-quality labeled observations. Students complete comprehensive survey instruments that capture both outcome measures and predictive features. Once a minimal viable corpus is established, the system activates lightweight inference mechanisms that leverage similarity-based reasoning to generate initial predictions. This stage employs computationally efficient methods that perform reliably with limited training samples.
+**Stage 1: Foundation.** The system collects labeled observations through survey instruments capturing both outcomes and predictive features. Once a minimal corpus exists, lightweight similarity-based methods generate initial predictions. This stage prioritizes data quality over prediction sophistication, ensuring a reliable foundation for subsequent phases.
 
-**Stage 2: Augmentation (Synthetic Data Generation).** The augmentation phase addresses the fundamental limitation of small sample sizes by employing generative modeling techniques to synthesize additional training observations. These methods learn the underlying distributional characteristics of the real data and produce synthetic samples that expand the training corpus while preserving statistical properties. The augmented dataset provides sufficient volume to support more sophisticated learning algorithms.
+**Stage 2: Augmentation.** Generative techniques synthesize additional training samples, learning from real data distributions to expand the corpus while preserving statistical properties. The augmented dataset provides sufficient volume to support more sophisticated learning algorithms that would otherwise fail with limited authentic samples.
 
-**Stage 3: Refinement (Deep Representation Learning).** With an adequately sized training corpus—comprising both authentic and synthetically generated observations—the system transitions to advanced non-linear modeling approaches capable of capturing complex relationships between predictive features and success outcomes. This phase leverages deep representation learning to extract hierarchical feature abstractions and produce refined predictions. Continuous feedback mechanisms enable ongoing model improvement as new authentic observations become available.
+**Stage 3: Refinement.** With sufficient data (real and synthetic), advanced non-linear models capture complex feature-outcome relationships. Feedback loops enable continuous improvement as new authentic data arrives. Validation is performed exclusively on authentic observations, ensuring that synthetic augmentation enhances rather than distorts predictive accuracy.
 
-<!-- VERSION A: Moderately Abstract Terminology
-Stage 1 uses "instance-based learning" for similarity-based inference
-Stage 2 uses "generative data augmentation" for synthetic sample generation
-Stage 3 uses "deep representation learning" for non-linear function approximation
--->
-
-<!-- VERSION B: Highly Abstract Terminology
-Stage 1 uses "similarity-based inference" for initial predictions
-Stage 2 uses "synthetic sample generation" for corpus expansion
-Stage 3 uses "non-linear function approximation" for refined predictions
--->
-
-The framework's modularity ensures that each stage operates as an **interchangeable component**. Alternative inference algorithms may be substituted at Stage 1 (any similarity-based or instance-based method), alternative generative techniques may be employed at Stage 2 (oversampling strategies, distributional modeling, or adversarial generation), and alternative architectures may be deployed at Stage 3 (any deep learning topology suited to the prediction task). This architectural flexibility positions ACOSUS not merely as a specific implementation, but as a generalizable framework adaptable to diverse educational prediction contexts.
+Each stage is an **interchangeable component**: any similarity method at Stage 1, any generative technique at Stage 2, any deep learning architecture at Stage 3. This flexibility makes ACOSUS a generalizable framework, not just a specific implementation.
 
 ```mermaid
 flowchart TB
@@ -93,6 +87,8 @@ flowchart TB
 **Figure 4.** The Three-Stage Progressive Pipeline. Each stage represents a pluggable component that can be substituted with alternative algorithms. The framework progresses from data acquisition through augmentation to refined prediction, with feedback loops enabling continuous improvement.
 
 ### 3.2 The Dual-Survey Architecture
+
+The variables most predictive of transfer success—credit articulation outcomes, "transfer shock" severity, belonging uncertainty, and financial precarity—are seldom captured in standard institutional systems [3], [5], [6]. Furthermore, academic advisors lack unified access to the information they need; prior research documents that advisors spend significant time gathering student data from disparate sources before providing meaningful guidance [8], [17]. ACOSUS addresses both challenges through a Dual-Survey Architecture that simultaneously feeds machine learning models and consolidates advisor-facing information.
 
 Prior research on transfer student success has identified multiple dimensions that contribute to successful degree completion, including academic self-efficacy, institutional commitment, social integration, and career goal clarity [2], [3], [5]. Our earlier factor analysis work identified clusters of social-cognitive variables—academic confidence, time management, financial stability, and support systems—that distinguish successful transfer students from those who struggle [REF: 2023 Factor Analysis Paper]. Building on these findings, ACOSUS operationalizes "success" as a **Readiness Score (Y)**—a continuous variable in the range [0, 1] representing the student's self-assessed likelihood of academic success across these dimensions. The system then learns to predict Y from a set of observable features **X** (academic background, financial circumstances, logistical factors) through the function Y = f(X).
 
