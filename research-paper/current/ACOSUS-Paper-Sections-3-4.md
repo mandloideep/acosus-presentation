@@ -18,29 +18,29 @@ ACOSUS addresses these challenges through a framework that treats data scarcity 
 
 As observations accumulate, the system's predictive intelligence matures through a three-stage progressive pipeline. **In the foundation stage**, the system prioritizes collecting high-quality labeled observations through survey instruments that capture both outcomes and predictive features. Once a minimal corpus exists, lightweight similarity-based methods generate initial predictions—this stage emphasizes data quality over prediction sophistication, establishing a reliable foundation for subsequent phases. **As the corpus grows, the augmentation stage** addresses the fundamental small-sample limitation through generative techniques that synthesize additional training observations. These methods learn distributional characteristics from authentic data and produce synthetic samples that expand the training corpus while preserving statistical properties, providing sufficient volume to support more sophisticated algorithms. **Finally, in the refinement stage**, the system transitions to advanced non-linear models capable of capturing complex feature-outcome relationships. Feedback loops enable continuous improvement as new authentic observations arrive, with validation performed exclusively on real data to ensure synthetic augmentation enhances rather than distorts predictive accuracy.
 
-The framework's modularity extends beyond the three-stage progression. Each computational component operates as an interchangeable module: any similarity-based method may serve the foundation stage, any generative technique may perform augmentation, and any deep learning architecture may handle refinement. This algorithm-agnostic design serves two purposes in the small-data context. First, it enables empirical comparison—researchers can evaluate which specific algorithms perform best with limited transfer student observations rather than committing to a fixed approach. Second, it future-proofs the system—as methodological advances emerge in few-shot learning, data augmentation, or neural architecture design, the framework can incorporate improvements without structural modification. ACOSUS is thus positioned not as a specific implementation but as a generalizable framework adaptable to diverse educational prediction contexts.
+The framework's modularity extends beyond the three-stage progression. Each computational component operates as an interchangeable module: any similarity-based method may serve the foundation stage, any generative technique may perform augmentation, and any deep learning architecture may handle refinement. This algorithm-agnostic design serves two purposes in the small-data context. First, it enables empirical comparison—researchers can evaluate which specific algorithms perform best with limited transfer student observations rather than committing to a fixed approach. Second, as methodological advances emerge in few-shot learning, data augmentation, or neural architecture design, the framework can integrate these improvements without structural modification—positioning ACOSUS not as a fixed implementation but as a generalizable architecture adaptable to diverse educational prediction contexts.
 
 ```mermaid
 flowchart TB
-    subgraph Framework["ACOSUS PROGRESSIVE LEARNING FRAMEWORK"]
+    subgraph Framework["ACOSUS THREE-STAGE PROGRESSIVE PIPELINE"]
         direction TB
 
         subgraph Stage1["STAGE 1: FOUNDATION"]
-            S1Title["Data Acquisition & Initial Inference"]
-            S1Desc["• Collect labeled observations<br/>• Establish ground truth corpus<br/>• Activate lightweight inference"]
-            S1Plug["⚙️ Pluggable Component:<br/>Any similarity-based method"]
+            S1Title["Data Collection & Initial Prediction"]
+            S1Desc["• Collect high-quality labeled observations<br/>• Establish ground truth corpus<br/>• Lightweight similarity-based predictions"]
+            S1Plug["⚙️ Pluggable: Any similarity-based method"]
         end
 
         subgraph Stage2["STAGE 2: AUGMENTATION"]
             S2Title["Synthetic Data Generation"]
-            S2Desc["• Learn distributional characteristics<br/>• Generate synthetic samples<br/>• Expand training corpus"]
-            S2Plug["⚙️ Pluggable Component:<br/>Any generative technique"]
+            S2Desc["• Learn distributional characteristics<br/>• Synthesize training observations<br/>• Preserve statistical properties"]
+            S2Plug["⚙️ Pluggable: Any generative technique"]
         end
 
         subgraph Stage3["STAGE 3: REFINEMENT"]
-            S3Title["Deep Representation Learning"]
-            S3Desc["• Train on augmented corpus<br/>• Extract feature abstractions<br/>• Produce refined predictions"]
-            S3Plug["⚙️ Pluggable Component:<br/>Any deep learning architecture"]
+            S3Title["Advanced Non-Linear Modeling"]
+            S3Desc["• Train on augmented corpus<br/>• Capture complex relationships<br/>• Continuous improvement via feedback"]
+            S3Plug["⚙️ Pluggable: Any deep learning architecture"]
         end
     end
 
@@ -53,16 +53,16 @@ flowchart TB
     end
 
     subgraph Feedback["FEEDBACK LOOP"]
-        FB["Student Feedback<br/>→ Continuous Improvement"]
+        FB["Student Feedback<br/>→ Model Improvement"]
     end
 
     Input --> Stage1
-    Stage1 -->|"Corpus threshold met"| Stage2
-    Stage2 -->|"Augmented corpus ready"| Stage3
+    Stage1 -->|"Minimal corpus established"| Stage2
+    Stage2 -->|"Sufficient volume achieved"| Stage3
     Stage3 --> Output
     Output --> Feedback
-    Feedback -.->|"New authentic data"| Stage1
-    Feedback -.->|"Model refinement"| Stage3
+    Feedback -.->|"New authentic observations"| Stage1
+    Feedback -.->|"Validation on real data"| Stage3
 
     style Stage1 fill:#d4edda,stroke:#28a745
     style Stage2 fill:#fff3cd,stroke:#ffc107
