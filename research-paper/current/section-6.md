@@ -18,6 +18,13 @@ The system is currently operational and collecting labeled observations during t
 
 The pilot findings are subject to the limitations detailed in §5.5: small sample size (N=4) precludes statistical generalization, self-selection bias may over-represent technology-positive students, and single-institution recruitment limits external validity. Furthermore, the evaluation captured immediate post-use perceptions rather than longitudinal academic outcomes. These constraints are appropriate for a formative usability study but insufficient for effectiveness claims.
 
+Several limitations constrain interpretation of these findings:
+**Sample Size:** With N=4, statistical inference is limited. The results represent formative usability feedback rather than generalizable effectiveness claims. Effect sizes and variance estimates are unstable at this sample size.
+**Self-Selection Bias:** Participants voluntarily enrolled after email invitation, potentially over-representing students with positive attitudes toward technology-assisted advising.
+**Single Institution:** All participants were from one urban public university. Generalizability to other institutional contexts (community colleges, rural institutions, private universities) remains untested.
+**Short-Term Assessment:** The study captured immediate post-use perceptions. Longitudinal assessment of actual academic outcomes (GPA changes, persistence, graduation) was beyond the pilot scope.
+**No Control Condition:** Without a comparison group using traditional advising, we cannot attribute satisfaction to ACOSUS-specific features versus general positive response to any structured advising interaction.
+
 ### 6.3 Future Work
 
 Several directions extend the current work:
@@ -40,4 +47,4 @@ The explicit separation of concerns—data collection instruments from predictio
 
 ---
 
-*End of Section 6*
+_End of Section 6_
