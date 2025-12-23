@@ -19,6 +19,35 @@
 \usepackage{amsmath}
 \usepackage{booktabs}
 \usepackage[hidelinks, pdftex]{hyperref}
+
+% TikZ packages for diagrams
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, arrows.meta, positioning, fit, backgrounds, calc}
+
+% Define colors for diagrams
+\definecolor{targetsurvey}{HTML}{FFF3E0}
+\definecolor{factorsurvey}{HTML}{E3F2FD}
+\definecolor{processing}{HTML}{F3E5F5}
+\definecolor{outputgreen}{HTML}{E8F5E9}
+\definecolor{stage1green}{HTML}{D4EDDA}
+\definecolor{stage1border}{HTML}{28A745}
+\definecolor{stage2yellow}{HTML}{FFF3CD}
+\definecolor{stage2border}{HTML}{FFC107}
+\definecolor{stage3blue}{HTML}{CCE5FF}
+\definecolor{stage3border}{HTML}{007BFF}
+\definecolor{framegray}{HTML}{F8F9FA}
+\definecolor{frameborder}{HTML}{6C757D}
+\definecolor{modelpink}{HTML}{FCE4EC}
+
+% TikZ styles
+\tikzset{
+    surveybox/.style={rectangle, rounded corners=3pt, minimum width=2.2cm, minimum height=0.8cm, text centered, draw=black!60, font=\scriptsize, text width=2cm, align=center},
+    groupbox/.style={rectangle, rounded corners=5pt, draw=black!40, thick},
+    arrow/.style={-{Stealth[length=2mm]}, thick, black!70},
+    dashedarrow/.style={-{Stealth[length=2mm]}, thick, black!50, dashed},
+    stagebox/.style={rectangle, rounded corners=5pt, minimum width=3cm, minimum height=1.8cm, draw, thick, text width=2.8cm, align=center, font=\scriptsize},
+    layerbox/.style={rectangle, rounded corners=3pt, minimum width=2cm, minimum height=0.6cm, text centered, draw=black!60, font=\tiny, text width=1.8cm, align=center},
+}
 \urlstyle{same}
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
@@ -111,11 +140,73 @@ The system architecture permits flexible study configurations through \textbf{su
     \item \textbf{Cohort customization}---different academic programs can deploy program-specific Factor Surveys (e.g., technical preparation for computing majors) while maintaining a common outcome measure through shared Target Surveys.
 \end{enumerate}
 
-% TODO: Add Figure 3 - Dual-Survey Architecture diagram (see research-diagrams.md)
+% Figure 3 - Dual-Survey Architecture diagram
 \begin{figure}[htbp]
 \centering
-% \includegraphics[width=\textwidth]{fig3_dual_survey.png}
-\fbox{\parbox{0.9\textwidth}{\centering [FIGURE PLACEHOLDER: Dual-Survey Architecture with survey linkage. Target Surveys collect the label, Factor Surveys collect features. Dashed lines show linkage relationships enabling flexible study configurations.]}}
+\resizebox{\textwidth}{!}{%
+\begin{tikzpicture}[node distance=0.4cm and 0.6cm]
+    % Target Surveys Group
+    \node[surveybox, fill=targetsurvey] (ts1) {Single-Question\\Direct 0--100 Scale};
+    \node[surveybox, fill=targetsurvey, below=of ts1] (ts2) {Multi-Question\\Weighted Aggregated};
+
+    \begin{scope}[on background layer]
+        \node[groupbox, fill=targetsurvey!30, fit=(ts1)(ts2), inner sep=8pt, label={[font=\small\bfseries]above:TARGET SURVEYS (Label: $Y$)}] (targetgroup) {};
+    \end{scope}
+
+    % Factor Surveys Group
+    \node[surveybox, fill=factorsurvey, right=2.5cm of ts1] (fs1) {Academic Background\\GPA, SAT, Credits};
+    \node[surveybox, fill=factorsurvey, below=of fs1] (fs2) {Financial Support\\Scholarship, Income};
+    \node[surveybox, fill=factorsurvey, below=of fs2] (fs3) {Logistics\\Distance, Work Hours};
+    \node[surveybox, fill=factorsurvey, below=of fs3] (fs4) {Interest \& Experience\\Career, Prior Exp.};
+    \node[surveybox, fill=factorsurvey!50, draw=black!40, dashed, below=of fs4] (fs5) {[Future Surveys]\\Adaptable};
+
+    \begin{scope}[on background layer]
+        \node[groupbox, fill=factorsurvey!30, fit=(fs1)(fs2)(fs3)(fs4)(fs5), inner sep=8pt, label={[font=\small\bfseries]above:FACTOR SURVEYS (Features: $X$)}] (factorgroup) {};
+    \end{scope}
+
+    % Processing Group
+    \node[surveybox, fill=processing, right=2.5cm of fs2] (norm) {Feature\\Normalization\\(0--10 scale)};
+    \node[surveybox, fill=processing, below=of norm] (pwrs) {Weighted\\Calculation\\(if multi-Q)};
+
+    \begin{scope}[on background layer]
+        \node[groupbox, fill=processing!30, fit=(norm)(pwrs), inner sep=8pt, label={[font=\small\bfseries]above:DATA PROCESSING}] (procgroup) {};
+    \end{scope}
+
+    % Output Group
+    \node[surveybox, fill=outputgreen, right=2.5cm of norm] (model) {$Y = f(X)$\\Predict Readiness};
+    \node[surveybox, fill=outputgreen, below=of model] (score) {Readiness Score\\(0--1 continuous)};
+
+    \begin{scope}[on background layer]
+        \node[groupbox, fill=outputgreen!30, fit=(model)(score), inner sep=8pt, label={[font=\small\bfseries]above:ML MODEL}] (outgroup) {};
+    \end{scope}
+
+    % Linkage arrows (dashed)
+    \draw[dashedarrow] (ts1.east) -- ++(0.3,0) |- (fs1.west);
+    \draw[dashedarrow] (ts1.east) -- ++(0.3,0) |- (fs2.west);
+    \draw[dashedarrow] (ts1.east) -- ++(0.3,0) |- (fs3.west);
+    \draw[dashedarrow] (ts2.east) -- ++(0.5,0) |- (fs1.west);
+    \draw[dashedarrow] (ts2.east) -- ++(0.5,0) |- (fs3.west);
+    \draw[dashedarrow] (ts2.east) -- ++(0.5,0) |- (fs4.west);
+
+    % Data flow arrows (solid)
+    \draw[arrow] (fs1.east) -- ++(0.4,0) |- (norm.west);
+    \draw[arrow] (fs2.east) -- ++(0.4,0) |- (norm.west);
+    \draw[arrow] (fs3.east) -- ++(0.4,0) |- (norm.west);
+    \draw[arrow] (fs4.east) -- ++(0.4,0) |- (norm.west);
+    \draw[arrow] (ts2.east) -- ++(1.8,0) |- (pwrs.west);
+
+    \draw[arrow] (norm.east) -- (model.west);
+    \draw[arrow] (pwrs.east) -- ++(0.4,0) |- (model.west);
+    \draw[arrow] (ts1.east) -- ++(2.0,0) |- (model.west);
+    \draw[arrow] (model) -- (score);
+
+    % Legend
+    \node[below=1.2cm of fs5, font=\tiny, text width=6cm, align=left] {
+        \tikz{\draw[dashedarrow] (0,0) -- (0.5,0);} Survey linkage \quad
+        \tikz{\draw[arrow] (0,0) -- (0.5,0);} Data flow
+    };
+\end{tikzpicture}
+}%
 \caption{Dual-Survey Architecture with survey linkage. Target Surveys collect the label ($Y$), Factor Surveys collect features ($X$). Dashed lines show linkage relationships enabling flexible study configurations.}
 \label{fig:dualsurvey}
 \end{figure}
@@ -136,11 +227,68 @@ As observations accumulate, the system's predictive intelligence matures through
 
 The framework's modularity extends beyond the three-stage progression. Each computational component operates as an interchangeable module: any similarity-based method may serve the foundation stage, any generative technique may perform augmentation, and any deep learning architecture may handle refinement. This algorithm-agnostic design serves two purposes in the small-data context. First, it enables empirical comparison---researchers can evaluate which specific algorithms perform best with limited transfer student observations rather than committing to a fixed approach. Second, as methodological advances emerge in few-shot learning, data augmentation, or neural architecture design, the framework can integrate these improvements without structural modification---positioning ACOSUS not as a fixed implementation but as a generalizable architecture adaptable to diverse educational prediction contexts.
 
-% TODO: Add Figure 4 - Three-Stage Progressive Pipeline diagram (see research-diagrams.md)
+% Figure 4 - Three-Stage Progressive Pipeline diagram
 \begin{figure}[htbp]
 \centering
-% \includegraphics[width=\textwidth]{fig4_pipeline.png}
-\fbox{\parbox{0.9\textwidth}{\centering [FIGURE PLACEHOLDER: The Three-Stage Progressive Pipeline. Each stage represents a pluggable component that can be substituted with alternative algorithms. The framework progresses from data acquisition through augmentation to refined prediction, with feedback loops enabling continuous improvement.]}}
+\resizebox{\textwidth}{!}{%
+\begin{tikzpicture}[node distance=0.5cm and 1cm]
+    % Stage 1
+    \node[stagebox, fill=stage1green, draw=stage1border] (stage1) {
+        \textbf{STAGE 1: FOUNDATION}\\[2pt]
+        Data Collection \&\\Initial Prediction\\[4pt]
+        {\tiny\textbullet\ Collect labeled observations}\\
+        {\tiny\textbullet\ Establish ground truth}\\
+        {\tiny\textbullet\ Similarity-based predictions}\\[4pt]
+        {\tiny\textit{Pluggable: Any similarity method}}
+    };
+
+    % Stage 2
+    \node[stagebox, fill=stage2yellow, draw=stage2border, right=1.2cm of stage1] (stage2) {
+        \textbf{STAGE 2: AUGMENTATION}\\[2pt]
+        Synthetic Data\\Generation\\[4pt]
+        {\tiny\textbullet\ Learn distributions}\\
+        {\tiny\textbullet\ Synthesize observations}\\
+        {\tiny\textbullet\ Preserve statistics}\\[4pt]
+        {\tiny\textit{Pluggable: Any generative technique}}
+    };
+
+    % Stage 3
+    \node[stagebox, fill=stage3blue, draw=stage3border, right=1.2cm of stage2] (stage3) {
+        \textbf{STAGE 3: REFINEMENT}\\[2pt]
+        Advanced Non-Linear\\Modeling\\[4pt]
+        {\tiny\textbullet\ Train on augmented corpus}\\
+        {\tiny\textbullet\ Capture complex relationships}\\
+        {\tiny\textbullet\ Continuous improvement}\\[4pt]
+        {\tiny\textit{Pluggable: Any DL architecture}}
+    };
+
+    % Input
+    \node[surveybox, fill=factorsurvey, left=1.2cm of stage1] (input) {Survey Responses\\(Features $X$,\\Labels $Y$)};
+
+    % Output
+    \node[surveybox, fill=outputgreen, right=1.2cm of stage3] (output) {Readiness Score\\(0--1 continuous)};
+
+    % Feedback
+    \node[surveybox, fill=processing, below=1.5cm of stage2] (feedback) {Student Feedback\\$\rightarrow$ Model Improvement};
+
+    % Framework box
+    \begin{scope}[on background layer]
+        \node[groupbox, fill=framegray, draw=frameborder, fit=(stage1)(stage2)(stage3), inner sep=12pt, label={[font=\small\bfseries]above:ACOSUS THREE-STAGE PROGRESSIVE PIPELINE}] (framework) {};
+    \end{scope}
+
+    % Arrows between stages
+    \draw[arrow] (input) -- (stage1);
+    \draw[arrow] (stage1) -- node[above, font=\tiny] {Corpus established} (stage2);
+    \draw[arrow] (stage2) -- node[above, font=\tiny] {Volume achieved} (stage3);
+    \draw[arrow] (stage3) -- (output);
+
+    % Feedback arrows
+    \draw[arrow] (output) -- ++(0,-0.8) -| (feedback);
+    \draw[dashedarrow] (feedback) -- ++(-3.5,0) |- node[pos=0.25, right, font=\tiny] {New observations} (stage1.south);
+    \draw[dashedarrow] (feedback) -- ++(3.5,0) |- node[pos=0.25, left, font=\tiny] {Validation} (stage3.south);
+
+\end{tikzpicture}
+}%
 \caption{The Three-Stage Progressive Pipeline. Each stage represents a pluggable component that can be substituted with alternative algorithms. The framework progresses from data acquisition through augmentation to refined prediction, with feedback loops enabling continuous improvement.}
 \label{fig:pipeline}
 \end{figure}
@@ -208,11 +356,42 @@ Continuous & SAT score: 1250 & Min-max scaling: $(x - \min)/(\max - \min)$ \\
 
 This type-aware processing ensures that the semantic meaning of responses is preserved during feature engineering---ordinal relationships remain ordered, nominal categories are not spuriously ranked, and continuous values are appropriately scaled.
 
-% TODO: Add Figure 5 - Survey Data Processing Pipeline diagram (see research-diagrams.md)
+% Figure 5 - Survey Data Processing Pipeline diagram
 \begin{figure}[htbp]
 \centering
-% \includegraphics[width=0.8\textwidth]{fig5_processing.png}
-\fbox{\parbox{0.8\textwidth}{\centering [FIGURE PLACEHOLDER: Survey data processing pipeline. Raw responses undergo priority weighting and type-aware normalization to produce standardized feature vectors for model ingestion.]}}
+\begin{tikzpicture}[node distance=0.4cm and 1.5cm]
+    % Survey Collection
+    \node[surveybox, fill=factorsurvey] (q1) {Question 1\\(Ordinal)};
+    \node[surveybox, fill=factorsurvey, below=of q1] (q2) {Question 2\\(Cardinal)};
+    \node[surveybox, fill=factorsurvey, below=of q2] (q3) {Question 3\\(Continuous)};
+
+    \begin{scope}[on background layer]
+        \node[groupbox, fill=factorsurvey!30, fit=(q1)(q2)(q3), inner sep=10pt, label={[font=\small\bfseries]above:SURVEY COLLECTION}] (collgroup) {};
+    \end{scope}
+
+    % Processing
+    \node[surveybox, fill=targetsurvey, right=2cm of q1] (pw) {Priority\\Weighting};
+    \node[surveybox, fill=targetsurvey, below=0.6cm of pw] (tn) {Type-Aware\\Normalization};
+
+    \begin{scope}[on background layer]
+        \node[groupbox, fill=targetsurvey!30, fit=(pw)(tn), inner sep=10pt, label={[font=\small\bfseries]above:DATA PROCESSING}] (procgroup) {};
+    \end{scope}
+
+    % Output
+    \node[surveybox, fill=outputgreen, right=2cm of pw, yshift=-0.5cm] (fv) {Normalized\\Feature Vector\\(0--10 scale)};
+
+    \begin{scope}[on background layer]
+        \node[groupbox, fill=outputgreen!30, fit=(fv), inner sep=10pt, label={[font=\small\bfseries]above:MODEL INPUT}] (outgroup) {};
+    \end{scope}
+
+    % Arrows
+    \draw[arrow] (q1.east) -- ++(0.5,0) |- (pw.west);
+    \draw[arrow] (q2.east) -- ++(0.5,0) |- (pw.west);
+    \draw[arrow] (q3.east) -- ++(0.5,0) |- (pw.west);
+    \draw[arrow] (pw) -- (tn);
+    \draw[arrow] (tn.east) -- ++(0.5,0) |- (fv.west);
+
+\end{tikzpicture}
 \caption{Survey data processing pipeline. Raw responses undergo priority weighting and type-aware normalization to produce standardized feature vectors for model ingestion.}
 \label{fig:processing}
 \end{figure}
@@ -229,11 +408,55 @@ The \textbf{Data Layer} provides flexible document storage for users, surveys, r
 
 The \textbf{Model Layer} operates as a separate service handling computationally intensive tasks: data normalization, prediction inference across all three pipeline stages, and model training. Asynchronous job queues prevent long-running training tasks from blocking prediction requests. Model versioning ensures that only validated improvements reach production---new models must demonstrate improved accuracy on held-out real student data before deployment.
 
-% TODO: Add Figure 6 - System Architecture diagram (see research-diagrams.md)
+% Figure 6 - System Architecture diagram
 \begin{figure}[htbp]
 \centering
-% \includegraphics[width=\textwidth]{fig6_architecture.png}
-\fbox{\parbox{0.9\textwidth}{\centering [FIGURE PLACEHOLDER: ACOSUS system architecture. Four layers separate presentation, business logic, data persistence, and machine learning concerns, enabling independent scaling and clear separation of responsibilities.]}}
+\resizebox{0.95\textwidth}{!}{%
+\begin{tikzpicture}[node distance=0.3cm and 0.4cm]
+    % Presentation Layer
+    \node[layerbox, fill=factorsurvey, minimum width=2.5cm] (student) {Student Portal\\Survey | Prediction};
+    \node[layerbox, fill=factorsurvey, right=of student, minimum width=2.5cm] (advisor) {Advisor Portal\\Search | Dashboard};
+    \node[layerbox, fill=factorsurvey, right=of advisor, minimum width=2.5cm] (admin) {Admin Portal\\Configure | Train};
+
+    \begin{scope}[on background layer]
+        \node[groupbox, fill=factorsurvey!30, fit=(student)(advisor)(admin), inner sep=8pt, label={[font=\small\bfseries]above:PRESENTATION LAYER}] (presgroup) {};
+    \end{scope}
+
+    % Business Logic Layer
+    \node[layerbox, fill=targetsurvey, below=1.2cm of student] (auth) {Authentication};
+    \node[layerbox, fill=targetsurvey, right=of auth] (survey) {Survey\\Management};
+    \node[layerbox, fill=targetsurvey, right=of survey] (workflow) {Phase\\Orchestration};
+    \node[layerbox, fill=targetsurvey, right=of workflow] (trigger) {Training\\Triggers};
+
+    \begin{scope}[on background layer]
+        \node[groupbox, fill=targetsurvey!30, fit=(auth)(survey)(workflow)(trigger), inner sep=8pt, label={[font=\small\bfseries]above:BUSINESS LOGIC LAYER}] (bizgroup) {};
+    \end{scope}
+
+    % Data Layer
+    \node[layerbox, fill=outputgreen, below=1.2cm of auth, minimum width=3cm] (db) {Document Storage};
+    \node[layerbox, fill=outputgreen, right=0.8cm of db, minimum width=5cm] (coll) {Users | Surveys | Responses | Models};
+
+    \begin{scope}[on background layer]
+        \node[groupbox, fill=outputgreen!30, fit=(db)(coll), inner sep=8pt, label={[font=\small\bfseries]above:DATA LAYER}] (datagroup) {};
+    \end{scope}
+
+    % Model Layer
+    \node[layerbox, fill=modelpink, below=1.2cm of db] (norm) {Data\\Normalizer};
+    \node[layerbox, fill=modelpink, right=of norm] (predict) {Prediction\\Service};
+    \node[layerbox, fill=modelpink, right=of predict] (train) {Training\\Pipeline};
+    \node[layerbox, fill=modelpink, right=of train] (version) {Model\\Versioning};
+
+    \begin{scope}[on background layer]
+        \node[groupbox, fill=modelpink!30, fit=(norm)(predict)(train)(version), inner sep=8pt, label={[font=\small\bfseries]above:MODEL LAYER}] (mlgroup) {};
+    \end{scope}
+
+    % Arrows between layers
+    \draw[arrow] (presgroup.south) -- node[right, font=\tiny] {REST API} (bizgroup.north);
+    \draw[arrow] (bizgroup.south) -- (datagroup.north);
+    \draw[arrow] ($(bizgroup.south)+(1.5,0)$) -- node[right, font=\tiny] {Async} ($(mlgroup.north)+(1.5,0)$);
+
+\end{tikzpicture}
+}%
 \caption{ACOSUS system architecture. Four layers separate presentation, business logic, data persistence, and machine learning concerns, enabling independent scaling and clear separation of responsibilities.}
 \label{fig:architecture}
 \end{figure}
