@@ -141,13 +141,7 @@ ACOSUS implements this predictive framework through a Dual-Survey Architecture t
 
 Beyond their role as predictor vectors for the ML model, Factor Surveys serve a critical function for advisors: they systematize the collection of transfer-specific information that advisors would otherwise gather through lengthy, inconsistent interviews. This design addresses the data fragmentation problem---every transfer student answers the same questions, enabling meaningful cohort-level comparisons while ensuring no critical risk factors are overlooked. Survey responses are immediately available in the advisor dashboard, eliminating the need to search emails, notes, or schedule follow-up conversations.
 
-The system architecture permits flexible study configurations through \textbf{survey linkage}, where Target Surveys and Factor Surveys are connected through explicit associations. A single Target Survey (outcome $Y$) may be linked to multiple Factor Surveys (predictor sets $X_1, X_2, X_3$), enabling researchers to investigate which predictor combinations best predict success. This linkage architecture provides several research advantages:
-
-\begin{enumerate}
-    \item \textbf{Comparative predictor analysis}---researchers can deploy alternative Factor Surveys to the same cohort and compare predictive validity across different predictor sets;
-    \item \textbf{Longitudinal adaptability}---as research identifies new predictors of transfer success (e.g., post-pandemic factors, emerging transfer shock indicators), new Factor Surveys can be added without disrupting existing data collection or invalidating historical comparisons;
-    \item \textbf{Cohort customization}---different academic programs can deploy program-specific Factor Surveys (e.g., technical preparation for computing majors) while maintaining a common outcome measure through shared Target Surveys.
-\end{enumerate}
+The architecture supports flexible study configurations through \textbf{survey linkage}---explicit associations between Target and Factor Surveys---enabling researchers to compare predictor sets, adapt to emerging factors, and customize for different cohorts without modifying core infrastructure. Section~\ref{subsec:config} details how this linkage mechanism is configured in practice.
 
 % Figure 3 - Dual-Survey Architecture diagram (Whimsical-style)
 \begin{figure}[htbp]
@@ -489,7 +483,17 @@ The \textbf{Model Layer} operates as a separate service handling computationally
 
 \subsection{Model Configuration Flexibility}\label{subsec:config}
 
-The algorithm-agnostic design described in Section~\ref{subsec:progressive} manifests in a configuration system that allows researchers to adapt the framework without modifying core infrastructure. Three categories of configuration support this flexibility:
+The algorithm-agnostic design described in Section~\ref{subsec:progressive} manifests in a configuration system that allows researchers to adapt the framework without modifying core infrastructure. Four categories of configuration support this flexibility:
+
+\textbf{Survey Linkage.} The dual-survey architecture described in Section~\ref{subsec:dualsurvey} is operationalized through explicit linkage configurations. A single Target Survey (outcome $Y$) may be linked to multiple Factor Surveys (predictor sets $X_1, X_2, X_3$), enabling researchers to investigate which predictor combinations best predict success. This linkage mechanism provides several research advantages:
+
+\begin{enumerate}
+    \item \textbf{Comparative predictor analysis}---researchers can deploy alternative Factor Surveys to the same cohort and compare predictive validity across different predictor sets;
+    \item \textbf{Longitudinal adaptability}---as research identifies new predictors of transfer success (e.g., post-pandemic factors, emerging transfer shock indicators), new Factor Surveys can be added without disrupting existing data collection or invalidating historical comparisons;
+    \item \textbf{Cohort customization}---different academic programs can deploy program-specific Factor Surveys (e.g., technical preparation for computing majors) while maintaining a common outcome measure through shared Target Surveys.
+\end{enumerate}
+
+The remaining three categories address the progressive learning pipeline:
 
 \textbf{Phase Transition Thresholds.} Administrators specify the observation counts that trigger transitions between pipeline stages. Default thresholds (foundation $\rightarrow$ augmentation at $N=10$, augmentation $\rightarrow$ refinement at $N=100$) are based on statistical considerations for the respective algorithm families, but institutions with different enrollment patterns can adjust these boundaries. A computing department expecting 200 transfers annually might lower thresholds; a smaller program might raise them.
 
