@@ -4,7 +4,9 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \documentclass[a4paper,10.5pt,twoside]{article}
-\hyphenpenalty=8000
+\hyphenpenalty=500
+\tolerance=1000
+\emergencystretch=3em
 \textwidth=125mm
 \textheight=200mm
 \usepackage[top=3cm, bottom=3cm, inner=3cm, outer=3cm, includehead]{geometry}
@@ -73,7 +75,7 @@
 
 \begin{abstract}
 \normalsize
-[ABSTRACT PLACEHOLDER: 100-200 words summarizing the ACOSUS system, its dual-survey architecture, progressive learning framework, and pilot evaluation results.]\vskip 2mm
+Transfer students---particularly those from underrepresented backgrounds in computing---face unique challenges that traditional advising systems fail to address: fragmented information across institutions, limited visibility into pre-transfer trajectories, and predictive models calibrated on native student populations. We present ACOSUS (AI-driven Counseling System for Underrepresented Students), an intelligent advising platform designed specifically for transfer student populations. The system introduces two architectural innovations: a dual-survey architecture that separates outcome measurement from feature collection while providing advisors with unified student profiles, and a progressive learning framework that treats data scarcity as a fundamental design constraint rather than a limitation to overcome. A pilot evaluation with transfer students ($N=4$) at a public urban university validated the data collection workflow, with participants rating Perceived Ease of Use at 5.00/5.00 and Perceived Usefulness at 4.46/5.00. The system is currently operational and collecting observations to enable future evaluation of its predictive capabilities.\vskip 2mm
 \textbf{Keywords:} transfer students, intelligent advising, machine learning, higher education, student success prediction.
 \end{abstract}
 
@@ -341,7 +343,7 @@ This yields a normalized score in $[0, 1]$ that accounts for both response quali
 \centering
 \caption{Example priority score assignments based on literature-informed importance.}
 \label{tab:priority}
-\begin{tabular}{@{}llcl@{}}
+\begin{tabular}{@{}p{3.2cm}p{4.5cm}cp{3.5cm}@{}}
 \toprule
 \textbf{Factor Category} & \textbf{Example Question} & \textbf{Priority} & \textbf{Rationale} \\
 \midrule
@@ -650,11 +652,13 @@ The current work establishes a functional prototype and validates the data colle
 
 Beyond the immediate application to transfer student advising, ACOSUS demonstrates a template for deploying intelligent systems in small-data educational contexts. Many prediction problems in higher education---success of students in newly launched programs, outcomes for specialized populations, retention in departments with limited enrollment---share the cold-start challenge that motivated this work. The progressive learning framework, with its emphasis on immediate advisor utility during data collection, offers a generalizable approach for these settings.
 
-The explicit separation of concerns---data collection instruments from prediction algorithms, advisor-facing dashboards from student-facing workflows, and model configuration from core infrastructure---positions the architecture for adaptation across diverse institutional contexts. As the educational technology field increasingly emphasizes equity and transparency, systems designed from the ground up for underrepresented populations provide a model for responsible AI deployment in higher education.
+The explicit separation of concerns---data collection instruments from prediction algorithms, advisor-facing dashboards from student-facing workflows, configuration from core infrastructure---positions the architecture for adaptation across diverse institutional contexts. As the educational technology field increasingly emphasizes equity and transparency, systems designed from the ground up for underrepresented populations provide a model for responsible AI deployment in higher education.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % BIBLIOGRAPHY
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{sloppypar}
 \printbibliography
+\end{sloppypar}
 
 \end{document}
