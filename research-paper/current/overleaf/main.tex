@@ -165,7 +165,7 @@ Beyond their role as predictor vectors for the AI model, Factor Surveys serve a 
 The architecture supports flexible study configurations through \textbf{survey linkage}---explicit associations between Target and Factor Surveys---enabling researchers to compare predictor sets, adapt to emerging factors, and customize for different cohorts without modifying core infrastructure. Section~\ref{subsec:config} details how this linkage mechanism is configured in practice.
 
 % Figure 3 - Dual-Survey Architecture diagram
-\begin{figure}[H]
+\begin{figure}[htbp]
 \centering
 \resizebox{0.95\textwidth}{!}{%
 \begin{tikzpicture}[
@@ -211,7 +211,7 @@ As observations accumulate, the system's predictive intelligence matures through
 The framework's modularity extends beyond the three-stage progression. Each computational component operates as an interchangeable module: any predictive method may serve the foundation stage, any generative technique may perform augmentation, and any deep learning architecture may handle refinement. This algorithm-agnostic design serves two purposes in the small-data context. First, it enables empirical comparison---researchers can evaluate which specific algorithms perform best with limited transfer student observations rather than committing to a fixed approach. Second, as methodological advances emerge in few-shot learning, data augmentation, or neural architecture design, the framework can integrate these improvements without structural modification---positioning ACOSUS not as a fixed implementation but as a generalizable architecture adaptable to diverse educational prediction contexts.
 
 % Figure 4 - Three-Stage Progressive Pipeline diagram
-\begin{figure}[H]
+\begin{figure}[htbp]
 \centering
 \resizebox{\textwidth}{!}{%
 \begin{tikzpicture}[
@@ -359,7 +359,7 @@ Continuous & SAT score: 1250 & Min-max scaling: $(x - \min)/(\max - \min)$ \\
 This type-aware processing ensures that the semantic meaning of responses is preserved during feature engineering---ordinal relationships remain ordered, nominal categories are not spuriously ranked, and continuous values are appropriately scaled.
 
 % Figure 5 - Survey Data Processing Pipeline diagram
-\begin{figure}[H]
+\begin{figure}[htbp]
 \centering
 \resizebox{0.95\textwidth}{!}{%
 \begin{tikzpicture}[
@@ -431,7 +431,7 @@ The \textbf{Data Layer} provides flexible document storage for users, surveys, r
 The \textbf{Model Layer} operates as a separate service handling computationally intensive tasks: data normalization, prediction inference across all three pipeline stages, and model training. Asynchronous job queues prevent long-running training tasks from blocking prediction requests. Model versioning ensures that only validated improvements reach production---new models must demonstrate improved accuracy on held-out real student data before deployment.
 
 % Figure 6 - System Architecture diagram
-\begin{figure}[H]
+\begin{figure}[htbp]
 \centering
 \resizebox{0.95\textwidth}{!}{%
 \begin{tikzpicture}[
@@ -521,7 +521,7 @@ The algorithm-agnostic design described in Section~\ref{subsec:progressive} mani
 \end{enumerate}
 
 % Figure 7 - Dual-Survey Architecture with Linkage
-\begin{figure}[H]
+\begin{figure}[htbp]
 \centering
 \resizebox{0.95\textwidth}{!}{%
 \begin{tikzpicture}[
