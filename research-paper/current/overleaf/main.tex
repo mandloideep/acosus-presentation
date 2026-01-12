@@ -368,25 +368,26 @@ This type-aware processing ensures that the semantic meaning of responses is pre
 \centering
 \resizebox{0.95\textwidth}{!}{%
 \begin{tikzpicture}[
-    node distance=0.5cm,
+    node distance=0.35cm,
     inner/.style={rectangle, dashed, thick, rounded corners=3pt, align=center, inner sep=10pt, font=\normalsize},
-    outer/.style={rectangle, thick, rounded corners=3pt, inner sep=12pt},
+    outer/.style={rectangle, thick, rounded corners=3pt, inner sep=6pt},
     arrow/.style={-{Stealth[scale=0.9]}, gray!70, thick, rounded corners=6pt},
     arrowline/.style={gray!70, thick, rounded corners=6pt}
 ]
 
 % Survey Collection inner boxes
-\node[inner, fill=surveyboxfill, draw=surveyblue!70, text width=3cm, minimum height=1.5cm] (q1) {Question 1\\(Ordinal)};
-\node[inner, fill=surveyboxfill, draw=surveyblue!70, text width=3cm, minimum height=1.5cm, below=0.5cm of q1] (q2) {Question 2\\(Cardinal)};
-\node[inner, fill=surveyboxfill, draw=surveyblue!70, text width=3cm, minimum height=1.5cm, below=0.5cm of q2] (q3) {Question 3\\(Continuous)};
+\node[inner, fill=surveyboxfill, draw=surveyblue!70, text width=3cm, minimum height=0.75cm] (q1) {Question 1\\(Ordinal)};
+\node[inner, fill=surveyboxfill, draw=surveyblue!70, text width=3cm, minimum height=.75cm, below=0.2cm of q1] (q2) {Question 2\\(Cardinal)};
+\node[inner, fill=surveyboxfill!40, draw=surveyblue!40, densely dotted, text width=3cm, minimum height=.75cm, below=0.2cm of q2] (qdots) {\textit{...}};
+\node[inner, fill=surveyboxfill, draw=surveyblue!70, text width=3cm, minimum height=0.75cm, below=0.2cm of qdots] (qn) {Question N\\(Continuous)};
 
 % Survey Collection title and outer box
 \node[above=0.3cm of q1, font=\normalsize\bfseries, text=surveyblue!80!black] (survey-title) {SURVEY COLLECTION};
-\node[outer, draw=surveyblue, fit=(survey-title)(q1)(q2)(q3), inner sep=10pt] (survey-box) {};
+\node[outer, draw=surveyblue, fit=(survey-title)(q1)(q2)(qdots)(qn), inner sep=10pt] (survey-box) {};
 
 % Data Processing inner boxes
-\node[inner, fill=processboxfill, draw=processboxborder, text width=3cm, minimum height=1.5cm, right=2.2cm of q1.east |- q1.south east] (priority) {Priority\\Weighting};
-\node[inner, fill=processboxfill, draw=processboxborder, text width=3cm, minimum height=1.5cm, below=0.8cm of priority] (normalize) {Type-Aware\\Normalization};
+\node[inner, fill=processboxfill, draw=processboxborder, text width=3cm, minimum height=1cm, right=1.8cm of q1.east |- q1.south east] (priority) {Priority\\Weighting};
+\node[inner, fill=processboxfill, draw=processboxborder, text width=3cm, minimum height=1cm, below=0.8cm of priority] (normalize) {Type-Aware\\Normalization};
 
 % Data Processing title and outer box
 \node[above=0.3cm of priority, font=\normalsize\bfseries, text=processorange!80!black] (process-title) {DATA PROCESSING};
@@ -394,7 +395,7 @@ This type-aware processing ensures that the semantic meaning of responses is pre
 
 % Model Input inner box (centered with process box)
 \path (priority.center) -- (normalize.center) coordinate[midway] (process-center);
-\node[inner, fill=modelboxfill, draw=modelboxborder, text width=3cm, minimum height=1.5cm, right=1.5cm of process-box.east, anchor=west] (feature) {Normalized\\Feature Vector};
+\node[inner, fill=modelboxfill, draw=modelboxborder, text width=3cm, minimum height=1cm, right=1.5cm of process-box.east, anchor=west] (feature) {Normalized\\Feature Vector};
 
 % Model Input title and outer box
 \node[above=0.3cm of feature, font=\normalsize\bfseries, text=modelgreen] (model-title) {MODEL INPUT};
@@ -407,7 +408,7 @@ This type-aware processing ensures that the semantic meaning of responses is pre
 % Curved lines from questions converging to merge point, then to priority
 \draw[arrowline] (q1.east) to[out=0, in=135] (merge-point);
 \draw[arrowline] (q2.east) -- (merge-point);
-\draw[arrowline] (q3.east) to[out=0, in=-135] (merge-point);
+\draw[arrowline] (qn.east) to[out=0, in=-135] (merge-point);
 \draw[arrow] (merge-point) to[out=45, in=180] (priority.west);
 
 % Arrow between Priority and Normalization
@@ -486,9 +487,9 @@ The \textbf{Model Layer} operates as a separate service handling computationally
 \node[layer, draw=purple, fit=(dlist), inner sep=2.5mm, label={[lbl]above:DATA LAYER}] (data) {};
 \end{scope}
 
-% ML Layer - match Data Layer size
+% Predictive Modeling Layer - match Data Layer size
 \path let \p1=(data.north), \p2=(data.south), \p3=(data.west), \p4=(data.east) in
-    node[below=12mm of data, layer, draw=purple, minimum height={\y1-\y2-6mm}, minimum width={\x4-\x3}, label={[lbl]above:ML LAYER}] (ml) {};
+    node[below=12mm of data, layer, draw=purple, minimum height={\y1-\y2-6mm}, minimum width={\x4-\x3}, label={[lbl]above:PREDICTIVE MODELING}] (ml) {};
 
 \node[font=\scriptsize, align=left] at (ml.center) {
     \textbullet\ Data Normalizer\\
@@ -509,7 +510,7 @@ The \textbf{Model Layer} operates as a separate service handling computationally
 
 \end{tikzpicture}
 }%
-\caption{ACOSUS system architecture. Four layers separate presentation, business logic, data persistence, and machine learning concerns, enabling independent scaling and clear separation of responsibilities.}
+\caption{ACOSUS system architecture. Four layers separate presentation, business logic, data persistence, and predictive modeling, enabling independent scaling and clear separation of responsibilities.}
 \label{fig:architecture}
 \end{figure}
 
