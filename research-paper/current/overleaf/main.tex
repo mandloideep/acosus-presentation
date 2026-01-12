@@ -118,7 +118,7 @@ To address this gap, we designed and evaluated an intelligent advising system th
     \item We validated the platform through a pilot deployment with transfer students, who provided feedback on their experience using it, showing that it streamlines self-advising workflows and is perceived as trustworthy, actionable, and equity-enhancing.
 \end{enumerate}
 
-The remainder of the paper is organized as follows. Section~\ref{sec:literature} reviews related scholarship on transfer-student success and intelligent advising. Section~\ref{sec:design} describes our system design and methodology. Section~\ref{sec:implementation} presents implementation details. Section~\ref{sec:evaluation} reports empirical findings from our pilot study. Section~\ref{sec:conclusion} concludes and outlines directions for future research.
+The remainder of the paper is organized as follows. Section~\ref{sec:literature} reviews related work on transfer-student success and intelligent advising. Section~\ref{sec:design} describes our system design and methodology. Section~\ref{sec:implementation} presents implementation details. Section~\ref{sec:evaluation} reports empirical findings from our pilot study. Section~\ref{sec:conclusion} concludes and outlines directions for future research.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % SECTION 2: LITERATURE REVIEW
@@ -127,7 +127,7 @@ The remainder of the paper is organized as follows. Section~\ref{sec:literature}
 
 The growing body of work on transfer-student outcomes can be grouped into two complementary strands \cite{factoranalysis2023}. The first investigates personal and academic characteristics that shape the transfer journey; the second examines institutional practices---especially advising---that mediate these effects.
 
-Early conceptual models, notably Wang's adaptation of Social-Cognitive Career Theory, frame upward transfer as a function of ``person inputs'' (e.g., socioeconomic status, self-efficacy) and ``transfer receptivity,'' a campus-level construct encompassing articulation policies and support services \cite{computingtransfer2024}. Empirical validation across STEM programs shows that self-efficacy and goal-setting scores tend to rise after students move to four-year campuses, even as they confront unfamiliar academic norms \cite{socialcognitive2022,topicmodeling2024}. Quantitative factor-analysis studies corroborate the salience of financial considerations, institutional reputation, geographic proximity, and family expectations in the initial decision to transfer \cite{factoranalysis2023}, while regression analyses link post-transfer GPA to race/ethnicity and first-generation status \cite{computingtransfer2024}. Topic-modeling of open-ended survey and social-media data adds texture to this portrait, revealing frustration with credit evaluation, heavy commuting burdens, and limited on-campus engagement opportunities \cite{topicmodeling2024}.
+Early conceptual models, notably Ty et al.'s adaptation of Social-Cognitive Career Theory, frame upward transfer as a function of ``person inputs'' (e.g., socioeconomic status, self-efficacy) and ``transfer receptivity,'' a campus-level construct encompassing articulation policies and support services \cite{computingtransfer2024}. Empirical validation across STEM programs shows that self-efficacy and goal-setting scores tend to rise after students move to four-year university, even as they confront unfamiliar academic norms \cite{socialcognitive2022,topicmodeling2024}. Quantitative factor-analysis studies corroborate the salience of financial considerations, institutional reputation, geographic proximity, and family expectations in the initial decision to transfer \cite{factoranalysis2023}, while regression analyses link post-transfer GPA to race/ethnicity and first-generation status \cite{computingtransfer2024}. Topic-modeling of open-ended survey and social-media data adds texture to this portrait, revealing frustration with credit evaluation, heavy commuting burdens, and limited on-campus engagement opportunities \cite{topicmodeling2024}.
 
 Advising research converges on the notion of ``transfer student capital,'' the knowledge and networks students accrue as they navigate multiple institutions \cite{laanan2010adjustment,lukszo2020}. When formal channels fall short, many seek guidance on Reddit, Discord, or peer-run forums, especially about financial aid, housing, and course selection \cite{topicmodeling2024,nguyen2024community}. Qualitative interviews highlight how relationship-rich advising mitigates transfer shock and fosters a sense of belonging \cite{thiry2023,jaggars2025}. Yet advisors themselves report difficulty keeping abreast of ever-shifting articulation rules and program maps, given heavy caseloads \cite{preposttransfer2014,nguyen2024community}.
 
@@ -495,7 +495,7 @@ The \textbf{Model Layer} operates as a separate service handling computationally
 };
 
 % Title
-\node[font=\large\bfseries, above=12mm of biz.north] (title) {ACOSUS SYSTEM ARCHITECTURE};
+%\node[font=\large\bfseries, above=12mm of biz.north] (title) {ACOSUS SYSTEM ARCHITECTURE};
 
 % Arrows
 \draw[->, thick, gray] (pres.east) -- (biz.west) node[midway, above, font=\tiny, align=center] {HTTPS\\REST API};
@@ -514,7 +514,7 @@ The \textbf{Model Layer} operates as a separate service handling computationally
 
 The algorithm-agnostic design described in Section~\ref{subsec:progressive} manifests in a configuration system that allows researchers to adapt the framework without modifying core infrastructure. Four categories of configuration support this flexibility:
 
-\textbf{Survey Linkage.} The dual-survey architecture described in Section~\ref{subsec:dualsurvey} is operationalized through explicit linkage configurations. A single Target Survey (outcome $Y$) may be linked to multiple Factor Surveys (predictor sets $X_1, X_2, X_3$), enabling researchers to investigate which predictor combinations best predict success. This linkage mechanism provides several research advantages:
+\textbf{Survey Linkage:} The dual-survey architecture described in Section~\ref{subsec:dualsurvey} is operationalized through explicit linkage configurations. A single Target Survey (outcome $Y$) may be linked to multiple Factor Surveys (predictor sets $X_1, X_2, X_3$), enabling researchers to investigate which predictor combinations best predict success. This linkage mechanism provides several research advantages:
 
 \begin{enumerate}
     \item \textbf{Comparative predictor analysis}---researchers can deploy alternative Factor Surveys to the same cohort and compare predictive validity across different predictor sets;
@@ -540,7 +540,7 @@ The algorithm-agnostic design described in Section~\ref{subsec:progressive} mani
 \node[container,draw=blue!70,fit=(weighted)(normalize),label={[font=\small\bfseries]above:DATA PROCESSING}] (dbox) {};
 
 % Left column - Factor Surveys (aligned to dbox bottom)
-\node[box,draw=blue!50,fill=blue!15,minimum width=32mm,minimum height=28mm,anchor=south] at ([yshift=3mm]target.south|-dbox.south) (factors) {Factor Survey $X_1$\\Factor Survey $X_2$\\.\\Factor Survey $X_N$};
+\node[box,draw=blue!50,fill=blue!15,minimum width=32mm,minimum height=28mm,anchor=south] at ([yshift=3mm]target.south|-dbox.south) (factors) {Factor Survey $X_1$\\Factor Survey $X_2$\\...\\Factor Survey $X_N$};
 \node[font=\small\bfseries,align=center,above=1mm of factors] (flabel) {FACTOR SURVEYS\\(Features)};
 \node[container,draw=blue!70,inner sep=3mm,fit=(factors)(flabel)] (fbox) {};
 
@@ -568,9 +568,9 @@ The remaining three categories address the progressive learning pipeline:
 
 \textbf{Phase Transition Thresholds.} Administrators specify the observation counts that trigger transitions between pipeline stages. Default thresholds reflect statistical considerations for each algorithm family, but institutions can adjust these boundaries based on their enrollment patterns and desired trade-offs between prediction availability and model reliability.
 
-\textbf{Algorithm Selection.} Each pipeline stage accepts any algorithm conforming to the expected interface. The foundation stage requires a predictor that operates effectively with minimal training data---any similarity-based or instance-based method satisfies this constraint. The augmentation stage requires a generative model capable of synthesizing observations that preserve distributional properties. The refinement stage accepts any supervised learning architecture capable of capturing non-linear relationships. This modularity enables empirical comparison: researchers can evaluate alternative algorithms on their specific student population rather than accepting default choices.
+\textbf{Algorithm Selection:} Each pipeline stage accepts any algorithm conforming to the expected interface. The \textbf{foundation stage} requires a predictor that operates effectively with minimal training data---any similarity-based or instance-based method satisfies this constraint. The \textbf{augmentation stage} requires a generative model capable of synthesizing observations that preserve distributional properties. The \textbf{refinement stage} accepts any supervised learning architecture capable of capturing non-linear relationships. This modularity enables empirical comparison: researchers can evaluate alternative algorithms on their specific student population rather than accepting default choices.
 
-\textbf{Hyperparameter Tuning.} Within each algorithm, configurable parameters allow fine-tuning for institutional context. Distance metrics, neighbor counts, generation multipliers, network architectures, and training schedules are all exposed as configuration options. The system logs all configuration choices alongside model performance metrics, enabling systematic comparison across settings.
+\textbf{Hyperparameter Tuning:} Within each algorithm, configurable parameters allow fine-tuning for institutional context. Distance metrics, neighbor counts, generation multipliers, network architectures, and training schedules are all exposed as configuration options. The system logs all configuration choices alongside model performance metrics, enabling systematic comparison across settings.
 
 This configuration flexibility supports the framework's positioning as a generalizable architecture rather than a fixed implementation. As methodological advances emerge---improved few-shot learning techniques, more effective data augmentation strategies, novel neural architectures---institutions can integrate these improvements by updating configuration rather than reengineering the system.
 
@@ -585,7 +585,7 @@ To assess the usability and perceived value of the ACOSUS platform, we conducted
 
 \subsubsection{Participants}
 
-Four transfer students ($N=4$) from Northeastern Illinois University participated in the study. Participants were recruited through email invitation and voluntarily enrolled after providing informed consent. All participants were active transfer students in computing-related majors. This evaluation was conducted during the foundation phase of the progressive learning pipeline (Section~\ref{subsec:progressive}), when the system was actively collecting labeled observations to establish the initial training corpus. At this stage, no predictive model had yet been trained---the system's primary function was structured data collection rather than prediction generation. Participants completed the Factor and Target Survey instruments described in Sections~\ref{subsec:dualsurvey} and~\ref{subsec:dataprocessing}, followed by a post-hoc feedback survey administered through Qualtrics. The study protocol received Institutional Review Board (IRB) approval prior to data collection.
+Four transfer students ($N=4$) from Northeastern Illinois University participated in the study. Participants were recruited through email invitation and voluntarily enrolled after providing informed consent. All participants were active transfer students in computing-related majors. This evaluation was conducted during the foundation phase of the progressive learning pipeline (Section~\ref{subsec:progressive}), when the system was actively collecting labeled observations to establish the initial training corpus. At this stage, no predictive model had yet been trained---the system's primary function was structured data collection rather than prediction generation. Participants completed the Factor and Target Survey instruments described in Sections~\ref{subsec:dualsurvey} and~\ref{subsec:dataprocessing}, followed by a post-hoc feedback survey administered through Qualtrics. The study protocol received the University's Institutional Review Board (IRB) approval prior to data collection.
 
 \subsection{Evaluation Instruments}\label{subsec:instruments}
 
