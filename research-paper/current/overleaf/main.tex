@@ -441,8 +441,8 @@ The \textbf{Model Layer} operates as a separate service handling computationally
 \centering
 \resizebox{0.95\textwidth}{!}{%
 \begin{tikzpicture}[
-    node distance=2.5mm,
-    box/.style={draw, dashed, rounded corners=3pt, minimum width=22mm, minimum height=14mm, align=center, font=\scriptsize},
+    node distance=1.5mm,
+    box/.style={draw, dashed, rounded corners=3pt, minimum width=32mm, minimum height=8mm, align=center, font=\scriptsize},
     layer/.style={draw, rounded corners=5pt, inner sep=3mm},
     student/.style={box, draw=teal!70, fill=teal!15},
     advisor/.style={box, draw=cyan!70, fill=cyan!15},
@@ -453,9 +453,9 @@ The \textbf{Model Layer} operates as a separate service handling computationally
 
 % Column 2: Business Logic Layer (reference)
 \node[student] (auth) {Auth};
-\node[student, below=of auth] (surv) {Survey\\[-1pt]Management};
-\node[advisor, below=of surv] (stage) {Stage\\[-1pt]Orchestration};
-\node[admin, below=of stage] (train) {Training\\[-1pt]Trigger};
+\node[student, below=of auth] (surv) {Survey Management};
+\node[advisor, below=of surv] (stage) {Stage Orchestration};
+\node[admin, below=of stage] (train) {Training Trigger};
 
 \begin{scope}[on background layer]
 \node[layer, draw=dblue, fit=(auth)(surv)(stage)(train), label={[lbl]above:BUSINESS LOGIC\\[-2pt]LAYER (Backend)}] (biz) {};
@@ -470,9 +470,9 @@ The \textbf{Model Layer} operates as a separate service handling computationally
          label={[lbl]above:PRESENTATION\\[-2pt]LAYER}] (pres) at ($(\x3,\y1)+(-14mm,0)$) {};
 
 % Place boxes centered inside pres
-\node[student, anchor=north] at ($(pres.north)+(0,-3mm)$) (sp) {Student Portal\\[-1pt]\tiny Profile \textbar{} Survey\\[-1pt]\tiny Prediction \textbar{} Feedback};
-\node[advisor] at (pres.center) (ap) {Advisor Portal\\[-1pt]\tiny Search \textbar{} Profile\\[-1pt]\tiny Manage};
-\node[admin, anchor=south] at ($(pres.south)+(0,3mm)$) (adm) {Admin Portal\\[-1pt]\tiny Configure Survey\\[-1pt]\tiny Train \textbar{} Analytics};
+\node[student, anchor=north] at ($(pres.north)+(0,-3mm)$) (sp) {Student Portal\\[-1pt]\tiny Profile \textbar{} Survey \textbar{} Prediction \textbar{} Feedback};
+\node[advisor] at (pres.center) (ap) {Advisor Portal\\[-1pt]\tiny Search \textbar{} Profile \textbar{} Manage};
+\node[admin, anchor=south] at ($(pres.south)+(0,3mm)$) (adm) {Admin Portal\\[-1pt]\tiny Configure Survey \textbar{} Train \textbar{} Analytics};
 
 % Column 3: Data Layer (top) + ML Layer (bottom)
 \node[right=12mm of auth, font=\scriptsize, align=left, anchor=north west] (dlist) {
