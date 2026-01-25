@@ -140,13 +140,102 @@ A related but distinct challenge compounds the technology gap: even where transf
 The present work answers these gaps from a systems perspective. Drawing on prior quantitative and qualitative insights, we engineer an integrated advising platform that fuses standard academic records (e.g., transfer-credit counts, GPA history, enrollment status) with student-supplied experience data and applies a lightweight, interpretable classifier to generate individualized success forecasts. An intuitive dashboard delivers these forecasts directly to students. Initial user feedback from the pilot indicates that the system fills a critical void in current transfer-student support practices and offers a scalable template for institutions seeking to improve equity and retention.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% SECTION 3: SYSTEM DESIGN AND METHODOLOGY
+% SECTION 3: METHODOLOGY AND IMPLEMENTATION
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{System Design and Methodology}\label{sec:design}
+\section{Methodology and Implementation}\label{sec:methodology}
 
-To address the data constraints and advising challenges outlined in Section~\ref{sec:introduction}, we designed ACOSUS (AI-driven Counseling System for Underrepresented Students). This section presents the system's core architectural innovations: a dual-survey architecture that captures transfer-specific variables while supporting advisor workflows (\S\ref{subsec:dualsurvey}), and a progressive learning framework designed for the small-data regime inherent in departmental-level or institutional level transfer advising (\S\ref{subsec:progressive}).
+This section presents the ACOSUS platform's design and implementation. We begin with the overall system architecture (\S\ref{subsec:sysarch}), then describe the dual-survey data collection approach (\S\ref{subsec:dualsurvey}), detail how survey responses are processed (\S\ref{subsec:dataprocessing}), explain the progressive learning framework designed for small-data contexts (\S\ref{subsec:progressive}), and conclude with the configuration flexibility that enables institutional adaptation (\S\ref{subsec:config}).
 
-\subsection{The Dual-Survey Architecture}\label{subsec:dualsurvey}
+\subsection{System Architecture}\label{subsec:sysarch}
+
+The ACOSUS platform implements a four-layer architecture that separates concerns across presentation, business logic, data persistence, and predictive modeling (Figure~\ref{fig:architecture}). This separation enables independent scaling of each layer and supports the system's dual purpose: serving student-facing predictions while centralizing advisor-facing information.
+
+The \textbf{Presentation Layer} provides role-specific interfaces through a web-based application. Students access survey completion workflows, view predictions, and submit feedback. Advisors access a unified dashboard that consolidates student profiles---organized by the same categories as Factor Surveys---eliminating the need to gather information from disparate sources. Administrators configure survey instruments, trigger model training, and monitor system analytics.
+
+The \textbf{Business Logic Layer} orchestrates application workflows, enforcing the progressive learning framework's phase transitions. This layer ensures students encounter appropriate interfaces based on current system state---data collection only during the foundation phase, prediction with feedback during subsequent phases.
+
+The \textbf{Data Layer} provides flexible document storage for users, surveys, responses, and model metadata. The schema-flexible design accommodates researcher-defined survey instruments without requiring database migrations as questions evolve.
+
+The \textbf{Model Layer} operates as a separate service handling computationally intensive tasks: data normalization, prediction inference across all three pipeline stages, and model training. Asynchronous job queues prevent long-running training tasks from blocking prediction requests. Model versioning ensures that only validated improvements reach production---new models must demonstrate improved accuracy on held-out real student data before deployment.
+
+% Figure 1 - System Architecture diagram
+\begin{figure}[htbp]
+\centering
+\resizebox{0.95\textwidth}{!}{%
+\begin{tikzpicture}[
+    node distance=1.5mm,
+    box/.style={draw, dashed, rounded corners=3pt, minimum width=32mm, minimum height=8mm, align=center, font=\scriptsize},
+    layer/.style={draw, rounded corners=5pt, inner sep=3mm},
+    student/.style={box, draw=teal!70, fill=teal!15},
+    advisor/.style={box, draw=cyan!70, fill=cyan!15},
+    admin/.style={box, draw=magenta!50, fill=magenta!10},
+    lbl/.style={font=\footnotesize\bfseries, align=center},
+    >=Stealth
+]
+
+% Column 2: Business Logic Layer (reference)
+\node[student] (auth) {Auth};
+\node[student, below=of auth] (surv) {Survey Management};
+\node[advisor, below=of surv] (stage) {Stage Orchestration};
+\node[admin, below=of stage] (train) {Training Trigger};
+
+\begin{scope}[on background layer]
+\node[layer, draw=dblue, fit=(auth)(surv)(stage)(train), label={[lbl]above:BUSINESS LOGIC\\[-2pt]LAYER (Backend)}] (biz) {};
+\end{scope}
+
+% Column 1: Presentation Layer - create outer box first, then place inner boxes
+\path let \p1=(biz.north), \p2=(biz.south), \p3=(biz.west) in
+    node[layer, draw=orange,
+         minimum height={\y1-\y2},
+         minimum width=38mm,
+         anchor=north east,
+         label={[lbl]above:PRESENTATION\\[-2pt]LAYER}] (pres) at ($(\x3,\y1)+(-14mm,0)$) {};
+
+% Place boxes centered inside pres
+\node[student, anchor=north] at ($(pres.north)+(0,-3mm)$) (sp) {Student Portal\\[-1pt]\tiny Profile \textbar{} Survey\\[-1pt]\tiny Prediction \textbar{} Feedback};
+\node[advisor] at (pres.center) (ap) {Advisor Portal\\[-1pt]\tiny Search \textbar{} Manage\\[-1pt]\tiny Student Profiles};
+\node[admin, anchor=south] at ($(pres.south)+(0,3mm)$) (adm) {Admin Portal\\[-1pt]\tiny Configure Survey \textbar{} \\[-1pt]\tiny Train \textbar{} Analytics};
+
+% Column 3: Data Layer (top) + ML Layer (bottom)
+% Position Data Layer at top, aligned with Business Logic Layer outer box
+\path let \p1=(biz.north east) in
+    node[font=\scriptsize, align=left, anchor=north west] (dlist) at ($(\x1,\y1)+(12mm,0)$) {
+        \textbullet\ Users\\
+        \textbullet\ Surveys (Target + Factor)\\
+        \textbullet\ Responses\\
+        \textbullet\ Model Metadata\\
+        \textbullet\ Feedback Records
+    };
+
+\begin{scope}[on background layer]
+\node[layer, draw=purple, fit=(dlist), inner sep=2.5mm, label={[lbl]above:DATA LAYER}] (data) {};
+\end{scope}
+
+% Predictive Modeling Layer - align bottom with Business Logic Layer
+\path let \p1=(data.west), \p2=(data.east), \p3=(biz.south) in
+    node[layer, draw=purple, minimum width={\x2-\x1}, minimum height=18mm, anchor=south west, label={[lbl]above:PREDICTIVE MODELING}] (ml) at (\x1,\y3) {};
+
+\node[font=\scriptsize, align=left, anchor=north west] at ($(ml.north west)+(2.5mm,-2.5mm)$) {
+    \textbullet\ Data Normalizer\\
+    \textbullet\ Prediction Service\\
+    \textbullet\ Training Pipeline\\
+    \textbullet\ Model Versioning
+};
+
+% Arrows
+\draw[->, thick, gray] (pres.east) -- (biz.west) node[midway, above, font=\tiny, align=center] {HTTPS\\REST API};
+\coordinate (split) at ($(biz.east)+(4mm,0)$);
+\draw[thick, gray] (biz.east) -- (split);
+\draw[->, thick, gray, rounded corners=3pt] (split) |- (data.west);
+\draw[->, thick, gray, rounded corners=3pt] (split) |- (ml.west);
+
+\end{tikzpicture}
+}%
+\caption{ACOSUS system architecture. Four layers separate presentation, business logic, data persistence, and predictive modeling, enabling independent scaling and clear separation of responsibilities.}
+\label{fig:architecture}
+\end{figure}
+
+\subsection{Dual-Survey Architecture}\label{subsec:dualsurvey}
 
 Before proceeding, we clarify terminology used throughout this paper. ACOSUS frames transfer student success prediction as a supervised learning problem where the goal is to predict an outcome from a set of input variables. We use the following terms interchangeably based on context:
 
@@ -196,11 +285,131 @@ The architecture supports flexible study configurations through \textbf{survey l
 \label{fig:dualsurvey}
 \end{figure}
 
-\subsection{Architectural Philosophy: Small Data by Design}\label{subsec:progressive}
+\subsection{Survey Data Processing}\label{subsec:dataprocessing}
+
+The survey instruments described in Section~\ref{subsec:dualsurvey} synthesize information collected from students into feature vectors suitable for predictive modeling. Each survey question serves as a proxy for an underlying success factor identified in prior research---our factor analysis work established mappings between observable indicators (e.g., scholarship status, commute distance) and latent constructs (e.g., financial stability, institutional commitment) that predict transfer student outcomes \cite{factoranalysis2023}.
+
+\subsubsection{Priority Weighting}
+
+Not all factors contribute equally to student success. Research on transfer student outcomes consistently identifies certain variables---academic self-efficacy, financial stability, institutional fit---as more predictive than others \cite{factoranalysis2023,computingtransfer2024,socialcognitive2022}. ACOSUS operationalizes this differential importance through \textbf{priority scores}: These priorities derive from empirical evidence (effect sizes and factor loadings from prior research) and can be dynamically adjusted as advisor feedback identifies which factors prove most predictive for specific institutional contexts.
+
+The priority-weighted aggregation follows a straightforward formulation. For a survey with $n$ questions, where question $i$ has priority score $p_i$, the student selects an option with weightage $w_i^{\text{selected}}$ from a maximum possible $w_i^{\text{max}}$:
+
+\begin{equation}
+S = \frac{\sum_{i=1}^{n} \left(\frac{w_i^{\text{selected}}}{w_i^{\text{max}}} \times p_i\right)}{\sum_{i=1}^{n} p_i}
+\label{eq:priority}
+\end{equation}
+
+This yields a normalized score in $[0, 1]$ that accounts for both response quality and question importance. A logistic calibration curve is then applied to prevent overconfident predictions at the extremes.
+
+\begin{table}[htbp]
+\centering
+\caption{Example priority score assignments based on literature-informed importance.}
+\label{tab:priority}
+\begin{tabular}{@{}p{3.2cm}p{4.5cm}cp{3.5cm}@{}}
+\toprule
+\textbf{Factor Category} & \textbf{Example Question} & \textbf{Priority} & \textbf{Rationale} \\
+\midrule
+Academic Self-Efficacy & How confident in your ability to succeed? & 9 & Strong predictor \cite{bandura1997} \\
+\midrule
+Financial Stability & Expected financial stress impact? & 8 & Affects retention \cite{socialcognitive2022} \\
+\midrule
+Institutional Commitment & How committed to completing this program? & 9 & Persistence indicator \cite{tinto1993} \\
+\midrule
+Logistics & Commute distance to university? & 6 & Practical barrier \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+This priority-weighted approach offers an additional advantage: the weights can serve as informative priors in probabilistic modeling frameworks. When the system transitions to more sophisticated prediction methods, priority scores provide a principled initialization---features with higher priorities receive greater initial influence, which the model can then refine based on observed data. This connection between expert knowledge and learned parameters supports Bayesian inference approaches where priority weights inform prior distributions over feature importance.
+
+\subsubsection{Data Type Handling}
+
+Survey responses encompass heterogeneous data types that require type-aware normalization before model ingestion. The distinction between \textbf{ordinal} and \textbf{cardinal} data is particularly important: ordinal responses (e.g., ``Not confident'' $<$ ``Somewhat confident'' $<$ ``Very confident'') carry inherent ordering that must be preserved, while cardinal responses (e.g., career aspiration categories) represent nominal distinctions without implied ranking.
+
+\begin{table}[htbp]
+\centering
+\caption{Normalization strategies for different data types.}
+\label{tab:normalization}
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Data Type} & \textbf{Example} & \textbf{Normalization Method} \\
+\midrule
+Ordinal & GPA range: ``3.0--3.5'' & Direct option weightage (e.g., 8/10) \\
+Cardinal & Career: ``Industry/Corporate'' & Equal weightage or domain-specific mapping \\
+Continuous & SAT score: 1250 & Min-max scaling: $(x - \min)/(\max - \min)$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+This type-aware processing ensures that the semantic meaning of responses is preserved during feature engineering---ordinal relationships remain ordered, nominal categories are not spuriously ranked, and continuous values are appropriately scaled.
+
+% Figure 3 - Survey Data Processing Pipeline diagram
+\begin{figure}[htbp]
+\centering
+\resizebox{0.95\textwidth}{!}{%
+\begin{tikzpicture}[
+    node distance=0.35cm,
+    inner/.style={rectangle, dashed, thick, rounded corners=3pt, align=center, inner sep=10pt, font=\normalsize},
+    outer/.style={rectangle, thick, rounded corners=3pt, inner sep=6pt},
+    arrow/.style={-{Stealth[scale=0.9]}, gray!70, thick, rounded corners=6pt},
+    arrowline/.style={gray!70, thick, rounded corners=6pt}
+]
+
+% Survey Collection inner boxes
+\node[inner, fill=surveyboxfill, draw=surveyblue!70, text width=4cm, minimum height=0.5cm] (q1) {Question 1 (Ordinal)};
+\node[inner, fill=surveyboxfill, draw=surveyblue!70, text width=4cm, minimum height=.5cm, below=0.2cm of q1] (q2) {Question 2 (Cardinal)};
+\node[inner, fill=surveyboxfill!40, draw=surveyblue!40, densely dotted, text width=4cm, minimum height=.5cm, below=0.2cm of q2] (qdots) {\textit{...}};
+\node[inner, fill=surveyboxfill, draw=surveyblue!70, text width=4cm, minimum height=0.5cm, below=0.2cm of qdots] (qn) {Question N (Continuous)};
+
+% Survey Collection title and outer box
+\node[above=0.3cm of q1, font=\normalsize\bfseries, text=surveyblue!80!black] (survey-title) {SURVEY COLLECTION};
+\node[outer, draw=surveyblue, fit=(survey-title)(q1)(q2)(qdots)(qn), inner sep=10pt] (survey-box) {};
+
+% Data Processing inner boxes
+\node[inner, fill=processboxfill, draw=processboxborder, text width=3cm, minimum height=1cm, right=1.8cm of q1.east |- q1.south east] (priority) {Priority\\Weighting};
+\node[inner, fill=processboxfill, draw=processboxborder, text width=3cm, minimum height=1cm, below=0.8cm of priority] (normalize) {Type-Aware\\Normalization};
+
+% Data Processing title and outer box
+\node[above=0.3cm of priority, font=\normalsize\bfseries, text=processorange!80!black] (process-title) {DATA PROCESSING};
+\node[outer, draw=processorange, fit=(process-title)(priority)(normalize), inner sep=10pt] (process-box) {};
+
+% Model Input inner box (centered with process box)
+\path (priority.center) -- (normalize.center) coordinate[midway] (process-center);
+\node[inner, fill=modelboxfill, draw=modelboxborder, text width=3cm, minimum height=1cm, right=1.5cm of process-box.east, anchor=west] (feature) {Normalized\\Feature Vector};
+
+% Model Input title and outer box
+\node[above=0.3cm of feature, font=\normalsize\bfseries, text=modelgreen] (model-title) {MODEL INPUT};
+\node[outer, draw=modelgreen, fit=(model-title)(feature), inner sep=10pt] (model-box) {};
+
+% Arrows from Survey to Priority Weighting (converging)
+% Merge point at Q2 level so Q2 has straight horizontal line
+\coordinate (merge-point) at ($(survey-box.east)!0.5!(process-box.west) |- q2$);
+
+% Curved lines from questions converging to merge point, then to priority
+\draw[arrowline] (q1.east) to[out=0, in=135] (merge-point);
+\draw[arrowline] (q2.east) -- (merge-point);
+\draw[arrowline] (qn.east) to[out=0, in=-135] (merge-point);
+\draw[arrow] (merge-point) to[out=45, in=180] (priority.west);
+
+% Arrow between Priority and Normalization
+\draw[arrow] (priority.south) -- (normalize.north);
+
+% Arrow from Normalization to Feature Vector
+\draw[arrowline] (normalize.east) -- (process-box.east |- normalize.east);
+\draw[arrow] (process-box.east |- normalize.east) to[out=0, in=180] (feature.west);
+
+\end{tikzpicture}
+}%
+\caption{Survey data processing pipeline. Raw responses undergo priority weighting and type-aware normalization to produce standardized feature vectors for model ingestion.}
+\label{fig:processing}
+\end{figure}
+
+\subsection{Progressive Learning Framework}\label{subsec:progressive}
 
 ACOSUS addresses data scarcity constraints through a framework that treats them not as limitations to overcome but as fundamental design constraints to embrace. The architecture ensures the system delivers value from the very first student enrollment—before any predictions are possible, advisors gain access to structured student profiles through standardized data collection instruments. This immediate utility transforms the cold-start period from a limitation into a productive data-gathering phase.
 
-\subsubsection{The Three-Stage Progressive Pipeline}
+\subsubsection{Three-Stage Pipeline}
 
 As observations accumulate, the system's predictive intelligence matures through a three-stage progressive pipeline:
 
@@ -297,226 +506,7 @@ The framework's modularity extends beyond the three-stage progression. Each comp
 \label{fig:pipeline}
 \end{figure}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% SECTION 4: SYSTEM IMPLEMENTATION
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{System Implementation}\label{sec:implementation}
-
-The ACOSUS platform translates the architectural principles described in Section~\ref{sec:design} into a functional system. This section details how survey instruments capture and process heterogeneous student data (\S\ref{subsec:dataprocessing}), the layered system architecture that supports both prediction and advising workflows (\S\ref{subsec:sysarch}), and the configuration flexibility that enables researchers to adapt the framework to diverse institutional contexts (\S\ref{subsec:config}).
-
-\subsection{Survey Data Processing}\label{subsec:dataprocessing}
-
-The survey instruments described in Section~\ref{subsec:dualsurvey} synthesize information collected from students into feature vectors suitable for predictive modeling. Each survey question serves as a proxy for an underlying success factor identified in prior research---our factor analysis work established mappings between observable indicators (e.g., scholarship status, commute distance) and latent constructs (e.g., financial stability, institutional commitment) that predict transfer student outcomes \cite{factoranalysis2023}.
-
-\subsubsection{Priority Weighting}
-
-Not all factors contribute equally to student success. Research on transfer student outcomes consistently identifies certain variables---academic self-efficacy, financial stability, institutional fit---as more predictive than others \cite{factoranalysis2023,computingtransfer2024,socialcognitive2022}. ACOSUS operationalizes this differential importance through \textbf{priority scores}: These priorities derive from empirical evidence (effect sizes and factor loadings from prior research) and can be dynamically adjusted as advisor feedback identifies which factors prove most predictive for specific institutional contexts.
-
-The priority-weighted aggregation follows a straightforward formulation. For a survey with $n$ questions, where question $i$ has priority score $p_i$, the student selects an option with weightage $w_i^{\text{selected}}$ from a maximum possible $w_i^{\text{max}}$:
-
-\begin{equation}
-S = \frac{\sum_{i=1}^{n} \left(\frac{w_i^{\text{selected}}}{w_i^{\text{max}}} \times p_i\right)}{\sum_{i=1}^{n} p_i}
-\label{eq:priority}
-\end{equation}
-
-This yields a normalized score in $[0, 1]$ that accounts for both response quality and question importance. A logistic calibration curve is then applied to prevent overconfident predictions at the extremes.
-
-\begin{table}[htbp]
-\centering
-\caption{Example priority score assignments based on literature-informed importance.}
-\label{tab:priority}
-\begin{tabular}{@{}p{3.2cm}p{4.5cm}cp{3.5cm}@{}}
-\toprule
-\textbf{Factor Category} & \textbf{Example Question} & \textbf{Priority} & \textbf{Rationale} \\
-\midrule
-Academic Self-Efficacy & How confident in your ability to succeed? & 9 & Strong predictor \cite{bandura1997} \\
-\midrule
-Financial Stability & Expected financial stress impact? & 8 & Affects retention \cite{socialcognitive2022} \\
-\midrule
-Institutional Commitment & How committed to completing this program? & 9 & Persistence indicator \cite{tinto1993} \\
-\midrule
-Logistics & Commute distance to university? & 6 & Practical barrier \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-This priority-weighted approach offers an additional advantage: the weights can serve as informative priors in probabilistic modeling frameworks. When the system transitions to more sophisticated prediction methods, priority scores provide a principled initialization---features with higher priorities receive greater initial influence, which the model can then refine based on observed data. This connection between expert knowledge and learned parameters supports Bayesian inference approaches where priority weights inform prior distributions over feature importance.
-
-\subsubsection{Data Type Handling}
-
-Survey responses encompass heterogeneous data types that require type-aware normalization before model ingestion. The distinction between \textbf{ordinal} and \textbf{cardinal} data is particularly important: ordinal responses (e.g., ``Not confident'' $<$ ``Somewhat confident'' $<$ ``Very confident'') carry inherent ordering that must be preserved, while cardinal responses (e.g., career aspiration categories) represent nominal distinctions without implied ranking.
-
-\begin{table}[htbp]
-\centering
-\caption{Normalization strategies for different data types.}
-\label{tab:normalization}
-\begin{tabular}{@{}lll@{}}
-\toprule
-\textbf{Data Type} & \textbf{Example} & \textbf{Normalization Method} \\
-\midrule
-Ordinal & GPA range: ``3.0--3.5'' & Direct option weightage (e.g., 8/10) \\
-Cardinal & Career: ``Industry/Corporate'' & Equal weightage or domain-specific mapping \\
-Continuous & SAT score: 1250 & Min-max scaling: $(x - \min)/(\max - \min)$ \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-This type-aware processing ensures that the semantic meaning of responses is preserved during feature engineering---ordinal relationships remain ordered, nominal categories are not spuriously ranked, and continuous values are appropriately scaled.
-
-% Figure 5 - Survey Data Processing Pipeline diagram
-\begin{figure}[htbp]
-\centering
-\resizebox{0.95\textwidth}{!}{%
-\begin{tikzpicture}[
-    node distance=0.35cm,
-    inner/.style={rectangle, dashed, thick, rounded corners=3pt, align=center, inner sep=10pt, font=\normalsize},
-    outer/.style={rectangle, thick, rounded corners=3pt, inner sep=6pt},
-    arrow/.style={-{Stealth[scale=0.9]}, gray!70, thick, rounded corners=6pt},
-    arrowline/.style={gray!70, thick, rounded corners=6pt}
-]
-
-% Survey Collection inner boxes
-\node[inner, fill=surveyboxfill, draw=surveyblue!70, text width=4cm, minimum height=0.5cm] (q1) {Question 1 (Ordinal)};
-\node[inner, fill=surveyboxfill, draw=surveyblue!70, text width=4cm, minimum height=.5cm, below=0.2cm of q1] (q2) {Question 2 (Cardinal)};
-\node[inner, fill=surveyboxfill!40, draw=surveyblue!40, densely dotted, text width=4cm, minimum height=.5cm, below=0.2cm of q2] (qdots) {\textit{...}};
-\node[inner, fill=surveyboxfill, draw=surveyblue!70, text width=4cm, minimum height=0.5cm, below=0.2cm of qdots] (qn) {Question N (Continuous)};
-
-% Survey Collection title and outer box
-\node[above=0.3cm of q1, font=\normalsize\bfseries, text=surveyblue!80!black] (survey-title) {SURVEY COLLECTION};
-\node[outer, draw=surveyblue, fit=(survey-title)(q1)(q2)(qdots)(qn), inner sep=10pt] (survey-box) {};
-
-% Data Processing inner boxes
-\node[inner, fill=processboxfill, draw=processboxborder, text width=3cm, minimum height=1cm, right=1.8cm of q1.east |- q1.south east] (priority) {Priority\\Weighting};
-\node[inner, fill=processboxfill, draw=processboxborder, text width=3cm, minimum height=1cm, below=0.8cm of priority] (normalize) {Type-Aware\\Normalization};
-
-% Data Processing title and outer box
-\node[above=0.3cm of priority, font=\normalsize\bfseries, text=processorange!80!black] (process-title) {DATA PROCESSING};
-\node[outer, draw=processorange, fit=(process-title)(priority)(normalize), inner sep=10pt] (process-box) {};
-
-% Model Input inner box (centered with process box)
-\path (priority.center) -- (normalize.center) coordinate[midway] (process-center);
-\node[inner, fill=modelboxfill, draw=modelboxborder, text width=3cm, minimum height=1cm, right=1.5cm of process-box.east, anchor=west] (feature) {Normalized\\Feature Vector};
-
-% Model Input title and outer box
-\node[above=0.3cm of feature, font=\normalsize\bfseries, text=modelgreen] (model-title) {MODEL INPUT};
-\node[outer, draw=modelgreen, fit=(model-title)(feature), inner sep=10pt] (model-box) {};
-
-% Arrows from Survey to Priority Weighting (converging)
-% Merge point at Q2 level so Q2 has straight horizontal line
-\coordinate (merge-point) at ($(survey-box.east)!0.5!(process-box.west) |- q2$);
-
-% Curved lines from questions converging to merge point, then to priority
-\draw[arrowline] (q1.east) to[out=0, in=135] (merge-point);
-\draw[arrowline] (q2.east) -- (merge-point);
-\draw[arrowline] (qn.east) to[out=0, in=-135] (merge-point);
-\draw[arrow] (merge-point) to[out=45, in=180] (priority.west);
-
-% Arrow between Priority and Normalization
-\draw[arrow] (priority.south) -- (normalize.north);
-
-% Arrow from Normalization to Feature Vector
-\draw[arrowline] (normalize.east) -- (process-box.east |- normalize.east);
-\draw[arrow] (process-box.east |- normalize.east) to[out=0, in=180] (feature.west);
-
-\end{tikzpicture}
-}%
-\caption{Survey data processing pipeline. Raw responses undergo priority weighting and type-aware normalization to produce standardized feature vectors for model ingestion.}
-\label{fig:processing}
-\end{figure}
-
-\subsection{System Architecture}\label{subsec:sysarch}
-
-The ACOSUS platform implements a four-layer architecture that separates concerns across presentation, business logic, data persistence, and predictive modeling (Figure~\ref{fig:architecture}). This separation enables independent scaling of each layer and supports the system's dual purpose: serving student-facing predictions while centralizing advisor-facing information.
-
-The \textbf{Presentation Layer} provides role-specific interfaces through a web-based application. Students access survey completion workflows, view predictions, and submit feedback. Advisors access a unified dashboard that consolidates student profiles---organized by the same categories as Factor Surveys---eliminating the need to gather information from disparate sources. Administrators configure survey instruments, trigger model training, and monitor system analytics.
-
-The \textbf{Business Logic Layer} orchestrates application workflows, enforcing the progressive learning framework's phase transitions. This layer ensures students encounter appropriate interfaces based on current system state---data collection only during the foundation phase, prediction with feedback during subsequent phases.
-
-The \textbf{Data Layer} provides flexible document storage for users, surveys, responses, and model metadata. The schema-flexible design accommodates researcher-defined survey instruments without requiring database migrations as questions evolve.
-
-The \textbf{Model Layer} operates as a separate service handling computationally intensive tasks: data normalization, prediction inference across all three pipeline stages, and model training. Asynchronous job queues prevent long-running training tasks from blocking prediction requests. Model versioning ensures that only validated improvements reach production---new models must demonstrate improved accuracy on held-out real student data before deployment.
-
-% Figure 6 - System Architecture diagram
-\begin{figure}[htbp]
-\centering
-\resizebox{0.95\textwidth}{!}{%
-\begin{tikzpicture}[
-    node distance=1.5mm,
-    box/.style={draw, dashed, rounded corners=3pt, minimum width=32mm, minimum height=8mm, align=center, font=\scriptsize},
-    layer/.style={draw, rounded corners=5pt, inner sep=3mm},
-    student/.style={box, draw=teal!70, fill=teal!15},
-    advisor/.style={box, draw=cyan!70, fill=cyan!15},
-    admin/.style={box, draw=magenta!50, fill=magenta!10},
-    lbl/.style={font=\footnotesize\bfseries, align=center},
-    >=Stealth
-]
-
-% Column 2: Business Logic Layer (reference)
-\node[student] (auth) {Auth};
-\node[student, below=of auth] (surv) {Survey Management};
-\node[advisor, below=of surv] (stage) {Stage Orchestration};
-\node[admin, below=of stage] (train) {Training Trigger};
-
-\begin{scope}[on background layer]
-\node[layer, draw=dblue, fit=(auth)(surv)(stage)(train), label={[lbl]above:BUSINESS LOGIC\\[-2pt]LAYER (Backend)}] (biz) {};
-\end{scope}
-
-% Column 1: Presentation Layer - create outer box first, then place inner boxes
-\path let \p1=(biz.north), \p2=(biz.south), \p3=(biz.west) in
-    node[layer, draw=orange,
-         minimum height={\y1-\y2},
-         minimum width=38mm,
-         anchor=north east,
-         label={[lbl]above:PRESENTATION\\[-2pt]LAYER}] (pres) at ($(\x3,\y1)+(-14mm,0)$) {};
-
-% Place boxes centered inside pres
-\node[student, anchor=north] at ($(pres.north)+(0,-3mm)$) (sp) {Student Portal\\[-1pt]\tiny Profile \textbar{} Survey\\[-1pt]\tiny Prediction \textbar{} Feedback};
-\node[advisor] at (pres.center) (ap) {Advisor Portal\\[-1pt]\tiny Search \textbar{} Manage\\[-1pt]\tiny Student Profiles};
-\node[admin, anchor=south] at ($(pres.south)+(0,3mm)$) (adm) {Admin Portal\\[-1pt]\tiny Configure Survey \textbar{} \\[-1pt]\tiny Train \textbar{} Analytics};
-
-% Column 3: Data Layer (top) + ML Layer (bottom)
-% Position Data Layer at top, aligned with Business Logic Layer outer box
-\path let \p1=(biz.north east) in
-    node[font=\scriptsize, align=left, anchor=north west] (dlist) at ($(\x1,\y1)+(12mm,0)$) {
-        \textbullet\ Users\\
-        \textbullet\ Surveys (Target + Factor)\\
-        \textbullet\ Responses\\
-        \textbullet\ Model Metadata\\
-        \textbullet\ Feedback Records
-    };
-
-\begin{scope}[on background layer]
-\node[layer, draw=purple, fit=(dlist), inner sep=2.5mm, label={[lbl]above:DATA LAYER}] (data) {};
-\end{scope}
-
-% Predictive Modeling Layer - align bottom with Business Logic Layer
-\path let \p1=(data.west), \p2=(data.east), \p3=(biz.south) in
-    node[layer, draw=purple, minimum width={\x2-\x1}, minimum height=18mm, anchor=south west, label={[lbl]above:PREDICTIVE MODELING}] (ml) at (\x1,\y3) {};
-
-\node[font=\scriptsize, align=left, anchor=north west] at ($(ml.north west)+(2.5mm,-2.5mm)$) {
-    \textbullet\ Data Normalizer\\
-    \textbullet\ Prediction Service\\
-    \textbullet\ Training Pipeline\\
-    \textbullet\ Model Versioning
-};
-
-% Title
-%\node[font=\large\bfseries, above=12mm of biz.north] (title) {ACOSUS SYSTEM ARCHITECTURE};
-
-% Arrows
-\draw[->, thick, gray] (pres.east) -- (biz.west) node[midway, above, font=\tiny, align=center] {HTTPS\\REST API};
-\coordinate (split) at ($(biz.east)+(4mm,0)$);
-\draw[thick, gray] (biz.east) -- (split);
-\draw[->, thick, gray, rounded corners=3pt] (split) |- (data.west);
-\draw[->, thick, gray, rounded corners=3pt] (split) |- (ml.west);
-
-\end{tikzpicture}
-}%
-\caption{ACOSUS system architecture. Four layers separate presentation, business logic, data persistence, and predictive modeling, enabling independent scaling and clear separation of responsibilities.}
-\label{fig:architecture}
-\end{figure}
-
-\subsection{Model Configuration Flexibility}\label{subsec:config}
+\subsection{Configuration Flexibility}\label{subsec:config}
 
 The algorithm-agnostic design described in Section~\ref{subsec:progressive} manifests in a configuration system that allows researchers to adapt the framework without modifying core infrastructure. Four categories of configuration support this flexibility:
 
@@ -528,7 +518,7 @@ The algorithm-agnostic design described in Section~\ref{subsec:progressive} mani
     \item \textbf{Cohort customization}---different academic programs can deploy program-specific Factor Surveys (e.g., technical preparation for computing majors) while maintaining a common outcome measure through shared Target Surveys.
 \end{enumerate}
 
-% Figure 7 - Dual-Survey Architecture with Linkage
+% Figure 5 - Dual-Survey Architecture with Linkage
 \begin{figure}[htbp]
 \centering
 \resizebox{0.95\textwidth}{!}{%
@@ -599,7 +589,7 @@ The remaining three categories address the progressive learning pipeline:
 This configuration flexibility supports the framework's positioning as a generalizable architecture rather than a fixed implementation. As methodological advances emerge---improved few-shot learning techniques, more effective data augmentation strategies, novel neural architectures---institutions can integrate these improvements by updating configuration rather than reengineering the system.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% SECTION 5: EVALUATION
+% SECTION 4: EVALUATION
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Evaluation}\label{sec:evaluation}
 
@@ -654,7 +644,7 @@ Likelihood to Recommend & 4.25 & 1.50 & 2 & 5 \\
 \end{tabular}
 \end{table}
 
-% Figure 7 - TAM construct scores
+% Figure 6 - TAM construct scores
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.9\textwidth]{infographics/fig1_tam_metrics.png}
@@ -666,7 +656,7 @@ Perceived Ease of Use achieved a perfect mean score ($M=5.00$, $SD=0.00$), indic
 
 \subsubsection{Behavioral Intention}
 
-% Figure 10 - Behavioral intention metrics
+% Figure 7 - Behavioral intention metrics
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.9\textwidth]{infographics/fig4_behavioral_intention.png}
@@ -680,7 +670,7 @@ Likelihood to Continue using the system was high ($M=4.75$, $SD=0.50$), suggesti
 
 Thematic analysis of open-ended responses revealed four primary themes.
 
-% Figure 16 - Qualitative theme distribution
+% Figure 8 - Qualitative theme distribution
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.9\textwidth]{infographics/fig6_qualitative_themes.png}
@@ -707,7 +697,7 @@ Personalization & 1 & ``Make it tailored more towards individual users'' \\
 \textbf{Usability} emerged most frequently, with participants consistently praising the interface design---one noted ``UI navigation is very user friendly'' while another described the system as ``easy to understand and navigate,'' corroborating the quantitative PEOU results ($M=5.00$). \textbf{Satisfaction} was equally prominent; when asked about missing features or interface difficulties, participants responded with ``No feature was missing, experience was great'' and ``None, everything was clear.'' One participant highlighted \textbf{efficiency}, noting the system was ``faster and more compatible'' than alternative advising methods, aligning with the Perceived Usefulness construct. Finally, one participant suggested greater \textbf{personalization}, recommending the system ``make it tailored more towards individual users and their specific situation.''
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% SECTION 6: CONCLUSION AND FUTURE WORK
+% SECTION 5: CONCLUSION AND FUTURE WORK
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Conclusion and Future Work}\label{sec:conclusion}
 
