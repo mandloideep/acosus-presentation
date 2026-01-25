@@ -575,10 +575,11 @@ The algorithm-agnostic design described in Section~\ref{subsec:progressive} mani
 \draw[predarr] (normpred.east) to[out=0,in=180] (load.west);
 \draw[predarr] (load.south) -- (predict.north);
 
-% Legend
-\node[below=12mm of fbox.south west,anchor=north west] (legendtitle) {};
-\draw[trainarr] (legendtitle.east) -- ++(12mm,0) node[right,font=\small,black] {Training Flow};
-\draw[predarr] ([yshift=-8mm]legendtitle.east) -- ++(12mm,0) node[right,font=\small,black] {Prediction Flow};
+% Legend (horizontal layout)
+\node[below=5mm of fbox.south west,anchor=north west,font=\small\bfseries] (legendlabel) {Legend:};
+\draw[trainarr] ([xshift=2mm]legendlabel.east) -- ++(10mm,0) node[right,font=\small,black] {Training Flow};
+\node[right=50mm of legendlabel.east,anchor=west] (predlegendstart) {};
+\draw[predarr] (predlegendstart.west) -- ++(10mm,0) node[right,font=\small,black] {Prediction Flow};
 \end{tikzpicture}
 }%
 \caption{Dual-Survey Architecture with survey linkage. Gray arrows indicate training flow (Target Survey through model training), while green arrows indicate prediction flow (Factor Surveys through inference). Dashed lines show linkage relationships between Target and Factor Surveys.}
