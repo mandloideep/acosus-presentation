@@ -228,54 +228,54 @@ The framework's modularity extends beyond the three-stage progression. Each comp
 ]
 
 % Stage 1 inner boxes
-\node[header=stage1, text width=3cm] (s1-head) {Data Collection \& Initial\\Prediction};
-\node[content=stage1, below=0.12cm of s1-head, text width=3cm] (s1-content) {
+\node[header=stage1, text width=3cm, minimum height=0.8cm] (s1-head) {Data Collection \& Initial\\Prediction};
+\node[content=stage1, below=0.12cm of s1-head, text width=3cm, minimum height=1.4cm] (s1-content) {
     \textbullet\ Collect high-quality labeled observations\\
     \textbullet\ Establish ground truth corpus\\
     \textbullet\ Lightweight similarity-based
 };
-\node[plug=stage1, below=0.12cm of s1-content, text width=3cm] (s1-plug) {Pluggable: Any\\similarity-based method};
+\node[plug=stage1, below=0.12cm of s1-content, text width=3cm, minimum height=0.7cm] (s1-plug) {Pluggable: Any\\similarity-based method};
 \node[above=0.08cm of s1-head, font=\scriptsize\bfseries, text=stage1!80!black] (s1-title) {STAGE 1: FOUNDATION};
 \node[outer, draw=stage1!70, fit=(s1-title)(s1-head)(s1-content)(s1-plug)] (stage1-box) {};
 
 % Stage 2 inner boxes
-\node[header=stage2, right=3cm of s1-head, text width=3cm] (s2-head) {Synthetic Data\\Generation};
-\node[content=stage2, below=0.12cm of s2-head, text width=3cm] (s2-content) {
+\node[header=stage2, right=3cm of s1-head, text width=3cm, minimum height=0.8cm] (s2-head) {Synthetic Data\\Generation};
+\node[content=stage2, below=0.12cm of s2-head, text width=3cm, minimum height=1.4cm] (s2-content) {
     \textbullet\ Learn distributional characteristics\\
     \textbullet\ Synthesize training observations\\
     \textbullet\ Preserve statistical properties
 };
-\node[plug=stage2, below=0.12cm of s2-content, text width=3cm] (s2-plug) {Pluggable: Any\\generative technique};
+\node[plug=stage2, below=0.12cm of s2-content, text width=3cm, minimum height=0.7cm] (s2-plug) {Pluggable: Any\\generative technique};
 \node[above=0.08cm of s2-head, font=\scriptsize\bfseries, text=stage2!80!black] (s2-title) {STAGE 2: AUGMENTATION};
 \node[outer, draw=stage2!70, fit=(s2-title)(s2-head)(s2-content)(s2-plug)] (stage2-box) {};
 
 % Stage 3 inner boxes
-\node[header=stage3, right=3cm of s2-head, text width=3cm] (s3-head) {Advanced Non-Linear\\Modeling};
-\node[content=stage3, below=0.12cm of s3-head, text width=3cm] (s3-content) {
+\node[header=stage3, right=3cm of s2-head, text width=3cm, minimum height=0.8cm] (s3-head) {Advanced Non-Linear\\Modeling};
+\node[content=stage3, below=0.12cm of s3-head, text width=3cm, minimum height=1.4cm] (s3-content) {
     \textbullet\ Train on augmented corpus\\
     \textbullet\ Capture complex relationships\\
     \textbullet\ Continuous improvement via feedback
 };
-\node[plug=stage3, below=0.12cm of s3-content, text width=3cm] (s3-plug) {Pluggable: Any deep\\learning architecture};
+\node[plug=stage3, below=0.12cm of s3-content, text width=3cm, minimum height=0.7cm] (s3-plug) {Pluggable: Any deep\\learning architecture};
 \node[above=0.08cm of s3-head, font=\scriptsize\bfseries, text=stage3!80!black] (s3-title) {STAGE 3: REFINEMENT};
 \node[outer, draw=stage3!70, fit=(s3-title)(s3-head)(s3-content)(s3-plug)] (stage3-box) {};
 
 % Pipeline title (centered above stages)
-\path (stage1-box.north west) -- (stage3-box.north east) coordinate[midway] (pipeline-center);
-\node[above=0.6cm of pipeline-center, font=\small\bfseries, text=pipelineborder] (pipeline-title) {ACOSUS THREE-STAGE PROGRESSIVE PIPELINE};
+% \path (stage1-box.north west) -- (stage3-box.north east) coordinate[midway] (pipeline-center);
+% \node[above=0.6cm of pipeline-center, font=\small\bfseries, text=pipelineborder] (pipeline-title) {ACOSUS THREE-STAGE PROGRESSIVE PIPELINE};
 
 % Pipeline outer box
-\begin{scope}[on background layer]
-\node[outer, draw=pipelineborder, fit=(pipeline-title)(stage1-box)(stage2-box)(stage3-box), inner sep=12pt] (pipeline) {};
-\end{scope}
+% \begin{scope}[on background layer]
+% \node[outer, draw=pipelineborder, fit=(pipeline-title)(stage1-box)(stage2-box)(stage3-box), inner sep=12pt] (pipeline) {};
+% \end{scope}
 
-% Input box (aligned to top of pipeline)
-\node[inner, fill=white, draw=inputred!80, text width=2.4cm, anchor=north] at ([xshift=-2.8cm]stage1-box.north west |- s1-title.north) (input-inner) {Survey Responses\\(Features, Labels)};
-\node[above=0.08cm of input-inner, font=\scriptsize\bfseries, text=inputred] (input-title) {DATA INPUT};
+% Input box (outer box top aligned with Stage 1 outer box top)
+\node[font=\scriptsize\bfseries, text=inputred, anchor=north] (input-title) at ([xshift=-1.8cm, yshift=-8pt]stage1-box.north west) {DATA INPUT};
+\node[inner, fill=white, draw=inputred!80, text width=2.4cm, below=0.08cm of input-title] (input-inner) {Survey Responses\\(Features, Labels)};
 \node[outer, draw=inputred!80, fit=(input-title)(input-inner)] (input-box) {};
 
-% Output box (aligned to bottom of pipeline, same size as input)
-\node[inner, fill=white, draw=outputviolet!80, text width=2.4cm, anchor=south] at ([xshift=-2.8cm]stage1-box.south west |- s1-plug.south) (output-inner) {Readiness Score};
+% Output box (outer box bottom aligned with Stage 1 outer box bottom)
+\node[inner, fill=white, draw=outputviolet!80, text width=2.4cm, anchor=south] (output-inner) at ([xshift=-1.8cm, yshift=8pt]stage1-box.south west) {Readiness Score};
 \node[above=0.08cm of output-inner, font=\scriptsize\bfseries, text=outputviolet, align=center] (output-title) {PREDICTION\\ OUTPUT};
 \node[outer, draw=outputviolet!80, fit=(output-title)(output-inner)] (output-box) {};
 
