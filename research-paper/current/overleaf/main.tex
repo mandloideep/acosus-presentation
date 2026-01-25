@@ -171,9 +171,9 @@ The architecture supports flexible study configurations through \textbf{survey l
 \centering
 \resizebox{0.95\textwidth}{!}{%
 \begin{tikzpicture}[
-  box/.style={draw,dashed,rounded corners=3pt,minimum width=28mm,minimum height=14mm,align=center,font=\small},
-  target/.style={box,draw=orange!70,fill=orange!10},
-  factor/.style={box,draw=blue!50,fill=blue!10},
+  box/.style={draw,dashed,rounded corners=3pt,align=center,font=\small},
+  target/.style={box,draw=orange!70,fill=orange!10,minimum width=28mm,minimum height=10mm},
+  factor/.style={box,draw=blue!50,fill=blue!10,minimum width=48mm,minimum height=10mm,text width=46mm},
   container/.style={draw,rounded corners=5pt,inner sep=4mm}
 ]
 % Target surveys
@@ -182,10 +182,10 @@ The architecture supports flexible study configurations through \textbf{survey l
 \node[container,draw=purple!70,fit=(sq)(mq),label={[font=\small\bfseries]above:TARGET SURVEYS (Label)}] (tbox) {};
 
 % Factor surveys
-\node[factor,right=25mm of sq] (lc) {Logistics \&\\Commitment\\{\footnotesize Distance, Work Hours}};
-\node[factor,right=3mm of lc] (fs) {Financial Support\\{\footnotesize Scholarship, Family}\\{\footnotesize Income}};
-\node[factor,below=3mm of lc] (ab) {Academic\\Background\\{\footnotesize GPA, SAT, Credits}};
-\node[factor,right=3mm of ab] (fu) {[Future Surveys]\\{\footnotesize Adaptable to New}\\{\footnotesize Predictors}};
+\node[factor,right=25mm of sq] (lc) {Logistics \& Commitment\\\footnotesize Distance, Work Hours};
+\node[factor,right=3mm of lc] (fs) {Financial Support\\\footnotesize Scholarship, Family Income};
+\node[factor,below=3mm of lc] (ab) {Academic Background\\\footnotesize GPA, SAT, Credits};
+\node[factor,right=3mm of ab] (fu) {[Future Surveys]\\\footnotesize Adaptable to New Predictors};
 \node[container,draw=blue!70,fit=(lc)(fs)(ab)(fu),label={[font=\small\bfseries]above:FACTOR SURVEYS (Features)}] (fbox) {};
 
 % Connection
