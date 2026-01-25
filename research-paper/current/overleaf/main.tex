@@ -465,7 +465,7 @@ The \textbf{Model Layer} operates as a separate service handling computationally
 \path let \p1=(biz.north), \p2=(biz.south), \p3=(biz.west) in
     node[layer, draw=orange,
          minimum height={\y1-\y2},
-         minimum width=28mm,
+         minimum width=38mm,
          anchor=north east,
          label={[lbl]above:PRESENTATION\\[-2pt]LAYER}] (pres) at ($(\x3,\y1)+(-14mm,0)$) {};
 
@@ -475,23 +475,25 @@ The \textbf{Model Layer} operates as a separate service handling computationally
 \node[admin, anchor=south] at ($(pres.south)+(0,3mm)$) (adm) {Admin Portal\\[-1pt]\tiny Configure Survey \textbar{} Train \textbar{} Analytics};
 
 % Column 3: Data Layer (top) + ML Layer (bottom)
-\node[right=12mm of auth, font=\scriptsize, align=left, anchor=north west] (dlist) {
-    \textbullet\ Users\\
-    \textbullet\ Surveys (Target + Factor)\\
-    \textbullet\ Responses\\
-    \textbullet\ Model Metadata\\
-    \textbullet\ Feedback Records
-};
+% Position Data Layer at top, aligned with Business Logic Layer outer box
+\path let \p1=(biz.north east) in
+    node[font=\scriptsize, align=left, anchor=north west] (dlist) at ($(\x1,\y1)+(12mm,0)$) {
+        \textbullet\ Users\\
+        \textbullet\ Surveys (Target + Factor)\\
+        \textbullet\ Responses\\
+        \textbullet\ Model Metadata\\
+        \textbullet\ Feedback Records
+    };
 
 \begin{scope}[on background layer]
 \node[layer, draw=purple, fit=(dlist), inner sep=2.5mm, label={[lbl]above:DATA LAYER}] (data) {};
 \end{scope}
 
-% Predictive Modeling Layer - match Data Layer size
-\path let \p1=(data.north), \p2=(data.south), \p3=(data.west), \p4=(data.east) in
-    node[below=12mm of data, layer, draw=purple, minimum height={\y1-\y2-6mm}, minimum width={\x4-\x3}, label={[lbl]above:PREDICTIVE MODELING}] (ml) {};
+% Predictive Modeling Layer - align bottom with Business Logic Layer
+\path let \p1=(data.west), \p2=(data.east), \p3=(biz.south) in
+    node[layer, draw=purple, minimum width={\x2-\x1}, minimum height=18mm, anchor=south west, label={[lbl]above:PREDICTIVE MODELING}] (ml) at (\x1,\y3) {};
 
-\node[font=\scriptsize, align=left] at (ml.center) {
+\node[font=\scriptsize, align=left, anchor=north west] at ($(ml.north west)+(2.5mm,-2.5mm)$) {
     \textbullet\ Data Normalizer\\
     \textbullet\ Prediction Service\\
     \textbullet\ Training Pipeline\\
