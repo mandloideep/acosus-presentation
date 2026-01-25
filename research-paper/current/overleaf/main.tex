@@ -270,12 +270,12 @@ The framework's modularity extends beyond the three-stage progression. Each comp
 % \end{scope}
 
 % Input box (outer box top aligned with Stage 1 outer box top)
-\node[font=\scriptsize\bfseries, text=inputred, anchor=north] (input-title) at ([xshift=-1.8cm, yshift=-8pt]stage1-box.north west) {DATA INPUT};
+\node[font=\scriptsize\bfseries, text=inputred, anchor=north] (input-title) at ([xshift=-2.2cm, yshift=-8pt]stage1-box.north west) {DATA INPUT};
 \node[inner, fill=white, draw=inputred!80, text width=2.4cm, below=0.08cm of input-title] (input-inner) {Survey Responses\\(Features, Labels)};
 \node[outer, draw=inputred!80, fit=(input-title)(input-inner)] (input-box) {};
 
 % Output box (outer box bottom aligned with Stage 1 outer box bottom)
-\node[inner, fill=white, draw=outputviolet!80, text width=2.4cm, anchor=south] (output-inner) at ([xshift=-1.8cm, yshift=8pt]stage1-box.south west) {Readiness Score};
+\node[inner, fill=white, draw=outputviolet!80, text width=2.4cm, anchor=south] (output-inner) at ([xshift=-2.2cm, yshift=8pt]stage1-box.south west) {Readiness Score};
 \node[above=0.08cm of output-inner, font=\scriptsize\bfseries, text=outputviolet, align=center] (output-title) {PREDICTION\\ OUTPUT};
 \node[outer, draw=outputviolet!80, fit=(output-title)(output-inner)] (output-box) {};
 
