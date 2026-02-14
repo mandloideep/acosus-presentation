@@ -94,7 +94,7 @@
 
 \begin{abstract}
 \normalsize
-Transfer students---particularly those from underrepresented backgrounds in computing---face unique challenges that traditional advising systems fail to address: fragmented information across institutions, limited visibility into pre-transfer trajectories, and predictive models calibrated on native student populations. We present ACOSUS (AI-driven Counseling System for Underrepresented Students), an intelligent advising platform designed specifically for transfer student populations. The system introduces two architectural innovations: a dual-survey architecture that separates outcome measurement from feature collection while providing advisors with unified student profiles, and a progressive learning framework that treats data scarcity as a fundamental design constraint rather than a limitation to overcome. A pilot evaluation with transfer students at a public urban university validated the data collection workflow, with participants rating both Perceived Ease of Use and Perceived Usefulness highly. The system is currently operational and collecting observations to enable future evaluation of its predictive capabilities.\vskip 2mm
+Transfer students---particularly those from underrepresented backgrounds in computing---face unique challenges that traditional advising systems fail to address: fragmented information across institutions, limited visibility into pre-transfer trajectories, and predictive models calibrated on native student populations. We present ACOSUS (AI-driven counseling system for transfer students), an intelligent advising platform designed specifically for transfer student populations. The system introduces two architectural innovations: a dual-survey architecture that separates outcome measurement from feature collection while providing advisors with unified student profiles, and a progressive learning framework that treats data scarcity as a fundamental design constraint rather than a limitation to overcome. A pilot evaluation with transfer students at a public urban university validated the data collection workflow, with participants rating both Perceived Ease of Use and Perceived Usefulness highly. The system is currently operational and collecting observations to enable future evaluation of its predictive capabilities.\vskip 2mm
 \textbf{Keywords:} transfer students, intelligent advising, machine learning, higher education, student success prediction.
 \end{abstract}
 
@@ -112,13 +112,13 @@ Effective advising is widely regarded as the linchpin of transfer-student succes
 To address this gap, we designed and evaluated an intelligent advising system that merges academic records with social-cognitive, financial, and experiential data collected both before and after transfer. Our contributions are as follows:
 
 \begin{enumerate}
-    \item We present an intelligent advising platform designed specifically for transfer students, built on a four-layer architecture that integrates standard academic records with student-provided background to build unified longitudinal profiles (\S\ref{subsec:sysarch}).
-    \item We introduce a dual-survey architecture that separates outcome measurement (Target Surveys) from feature collection (Factor Surveys), enabling systematic capture of transfer-specific variables while providing advisors with structured student profiles through a centralized dashboard (\S\ref{subsec:dualsurvey}, \S\ref{subsec:dataprocessing}).
-    \item We develop a progressive learning framework with algorithm-agnostic design, treating data scarcity as a fundamental design constraint. Configuration options for survey linkage, phase transitions, and hyperparameters support adaptation to diverse institutional contexts without code modification (\S\ref{subsec:progressive}, \S\ref{subsec:config}).
-    \item We validate the platform through a pilot deployment with transfer students, demonstrating that the data collection workflow is perceived as easy to use, useful, and trustworthy (\S\ref{sec:evaluation}).
+    \item We introduced an intelligent advising platform designed specifically for transfer students, integrating standard academic records with student-provided background to build a unified longitudinal profile.
+    \item We developed a dual-survey architecture that separates outcome measurement (Target Surveys) from feature collection (Factor Surveys), enabling systematic capture of transfer-specific variables---academic background, financial circumstances, and logistical constraints---while providing advisors with unified, structured student profiles through a centralized dashboard.
+    \item We implemented a modular prediction architecture with extensive configuration support that enables adaptation to diverse institutional contexts and emerging methodological advances. The system's algorithm-agnostic design—where any compatible method can serve each pipeline stage—allows researchers to empirically evaluate alternative approaches on their specific transfer student populations, while configuration options for survey linkage, phase transitions, and hyperparameters support customization without code modification.
+    \item We validated the platform through a pilot deployment with transfer students, who provided feedback on their experience using it, showing that it streamlines self-advising workflows and is perceived as trustworthy, actionable, and equity-enhancing.
 \end{enumerate}
 
-The remainder of the paper is organized as follows. Section~\ref{sec:literature} reviews related work on transfer-student success and intelligent advising. Section~\ref{sec:methodology} describes our system design and methodology. Section~\ref{sec:evaluation} reports empirical findings from our pilot study. Section~\ref{sec:conclusion} concludes and outlines directions for future research.
+The remainder of the paper is organized as follows. Section~\ref{sec:literature} reviews related work on transfer-student success and intelligent advising. Section~\ref{sec:methodology} describes our system design and methodology, as well as implementation details. Section~\ref{sec:evaluation} reports empirical findings from our pilot study. Section~\ref{sec:conclusion} concludes and outlines directions for future research.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % SECTION 2: LITERATURE REVIEW
@@ -137,7 +137,7 @@ Against this backdrop, scholars have called for mixed-methods approaches that in
 
 A related but distinct challenge compounds the technology gap: even where transfer-specific systems might be developed, data scarcity constrains their effectiveness. Paradoxically, this scarcity stems not from a shortage of transfer students but from systemic information fragmentation across institutional boundaries \cite{nguyen2024community,roksa2008credits}. When students transfer, only a narrow slice of their academic record---credits earned, GPA, and course equivalencies---moves with them; the rich contextual understanding that community college advisors accumulate over semesters of interaction rarely transfers \cite{roksa2008credits,nguyen2024community}. Factors such as family obligations, financial stressors, career motivations, and early warning signs identified by sending-institution advisors remain undocumented or siloed in systems inaccessible to the receiving university \cite{preposttransfer2014,topicmodeling2024}. University advisors must therefore reconstruct this understanding through time-intensive intake conversations, and machine learning systems face a cold-start problem at the institutional level: each university must build its training corpus from scratch, accumulating labeled observations one student at a time \cite{coleman2019coldstart}. Traditional predictive approaches face cold-start challenges in small-cohort settings \cite{coleman2019coldstart}---and when the very factors most predictive of success are precisely what the transfer process fails to preserve \cite{socialcognitive2022,roksa2008credits}.
 
-The present work addresses these gaps through an integrated systems approach. We present ACOSUS, a platform that fuses standard academic records (e.g., transfer-credit counts, GPA history, enrollment status) with student-supplied data collected through a structured dual-survey architecture. A progressive learning framework enables the system to deliver value immediately through standardized data collection, while building toward predictive capabilities as observations accumulate. Initial user feedback from a pilot deployment indicates that the system fills a critical void in current transfer-student support practices and offers a scalable template for institutions seeking to improve equity and retention.
+The present work answers these gaps from a systems perspective. Drawing on prior quantitative and qualitative insights, we engineer an integrated advising platform that fuses standard academic records (e.g., transfer-credit counts, GPA history, enrollment status) with student-supplied experience data and applies a lightweight, interpretable classifier to generate individualized success forecasts. An intuitive dashboard delivers these forecasts directly to students. Initial user feedback from the pilot indicates that the system fills a critical void in current transfer-student support practices and offers a scalable template for institutions seeking to improve equity and retention.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % SECTION 3: METHODOLOGY AND IMPLEMENTATION
@@ -174,7 +174,7 @@ The \textbf{Model Layer} operates as a separate service handling computationally
 ]
 
 % Column 2: Business Logic Layer (reference)
-\node[student] (auth) {Auth};
+\node[student] (auth) {Authentication};
 \node[student, below=of auth] (surv) {Survey Management};
 \node[advisor, below=of surv] (stage) {Stage Orchestration};
 \node[admin, below=of stage] (train) {Training Trigger};
@@ -249,7 +249,7 @@ The variables most predictive of transfer success---credit articulation outcomes
 
 Prior research on transfer student success has identified multiple dimensions that contribute to successful degree completion, including academic self-efficacy, institutional commitment, social integration, and career goal clarity \cite{factoranalysis2023,topicmodeling2024,computingtransfer2024}. Our earlier factor analysis work identified clusters of social-cognitive variables---academic confidence, time management, financial stability, and support systems---that distinguish successful transfer students from those who struggle \cite{factoranalysis2023}. Building on these findings, ACOSUS operationalizes ``success'' as representing the student's likelihood of academic success across these dimensions and ``factors'' as determinants that affect the likelihood.
 
-ACOSUS implements this predictive framework through a Dual-Survey Architecture that cleanly separates outcome collection from predictor collection. \textbf{Target Surveys} (measuring $Y$) capture success through two supported modes: (1) a single direct self-assessment question where students rate their success on a 0--100 scale, or (2) a multi-question instrument measuring constructs such as academic confidence, commitment, time management self-efficacy, and career motivation, which are aggregated into a single score via Weighted Calculation. \textbf{Factor Surveys} (measuring $X$) collect the predictor variables used for prediction, organized into categories: academic background (pre-transfer GPA, credits transferred, standardized test scores), financial circumstances (scholarship status, family support, employment intensity), logistical factors (commute distance, work hours), and interest/experience indicators (career aspiration, prior subject experience).
+ACOSUS implements this predictive framework through a Dual-Survey Architecture that cleanly separates outcome collection from predictor collection. \textbf{Target Surveys} (measuring $Y$) capture success through two supported modes: (1) a single direct self-assessment question where students rate their success on a 0--100 scale, or (2) a multi-question instrument measuring constructs such as academic confidence, commitment, time management self-efficacy, and career motivation, which are aggregated into a single score via weighted calculation. \textbf{Factor Surveys} (measuring $X$) collect the predictor variables used for prediction, organized into categories: academic background (pre-transfer GPA, credits transferred, standardized test scores), financial circumstances (scholarship status, family support, employment intensity), logistical factors (commute distance, work hours), and interest/experience indicators (career aspiration, prior subject experience).
 
 Beyond their role as predictor vectors for the AI model, Factor Surveys serve a critical function for advisors: they systematize the collection of transfer-specific information that advisors would otherwise gather through lengthy, inconsistent interviews. This design addresses the data fragmentation problem---every transfer student answers the same questions, enabling meaningful cohort-level comparisons while ensuring no critical risk factors are overlooked. Survey responses are immediately available in the advisor dashboard, eliminating the need to search emails, notes, or schedule follow-up conversations.
 
@@ -306,11 +306,11 @@ This yields a normalized score in $[0, 1]$ that accounts for both response quali
 \centering
 \caption{Example priority score assignments based on literature-informed importance.}
 \label{tab:priority}
-\begin{tabular}{@{}p{3.2cm}p{4.5cm}cp{3.5cm}@{}}
+\begin{tabular}{@{}p{3.1cm}p{4.5cm}cp{3.5cm}@{}}
 \toprule
 \textbf{Factor Category} & \textbf{Example Question} & \textbf{Priority} & \textbf{Rationale} \\
 \midrule
-Academic Self-Efficacy & How confident in your ability to succeed? & 9 & Strong predictor \cite{bandura1997} \\
+Academic ~ ~ ~ ~ ~ ~ ~ ~ ~ Self-Efficacy & How confident in your ability to succeed? & 9 & Strong predictor \cite{bandura1997} \\
 \midrule
 Financial Stability & Expected financial stress impact? & 8 & Affects retention \cite{socialcognitive2022} \\
 \midrule
@@ -703,13 +703,26 @@ Personalization & 1 & ``Make it tailored more towards individual users'' \\
 
 This paper presented ACOSUS, an AI-driven counseling system designed for transfer students in computing majors, addressing fragmented information landscapes and data scarcity in departmental-level advising.
 
-\textbf{Summary of Contributions.} Our work makes three contributions: (1) a dual-survey architecture that separates outcome measurement from feature collection while providing advisors with structured, standardized student profiles through a unified dashboard (\S\ref{subsec:dualsurvey}); (2) a progressive learning framework with algorithm-agnostic design that enables researchers to empirically evaluate alternative approaches on their specific transfer student populations, with configuration options supporting adaptation to diverse institutional contexts (\S\ref{subsec:progressive}, \S\ref{subsec:config}); and (3) pilot validation with transfer students ($N=4$) demonstrating strong usability---Perceived Ease of Use achieved a perfect score, indicating the survey workflow balances comprehensiveness with accessibility (\S\ref{sec:evaluation}).
+%\textbf{Summary of Contributions.} 
+Our primary contributions include: (1) a Dual-Survey Architecture that separates outcome measurement from feature collection while providing advisors with structured, standardized student profiles through a unified dashboard; (2) a modular prediction architecture with an algorithm-agnostic design that enables researchers to empirically evaluate alternative approaches on their specific transfer student populations, with configuration options for survey linkage, phase transitions, and hyperparameters supporting adaptation to diverse institutional contexts; and (3) pilot validation with transfer students ($N=4$) demonstrating strong usability---Perceived Ease of Use achieved a perfect score, indicating the survey workflow balances comprehensiveness with accessibility.
 
-\textbf{Limitations and Current Status.} The system is operational and collecting observations during the foundation phase, but predictive components remain to be evaluated as the corpus grows. The pilot's small sample size ($N=4$), single-institution setting, voluntary enrollment, and cross-sectional design limit generalizability; longitudinal outcome tracking was beyond scope.
+%\textbf{Limitations and Current Status.} 
+Currently, the system is operational and collecting observations during the foundation phase, but predictive components remain to be evaluated as the corpus grows. The pilot's small sample size ($N=4$), single-institution setting, voluntary enrollment, and cross-sectional design limit generalizability; longitudinal outcome tracking was beyond scope.
 
-\textbf{Future Work.} Priorities include: (1) evaluating the full progressive pipeline once sufficient observations accumulate, including accuracy, calibration, and fairness assessment; (2) multi-institutional deployment across community colleges and regional universities to test generalizability; (3) integrating advisor feedback mechanisms to refine predictions and assessing dashboard utility; and (4) exploring LLM integration for personalized narrative explanations and actionable intervention recommendations.
+%\textbf{Future Work.} 
+Looking ahead, this work opens several directions for future research and system development, including: (1) evaluating the full progressive pipeline once sufficient observations accumulate, including accuracy, calibration, and fairness assessment; (2) multi-institutional deployment across community colleges and regional universities to test generalizability; (3) integrating advisor feedback mechanisms to refine predictions and assessing dashboard utility; and (4) exploring LLM integration for personalized narrative explanations and actionable intervention recommendations.
 
 The modular architecture, with its emphasis on immediate advisor utility during data collection and configuration-based adaptation, offers a generalizable template for deploying intelligent systems in small-data educational contexts.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% ACKNOWLEDGMENT
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Acknowledgments}
+\small
+% This research was supported by the National Science Foundation (NSF) CISE-MSI award CNS-2219623 and an ASEE CyBR-MSI mini-grant under NSF award CNS-2139136. 
+
+This material is based upon work supported by the National Science Foundation under Grant No. CNS-2219623.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % BIBLIOGRAPHY
