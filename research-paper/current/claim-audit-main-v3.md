@@ -1,0 +1,46 @@
+# Claim Audit for `main-v3.tex`
+
+This audit checks the main literature-backed claims in the Introduction and Literature Review of `main-v3.tex` against the local paper summaries in `research-paper/past-papers/` and `research-paper/past-papers/ref/`.
+
+Status meanings:
+
+- `Supported`: the cited paper summaries clearly support the claim as written.
+- `Partially supported`: the cited papers support part of the claim, but the wording is broader or more specific than the source.
+- `Weak / mismatch`: the cited papers do not clearly support the claim as written, or the wrong source is attached.
+
+| Main text lines | Claim in `main-v3.tex` | Current citation(s) | Status | Audit note | Recommended action |
+| --- | --- | --- | --- | --- | --- |
+| 106 | "More than one-third of undergraduates follow this route." | `ishitani2018student`, `roksa2008credits` | Weak / mismatch | `ishitani2018student` is about transfer-out behavior at four-year institutions and cites 37.2% attending a different institution at least once, not specifically community-college-to-four-year transfer. `roksa2008credits` focuses on articulation and credit preservation, not a national prevalence estimate. | Replace with a source that directly reports vertical transfer prevalence, or soften the wording. |
+| 106 | Transfer pathway is more common in computing/STEM and among first-generation, low-income, and racially minoritized students. | `wali2025transfer`, `computingtransfer2024`, `jabbar2019complex` | Partially supported | `computingtransfer2024` and `wali2025transfer` support the importance of transfer pathways for underrepresented groups in CS/STEM. The exact comparative prevalence wording is stronger than what the local summaries directly confirm. | Keep claim but verify exact wording against the full papers, or change to "is especially important for". |
+| 106 | Transfer pathway is more affordable. | `socialcognitive2022`, `factoranalysis2023` | Supported | `factoranalysis2023` and `topicmodeling2024` repeatedly identify cost, affordability, and financial aid as major drivers of choosing community college first. | Keep. |
+| 106 | Transfer creates coordination problems; advisors face articulation and credit-recognition issues. | `topicmodeling2024`, `factoranalysis2023`, `nguyen2024community`, `roksa2008credits`, `preposttransfer2014` | Supported | `nguyen2024community` supports ambiguity, fragmentation, and outdated articulation information; `roksa2008credits` supports articulation/credit-preservation problems; `preposttransfer2014` supports advising complexity after transfer. | Keep. |
+| 108 | Transfer students experience transfer shock, defined here as GPA decline and belonging difficulty in the first two semesters. | `jaggars2025`, `laanan2010adjustment` | Supported | `jaggars-transfer-shock-study.md` clearly supports GPA drop after transfer; `advising-similarities-differences-transfer.md` and `laanan-transfer-student-adjustment.md` support alienation/isolation/adjustment concerns. | Keep. |
+| 108 | Transfer students show higher attrition rates overall. | `jaggars2025`, `thiry2023`, `townsend2009` | Partially supported | `jaggars2025` links GPA drop and rebound to departure risk. `thiry2023` discusses retention risks and vulnerable populations. The exact comparative "higher attrition rates overall" wording is plausible but not directly quoted in the local summaries. | Keep with a softer wording such as "face elevated attrition risk." |
+| 108 | GPA, accepted credits, standardized tests, distance, and financial aid are associated with retention/completion. | `wang2020road`, `factoranalysis2023`, `jaggars2025`, `thiry2023`, `townsend2009` | Partially supported | The sources support pieces of this list, but not all of them in the same outcome frame. `wang2020road` is about first-year community-college STEM transfer intent, not post-transfer retention/completion. | Split this into narrower claims or swap in more precise predictor papers. |
+| 108 | Social support, mentorship, and campus engagement matter but are hard to capture in administrative systems. | `topicmodeling2024`, `thiry2023` | Supported | `thiry2023` strongly supports faculty mentorship, peer community, internships/research, and support outside standard records. `topicmodeling2024` supports qualitative challenges beyond structured metrics. | Keep. |
+| 110 | Advising is an important factor in transfer-student success. | `topicmodeling2024`, `preposttransfer2014`, `lukszo2020`, `thiry2023` | Supported | All four sources support the centrality of advising or transfer student capital. | Keep. |
+| 110 | Large caseloads limit individualized advising. | `topicmodeling2024`, `preposttransfer2014` | Partially supported | `preposttransfer2014` clearly shows dissatisfaction, inaccessibility, and advising errors. The "large caseloads" language is more directly supported by `maliszewski2020` / `townsend2006` in `ref-table.md` than by the current citekeys. | Replace or add a stronger advisor-capacity citation. |
+| 110 | Existing advising dashboards mostly reproduce registrar/early-alert data and omit transfer-specific context. | `nguyen2024community`, `preposttransfer2014` | Weak / mismatch | `nguyen2024community` is about articulation-agreement websites and software features, not institutional dashboards or predictive dashboards. `preposttransfer2014` is about advising satisfaction and errors, not dashboard design. | Revise the claim or add a direct analytics/dashboard source. |
+| 132 | When formal advising falls short, students turn to Reddit, Discord, or peer forums. | `topicmodeling2024`, `nguyen2024community` | Partially supported | `standfast2024reddit` directly supports Reddit use; `topicmodeling2024` supports social media/family/advisors as information sources. `nguyen2024community` does not really support Reddit/Discord behavior. | Add the Reddit paper here, or change to "online and peer sources". |
+| 134 | Most advising tech tools were built for native student populations. | `nguyen2024community` | Partially supported | `nguyen2024community` supports limitations in transfer-focused advising software and articulation tools, but not a broad claim about "most" advising technologies. | Narrow the claim or add a broader systems-review source. |
+| 134 | Existing systems rely on registrar/LMS data and miss transfer-specific variables. | `nguyen2024community`, `topicmodeling2024` | Weak / mismatch | `topicmodeling2024` supports the existence of important unstructured transfer factors. `nguyen2024community` focuses on articulation websites. Neither directly establishes that most predictive systems are registrar/LMS-driven. | Add a learning-analytics review source or soften the wording. |
+| 136 | Mixed-methods approaches are needed because structured data miss important context. | `socialcognitive2022`, `wang2020road` | Supported | `wang2020road` is explicitly mixed-methods and emphasizes supports/barriers beyond simple metrics. `socialcognitive2022` aligns with broader social-cognitive factors. | Keep. |
+| 136 | Deng et al. used Revealed Causal Mapping on narratives to study social media and student experience. | `deng2021` | Supported | `SocialMediaUsebyFirstGenerationcollegestudents.md` clearly confirms RCM on narrative data and its relation to academic support/social capital. | Keep. |
+| 138 | Transfer-student records are split across institutions; only a narrow slice follows the student. | `nguyen2024community`, `roksa2008credits` | Partially supported | `roksa2008credits` supports credit-transfer/articulation problems. `nguyen2024community` supports fragmented and ambiguous transfer information. The exact wording about what "usually moves with them" is an inference rather than a direct finding. | Keep with slightly softer wording, or add a source that explicitly discusses record fragmentation. |
+| 138 | Advisors reconstruct missing context through time-consuming intake conversations. | `preposttransfer2014`, `topicmodeling2024` | Supported | `preposttransfer2014` strongly supports post-transfer advising complexity, student confusion, and the consequences of bad/incomplete advising information. | Keep. |
+| 138 | Cold-start prediction is a problem in small-data settings. | `coleman2019coldstart` | Supported | `cold-start-student-prediction.md` clearly supports the general cold-start problem in educational prediction systems, though it is from K-12 rather than higher education transfer advising. | Keep, but note the cross-domain transfer if reviewers are strict. |
+
+## Highest-priority citation problems
+
+1. The national "more than one-third" prevalence claim at line 106 is not supported by the current cite pair.
+2. The dashboard / early-alert claim at line 110 is too specific for the current sources.
+3. The registrar/LMS analytics claim at line 134 needs a direct analytics-review source.
+4. The Reddit / Discord claim at line 132 should cite the Reddit paper directly.
+
+## Practical next step
+
+If you want, the next step should be to patch `main-v3.tex` so that:
+
+- unsupported claims are softened,
+- missing citations are replaced with the stronger local sources already listed in `ref-table.md`,
+- and each risky sentence has a cleaner, reviewer-safe citation set.
