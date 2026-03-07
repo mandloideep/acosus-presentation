@@ -158,6 +158,8 @@ The \textbf{Data Layer} stores users, surveys, responses, and model metadata in 
 
 The \textbf{Model Layer} runs as a separate service for data normalization, prediction across all three pipeline stages, and model training. Asynchronous job queues keep training tasks from blocking prediction requests. Model versioning ensures that updated models are deployed only after they perform better on held-out real student data.
 
+This architecture defines where the major system functions reside, but it does not yet explain how transfer-specific information enters the platform. We address that next through the dual-survey design.
+
 % Figure 1 - System Architecture diagram
 \begin{figure}[htbp]
 \centering
@@ -237,7 +239,7 @@ The \textbf{Model Layer} runs as a separate service for data normalization, pred
 
 \subsection{Dual-Survey Architecture}\label{subsec:dualsurvey}
 
-This section introduces the terms used throughout the paper. ACOSUS treats transfer student success prediction as a supervised learning problem in which an outcome is predicted from a set of input variables. We use the following terms:
+This section introduces the terms used throughout the paper. ACOSUS treats transfer student success prediction as a supervised learning problem in which an outcome is predicted from a set of input variables. Because the platform separates what is being predicted from the information used to make that prediction, three terms are central to the design:
 
 \begin{itemize}
     \item \textbf{Target Survey / Outcome ($Y$)}: The survey instrument that measures what we want to predict---the student's likelihood of academic success. In machine learning terminology, this is the \emph{label} or \emph{dependent variable}.
@@ -245,15 +247,15 @@ This section introduces the terms used throughout the paper. ACOSUS treats trans
     \item \textbf{Constructs}: Psychological or educational concepts (e.g., self-efficacy, institutional commitment) that we operationalize through survey questions. A single Factor Survey may measure multiple constructs.
 \end{itemize}
 
-Variables that strongly affect transfer success---such as credit articulation outcomes, transfer shock, belonging, and financial precarity---are rarely captured in standard institutional systems \cite{topicmodeling2024,computingtransfer2024,socialcognitive2022}. Advisors also often lack one place to access the information they need; prior work shows that they spend substantial time gathering student data from multiple sources before they can offer useful guidance \cite{preposttransfer2014,thiry2023}. ACOSUS addresses both issues through a dual-survey architecture that supports prediction while also consolidating advisor-facing information.
+These definitions matter because many of the factors that shape transfer success do not map cleanly onto the information universities already store. Variables such as credit articulation outcomes, transfer shock, belonging, and financial precarity are rarely captured in standard institutional systems \cite{topicmodeling2024,computingtransfer2024,socialcognitive2022}. Advisors also often lack one place to access the information they need; prior work shows that they spend substantial time gathering student data from multiple sources before they can offer useful guidance \cite{preposttransfer2014,thiry2023}. ACOSUS addresses both issues through a dual-survey architecture that supports prediction while also consolidating advisor-facing information.
 
 Prior research identifies several dimensions of transfer success, including academic self-efficacy, institutional commitment, social integration, and career clarity \cite{factoranalysis2023,topicmodeling2024,computingtransfer2024}. Our earlier factor-analysis work grouped related variables into clusters such as academic confidence, time management, financial stability, and support systems \cite{factoranalysis2023}. Building on those findings, ACOSUS treats ``success'' as a student's likelihood of doing well across these dimensions and ``factors'' as the conditions that affect that likelihood.
 
-ACOSUS implements this framework through a dual-survey architecture that separates outcome collection from predictor collection. \textbf{Target Surveys} (measuring $Y$) capture success in two ways: (1) a single self-assessment item on a 0--100 scale, or (2) a multi-item instrument covering constructs such as academic confidence, commitment, time management self-efficacy, and career motivation, which are combined into a single score. \textbf{Factor Surveys} (measuring $X$) collect the predictor variables used for prediction, organized into categories such as academic background, financial circumstances, logistical constraints, and prior interests or experiences.
+ACOSUS implements this framework through a Dual-Survey Architecture that separates outcome collection from predictor collection. \textbf{Target Surveys} (measuring $Y$) capture success through two supported modes: (1) a single direct self-assessment question where students rate their success on a 0--100 scale, or (2) a multi-question instrument measuring constructs such as academic confidence, commitment, time management self-efficacy, and career motivation, which are aggregated into a single score via weighted calculation. \textbf{Factor Surveys} (measuring $X$) collect the predictor variables used for prediction, organized into categories such as academic background, financial circumstances, logistical constraints, and prior interests or experiences.
 
-Beyond their role in prediction, Factor Surveys also help advisors by standardizing the collection of transfer-specific information that would otherwise be gathered through lengthy and inconsistent interviews. Every transfer student answers the same set of questions, which supports cohort-level comparison and reduces the chance that important risk factors will be missed. Survey responses are immediately available in the advisor dashboard, which reduces the need to search through emails, notes, or follow-up conversations.
+Beyond their role as predictor vectors for the AI model, Factor Surveys also help advisors by standardizing the collection of transfer-specific information that would otherwise be gathered through lengthy and inconsistent interviews. Every transfer student answers the same set of questions, which supports cohort-level comparison and reduces the chance that important risk factors will be missed. Survey responses are immediately available in the advisor dashboard, which reduces the need to search through emails, notes, or follow-up conversations.
 
-The architecture also supports flexible study designs through \textbf{survey linkage}---explicit associations between Target and Factor Surveys. This makes it possible to compare different predictor sets, add new factors over time, and customize the system for different cohorts without changing the core infrastructure. Section~\ref{subsec:config} describes this configuration in more detail.
+The architecture also supports flexible study designs through \textbf{survey linkage}---explicit associations between Target and Factor Surveys. This makes it possible to compare different predictor sets, add new factors over time, and customize the system for different cohorts without changing the core infrastructure. Once these surveys are linked and deployed, the next step is to transform raw responses into model-ready inputs. Section~\ref{subsec:config} returns to the linkage mechanism from an implementation perspective.
 
 % Figure 3 - Dual-Survey Architecture diagram
 \begin{figure}[htbp]
@@ -287,7 +289,7 @@ The architecture also supports flexible study designs through \textbf{survey lin
 
 \subsection{Survey Data Processing}\label{subsec:dataprocessing}
 
-The survey instruments described in Section~\ref{subsec:dualsurvey} convert student responses into feature vectors for predictive modeling. Each question corresponds to a success-related factor identified in prior research. Our earlier factor-analysis work linked observable indicators such as scholarship status and commute distance to broader constructs such as financial stability and institutional commitment \cite{factoranalysis2023}.
+The survey instruments described in Section~\ref{subsec:dualsurvey} convert student responses into feature vectors for predictive modeling. Each question corresponds to a success-related factor identified in prior research. Our earlier factor-analysis work linked observable indicators such as scholarship status and commute distance to broader constructs such as financial stability and institutional commitment \cite{factoranalysis2023}. The purpose of this stage is to move from survey design to a consistent numerical representation that later modeling stages can use.
 
 \subsubsection{Priority Weighting}
 
@@ -321,7 +323,7 @@ Logistics & Commute distance to university? & 6 & Practical barrier \\
 \end{tabular}
 \end{table}
 
-These priority weights can also guide later modeling stages. When the system moves to more advanced probabilistic methods, higher-priority features can be given greater initial influence and then revised as more data become available.
+These priority weights also remain useful in later modeling stages. When ACOSUS moves to probabilistic methods, the weights can be used as informative priors or as a principled starting point, so that features with higher priorities have greater initial influence before the model updates them using observed data. This preserves a link between expert knowledge and learned parameters. The next step in processing is to ensure that different kinds of survey responses are normalized appropriately.
 
 \subsubsection{Data Type Handling}
 
@@ -342,7 +344,7 @@ Continuous & SAT score: 1250 & Min-max scaling: $(x - \min)/(\max - \min)$ \\
 \end{tabular}
 \end{table}
 
-This type-aware processing preserves the meaning of the responses during feature engineering: ordinal relationships remain ordered, nominal categories are not treated as ranked, and continuous values are scaled appropriately.
+This type-aware processing preserves the meaning of the responses during feature engineering: ordinal relationships remain ordered, nominal categories are not treated as ranked, and continuous values are scaled appropriately. With this processing in place, ACOSUS can pass standardized inputs to the prediction pipeline. The next subsection explains how that pipeline is designed for settings where only a small amount of institutional data is available at first.
 
 % Figure 3 - Survey Data Processing Pipeline diagram
 \begin{figure}[htbp]
@@ -407,7 +409,7 @@ This type-aware processing preserves the meaning of the responses during feature
 
 \subsection{Progressive Learning Framework}\label{subsec:progressive}
 
-ACOSUS is designed to work under limited-data conditions from the beginning. Rather than waiting until enough data exist to support prediction, the system provides value from the first student enrollment by giving advisors structured student profiles through standardized surveys. In this way, the early cold-start period still serves a useful advising and data-collection function.
+After survey responses have been standardized, the remaining challenge is how to make use of them when only a small amount of institutional data exists. ACOSUS is designed to work under limited-data conditions from the beginning. Rather than waiting until enough data exist to support prediction, the system provides value from the first student enrollment by giving advisors structured student profiles through standardized surveys. In this way, the early cold-start period still serves a useful advising and data-collection function.
 
 \subsubsection{Three-Stage Pipeline}
 
@@ -419,7 +421,7 @@ As observations accumulate, the system moves through a three-stage pipeline:
 
 \textbf{Refinement Stage.} Finally, the system transitions to more advanced non-linear models that can capture complex relationships between features and outcomes.
 
-The framework is modular across all three stages. Any compatible predictive method may be used in the foundation stage, any suitable generative technique may be used for augmentation, and any supervised learning architecture may be used in refinement. This design allows researchers to compare algorithms on their own student populations and to adopt new methods as they become available without redesigning the full system.
+The framework is modular across all three stages. Any compatible predictive method may be used in the foundation stage, any suitable generative technique may be used for augmentation, and any supervised learning architecture may be used in refinement. This design allows researchers to compare algorithms on their own student populations and to adopt new methods as they become available without redesigning the full system. Because those choices may differ across institutions and studies, the next subsection describes the configuration layer that controls how surveys, stages, and algorithms are connected in practice.
 
 % Figure 4 - Three-Stage Progressive Pipeline diagram
 \begin{figure}[htbp]
