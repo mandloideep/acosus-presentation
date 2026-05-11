@@ -3,9 +3,18 @@
 % Document Class: Article with ACM-style formatting
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\documentclass[letterpaper,11pt]{article}
-\usepackage[margin=1in]{geometry}
-\pagestyle{empty}
+\documentclass[a4paper,10.5pt,twoside]{article}
+\hyphenpenalty=500
+\tolerance=1000
+\emergencystretch=3em
+\textwidth=125mm
+\textheight=200mm
+\usepackage[top=3cm, bottom=3cm, inner=3cm, outer=3cm, includehead]{geometry}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhead{}
+\fancyfoot{}
+\raggedbottom
 \usepackage{xurl}
 \usepackage{graphicx}
 \usepackage{alltt}
@@ -63,50 +72,31 @@
 \urlstyle{same}
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
-\usepackage{helvet}
-\renewcommand{\familydefault}{\sfdefault}
+\usepackage{lmodern}
 \usepackage{csquotes}
-\usepackage[style=apa, backend=biber, sortcites=true, sorting=nyt]{biblatex}
-\DeclareLanguageMapping{english}{english-apa}
+\usepackage[style=numeric, backend=biber, sorting=none]{biblatex}
 \addbibresource{references.bib}
+\pagenumbering{arabic}
+\setcounter{page}{1}
 
 \usepackage[english]{babel}
 
-\usepackage{ragged2e}
-\setlength{\RaggedRightParindent}{0pt}
-\RaggedRight
-\linespread{1.0}
-\setlength{\parskip}{0pt}
-
-\usepackage{titlesec}
-% Level 1: ALL CAPS, bold, left-aligned, no displayed number
-\titleformat{\section}{\normalfont\bfseries\MakeUppercase}{}{0pt}{}
-% Level 2: bold, sentence case, no displayed number
-\titleformat{\subsection}{\normalfont\bfseries}{}{0pt}{}
-% Level 3: underlined, sentence case, not bold, no displayed number
-\titleformat{\subsubsection}{\normalfont}{}{0pt}{\underline}
-\titlespacing*{\section}{0pt}{1.5\baselineskip}{0.5\baselineskip}
-\titlespacing*{\subsection}{0pt}{1\baselineskip}{0.5\baselineskip}
-\titlespacing*{\subsubsection}{0pt}{0.5\baselineskip}{0.5\baselineskip}
-
 \begin{document}
+\fancyhead[LE]{\thepage\ \ \ \ [Author Last Names]}
+\fancyhead[RO]{ACOSUS: AI-driven Transfer Student Advising\ \ \ \ \thepage}
 
 \begin{center}
-DECISION SCIENCES INSTITUTE\\[6pt]
-An AI-driven transfer student advising system: Design, implementation, and evaluation
+\LARGE
+\textbf{An AI-driven Transfer Student Advising System: Design, Implementation, and User Study}\\[12pt]
+\normalsize
+\textbf{Author1,\footnote{Author1 title, Author1 institution, Author1 country, Author1 email.} Author2,\footnote{Author2 title, Author2 institution, Author2 country, Author2 email.} and Author3\footnote{Author3 title, Author3 institution, Author3 country, Author3 email.}}\\[4pt]
 \end{center}
 
-\bigskip
-
-\begin{center}
-\textbf{ABSTRACT}
-\end{center}
-
-Transfer students, particularly those from underrepresented backgrounds in computing, face advising challenges that conventional systems do not address well. Their records are split across institutions, receiving universities often have limited visibility into pre-transfer coursework, and many predictive models are trained on students who entered as freshmen. We present ACOSUS (AI-driven counseling system for transfer students), an advising platform built for transfer student populations. This paper describes the design rationale, architecture, and implementation of the system. The system combines a dual-survey design that separates outcome measurement from predictor collection with a progressive learning framework for settings where little institutional data are available at the start. A controlled pilot study with transfer students at a public urban university provides initial evidence that the design works as intended: participants reported high perceived ease of use and perceived usefulness, and the survey workflow operated correctly. The evaluation demonstrates design feasibility rather than validated predictive performance; the system is now deployed and collecting data for later evaluation at scale.
-
-\bigskip
-
-\noindent\textbf{KEYWORDS:}\quad transfer students, intelligent advising, machine learning, higher education, student success prediction
+\begin{abstract}
+\normalsize
+Transfer students, particularly those from underrepresented backgrounds in computing, face advising challenges that conventional systems do not address well. Their records are split across institutions, receiving universities often have limited visibility into pre-transfer coursework, and many predictive models are trained on students who entered as freshmen. We present ACOSUS (AI-driven counseling system for transfer students), an advising platform built for transfer student populations. This paper describes the design rationale, architecture, and implementation of the system. The system combines a dual-survey design that separates outcome measurement from predictor collection with a progressive learning framework for settings where little institutional data are available at the start. A controlled pilot study with transfer students at a public urban university provides initial evidence that the design works as intended: participants reported high perceived ease of use and perceived usefulness, and the survey workflow operated correctly. The evaluation demonstrates design feasibility rather than validated predictive performance; the system is now deployed and collecting data for later evaluation at scale.\vskip 2mm
+\textbf{Keywords:} transfer students, intelligent advising, machine learning, higher education, student success prediction.
+\end{abstract}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % SECTION 1: INTRODUCTION
@@ -477,7 +467,7 @@ The framework is modular across all three stages. Any compatible predictive meth
     \textbullet\ Capture complex relationships\\
     \textbullet\ Continuous improvement via feedback
 };
-\node[plug=stage3, below=0.12cm of s3-content, text width=3cm, minimum height=0.9cm] (s3-plug) {Pluggable: Any deep\\learning architecture\\(e.g., neural nets, gradient boosting)};
+\node[plug=stage3, below=0.12cm of s3-content, text width=3cm, minimum height=0.9cm] (s3-plug) {Pluggable: Any deep\\learning architecture\\(e.g., neural networks, gradient boosting)};
 \node[above=0.08cm of s3-head, font=\scriptsize\bfseries, text=stage3!80!black] (s3-title) {STAGE 3: REFINEMENT};
 \node[outer, draw=stage3!70, fit=(s3-title)(s3-head)(s3-content)(s3-plug)] (stage3-box) {};
 
@@ -740,7 +730,7 @@ This material is based upon work supported by the National Science Foundation un
 % BIBLIOGRAPHY
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{sloppypar}
-\printbibliography[title={REFERENCES}]
+\printbibliography
 \end{sloppypar}
 
 \end{document}
