@@ -98,11 +98,35 @@ An AI-driven transfer student advising system: Design, implementation, and evalu
 
 \bigskip
 
+% DSI compliance: the current abstract below is ~180 words; DSI requires <=100 words.
+% Proposed trimmed rewrite (97 words) for discussion -- review and replace the
+% paragraph below with this version if you want to adopt it:
+%
+% Transfer students face advising challenges that conventional systems do not
+% address well: records are split across institutions, and predictive models are
+% typically trained on native-cohort students. We present ACOSUS, an advising
+% platform that combines a dual-survey design separating outcome measurement from
+% predictor collection with a progressive learning framework for low-data
+% settings. A pilot with ten transfer students at a public urban university
+% provides initial evidence that the platform operates as intended; participants
+% endorsed the system positively on ease of use and usefulness. The evaluation
+% demonstrates design feasibility; the system is now collecting data for later
+% predictive evaluation.
+%
+% __ALT_PHRASING__: Abstract evaluation sentence (alternative form that adds the
+% foundation-phase caveat; longer but more cautious). To use, replace the
+% sentence "participants endorsed the system positively on perceived ease of use
+% and perceived usefulness, and the survey workflow operated correctly" below
+% with:
+%   participants endorsed the system positively on perceived ease of use and
+%   perceived usefulness, with the lower usefulness rating consistent with the
+%   foundation-phase context in which no predictions had yet been generated,
+%   and the survey workflow operated correctly.
 \begin{center}
 \textbf{ABSTRACT}
 \end{center}
 
-Transfer students, particularly those from underrepresented backgrounds in computing, face advising challenges that conventional systems do not address well. Their records are split across institutions, receiving universities often have limited visibility into pre-transfer coursework, and many predictive models are trained on students who entered as freshmen. We present ACOSUS (AI-driven counseling system for transfer students), an advising platform built for transfer student populations. This paper describes the design rationale, architecture, and implementation of the system. The system combines a dual-survey design that separates outcome measurement from predictor collection with a progressive learning framework for settings where little institutional data are available at the start. A controlled pilot study with transfer students at a public urban university provides initial evidence that the design works as intended: participants reported high perceived ease of use and perceived usefulness, and the survey workflow operated correctly. The evaluation demonstrates design feasibility rather than validated predictive performance; the system is now deployed and collecting data for later evaluation at scale.
+Transfer students, particularly those from underrepresented backgrounds in computing, face advising challenges that conventional systems do not address well. Their records are split across institutions, receiving universities often have limited visibility into pre-transfer coursework, and many predictive models are trained on students who entered as freshmen. We present ACOSUS (AI-driven counseling system for transfer students), an advising platform built for transfer student populations. This paper describes the design rationale, architecture, and implementation of the system. The system combines a dual-survey design that separates outcome measurement from predictor collection with a progressive learning framework for settings where little institutional data are available at the start. A controlled pilot study with transfer students at a public urban university provides initial evidence that the design works as intended: participants endorsed the system positively on perceived ease of use and perceived usefulness, and the survey workflow operated correctly. The evaluation demonstrates design feasibility rather than validated predictive performance; the system is now deployed and collecting data for later evaluation at scale.
 
 \bigskip
 
@@ -611,7 +635,7 @@ To assess the usability and perceived value of ACOSUS, we conducted a pilot stud
 
 % \subsubsection{Participants}
 
-Four transfer students ($N=4$) from Northeastern Illinois University participated in the study. Participants were recruited by email and enrolled after providing informed consent. All were active transfer students in computing-related majors. The evaluation took place during the foundation phase of the progressive learning pipeline (Section~\ref{subsec:progressive}), when the system was still collecting labeled observations for the initial training corpus. At that stage, no predictive model had yet been trained, so the system's main function was structured data collection rather than prediction. Participants completed the Factor and Target Survey instruments described in Sections~\ref{subsec:dualsurvey} and~\ref{subsec:dataprocessing}, then completed a feedback survey through Qualtrics. The study protocol received Institutional Review Board (IRB) approval before data collection began.
+Ten transfer students ($N=10$) from Northeastern Illinois University participated in the study. Participants were recruited by email and enrolled after providing informed consent. All were active transfer students in computing-related majors. The evaluation took place during the foundation phase of the progressive learning pipeline (Section~\ref{subsec:progressive}), when the system was still collecting labeled observations for the initial training corpus. At that stage, no predictive model had yet been trained, so the system's main function was structured data collection rather than prediction. Participants completed the Factor and Target Survey instruments described in Sections~\ref{subsec:dualsurvey} and~\ref{subsec:dataprocessing}, then completed a feedback survey through Qualtrics. The study protocol received Institutional Review Board (IRB) approval before data collection began.
 
 \subsection{Evaluation Instruments}\label{subsec:instruments}
 
@@ -638,7 +662,31 @@ Open-ended questions captured qualitative feedback on interface difficulties, he
 
 \subsubsection{TAM Construct Scores}
 
-The TAM-based measures showed positive responses across all dimensions.
+% __ALT_PHRASING__: TAM Construct Scores opening paragraph. The active version
+% (recommended Option A) is below; alternative phrasings retained for reviewer
+% consideration:
+%
+% Option B (frames the spread as expected rather than as a weakness):
+%   The TAM-based measures showed positive endorsement on perceived ease of use
+%   and perceived usefulness, with the expected differences across respondents
+%   in how strongly each construct was endorsed. Because this evaluation was
+%   conducted during the foundation phase, before any predictive output had
+%   been generated for participants, the scores reflect participants'
+%   experience of the data-collection workflow and interface rather than the
+%   system's predictive utility. Lower ratings on usefulness should therefore
+%   be read as a reflection of the system's current functionality at the
+%   foundation phase rather than as evidence against the underlying design.
+%
+% Option C (most measured, fewest adjectives):
+%   Participants endorsed perceived ease of use and perceived usefulness
+%   positively across the TAM dimensions. Because this evaluation was conducted
+%   during the foundation phase, before any predictive output had been
+%   generated for participants, the scores reflect participants' experience of
+%   the data-collection workflow and interface rather than the system's
+%   predictive utility. Lower ratings on usefulness should therefore be read
+%   as a reflection of the system's current functionality at the foundation
+%   phase rather than as evidence against the underlying design.
+The TAM-based measures showed favorable responses on perceived ease of use and perceived usefulness across the participant group. Because this evaluation was conducted during the foundation phase, before any predictive output had been generated for participants, the scores reflect participants' experience of the data-collection workflow and interface rather than the system's predictive utility. Lower ratings on usefulness should therefore be read as a reflection of the system's current functionality at the foundation phase rather than as evidence against the underlying design.
 
 \begin{table}[htbp]
 \centering
@@ -648,10 +696,10 @@ The TAM-based measures showed positive responses across all dimensions.
 \toprule
 \textbf{Metric} & \textbf{Mean} & \textbf{SD} & \textbf{Min} & \textbf{Max} \\
 \midrule
-Perceived Usefulness (PU) & 4.46 & 0.85 & 3 & 5 \\
-Perceived Ease of Use (PEOU) & 5.00 & 0.00 & 5 & 5 \\
-Likelihood to Continue & 4.75 & 0.50 & 4 & 5 \\
-Likelihood to Recommend & 4.25 & 1.50 & 2 & 5 \\
+Perceived Usefulness (PU) & 3.27 & 1.44 & 1 & 5 \\
+Perceived Ease of Use (PEOU) & 3.83 & 1.47 & 1 & 5 \\
+Likelihood to Continue & 3.00 & 2.07 & 0 & 5 \\
+Likelihood to Recommend & 2.88 & 1.96 & 0 & 5 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -660,11 +708,11 @@ Likelihood to Recommend & 4.25 & 1.50 & 2 & 5 \\
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.9\textwidth]{infographics/fig1_tam_metrics.png}
-\caption{TAM construct scores. Perceived Ease of Use achieved a perfect score ($M=5.00$), while Perceived Usefulness showed strong agreement ($M=4.46$) with slightly more variance.}
+\caption{TAM construct scores ($N=10$). Perceived Ease of Use was the highest-rated TAM construct ($M=3.83$), while Perceived Usefulness was lower and showed similar variance ($M=3.27$).}
 \label{fig:tam}
 \end{figure}
 
-Perceived Ease of Use achieved a perfect mean score ($M=5.00$, $SD=0.00$), indicating that all participants found the system easy to learn and use. Perceived Usefulness was also high ($M=4.46$, $SD=0.85$), although the larger variance suggests some differences in how useful participants found the system for their own situations.
+Perceived Ease of Use received the highest mean among the TAM constructs ($M=3.83$, $SD=1.47$), indicating moderate, positive-leaning agreement that the system is easy to learn and use, though the wide spread points to uneven experiences across participants. Perceived Usefulness was lower and similarly dispersed ($M=3.27$, $SD=1.44$), suggesting that participants saw the system as easy to operate but were less uniformly convinced of its usefulness for their own advising needs.
 
 \subsubsection{Behavioral Intention}
 
@@ -672,11 +720,11 @@ Perceived Ease of Use achieved a perfect mean score ($M=5.00$, $SD=0.00$), indic
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.9\textwidth]{infographics/fig4_behavioral_intention.png}
-\caption{Behavioral intention. Likelihood to Continue ($M=4.75$) exceeded Likelihood to Recommend ($M=4.25$), with the latter showing greater variance.}
+\caption{Behavioral intention ($N=10$). Likelihood to Continue ($M=3.00$) was slightly higher than Likelihood to Recommend ($M=2.88$); both showed substantial variance across respondents ($SD\approx2$).}
 \label{fig:behavioral}
 \end{figure}
 
-Likelihood to Continue using the system was high ($M=4.75$, $SD=0.50$), suggesting strong personal interest in continued use. Likelihood to Recommend showed more variation ($M=4.25$, $SD=1.50$), including one lower rating (2/5). This difference may reflect caution about recommending a new tool rather than dissatisfaction with the system itself.
+Behavioral intention was the weakest dimension in the evaluation. Likelihood to Continue using the system was moderate on average ($M=3.00$, $SD=2.07$), and Likelihood to Recommend was slightly lower and similarly dispersed ($M=2.88$, $SD=1.96$). Both distributions are bimodal: several respondents scored 5/5 while others scored 0--2, with few intermediate ratings. This pattern suggests that the system appeals strongly to a subset of transfer students but not to others, rather than producing uniform mild enthusiasm. We read this cautiously: with only ten respondents at the foundation phase, when no predictions had yet been generated, low recommendation scores may reflect limited current utility rather than rejection of the design.
 
 \subsection{Qualitative Findings}\label{subsec:qualfindings}
 
@@ -686,27 +734,47 @@ Open-ended responses yielded four main themes.
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.9\textwidth]{infographics/fig6_qualitative_themes.png}
-\caption{Qualitative theme distribution. UI/Navigation Positive was the most frequently occurring theme (4 mentions), followed by No Issues Reported (3), Personalization Request (2), and Speed/Efficiency (1).}
+\caption{Qualitative theme distribution ($N=10$). Feature Requests was the most frequent theme (8 mentions), followed by UI/Navigation Positive (7), No Issues Reported (5), and Assessment \& Exploration Value (4).}
 \label{fig:themes}
 \end{figure}
 
 \begin{table}[htbp]
 \centering
-\caption{Qualitative themes and representative responses.}
+\caption{Qualitative themes and representative responses ($N=10$).}
 \label{tab:themes}
 \begin{tabular}{@{}lcp{7cm}@{}}
 \toprule
 \textbf{Theme} & \textbf{Count} & \textbf{Representative Quote} \\
 \midrule
-Usability & 3 & ``UI navigation is very user friendly''; ``User interface was easy to understand and navigate'' \\
-Satisfaction & 3 & ``No feature was missing, experience was great''; ``None, everything was clear'' \\
-Efficiency & 1 & ``Faster and more compatible'' \\
-Personalization & 1 & ``Make it tailored more towards individual users'' \\
+Feature Requests & 8 & ``Make it tailored more towards individual users and their specific situation''; ``Better analysis of prerequisites to allow for registration'' \\
+UI/Navigation Positive & 7 & ``The UI navigation is very user friendly''; ``All the interface of the website was very intuitive to interact with'' \\
+No Issues Reported & 5 & ``No feature was missing, my experience was great''; ``None, everything was clear'' \\
+Assessment \& Exploration Value & 4 & ``The assessment is fun and helpful to me''; ``Career exploration'' \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\textbf{Usability} appeared most often. Participants consistently described the interface as easy to navigate; one wrote that the ``UI navigation is very user friendly,'' and another described it as ``easy to understand and navigate,'' which is consistent with the PEOU results ($M=5.00$). \textbf{Satisfaction} was also common. When asked about missing features or interface difficulties, participants responded with comments such as ``No feature was missing, experience was great'' and ``None, everything was clear.'' One participant emphasized \textbf{efficiency}, describing the system as ``faster and more compatible'' than other advising methods. Another suggested greater \textbf{personalization}, recommending that the system be tailored more closely to individual users and their situations.
+\textbf{Feature Requests} was the most frequent theme. Rather than indicating dissatisfaction, the pattern suggests that participants engaged closely enough with the system to want it to do more. Several asked for tighter personalization, with one participant writing that they would ``make it tailored more towards individual users and their specific situation,'' while others requested deeper academic functionality, such as ``better analysis of prerequisites to allow for registration'' and ``more answer choices besides the ones provided.'' \textbf{UI/Navigation Positive} was the next most common theme; participants consistently described the interface as easy to navigate, with one writing that ``the UI navigation is very user friendly'' and another that ``all the interface of the website was very intuitive to interact with,'' which is consistent with PEOU being the highest-rated TAM construct ($M=3.83$). \textbf{No Issues Reported} formed a third cluster: when asked about missing features or interface difficulties, several participants responded with comments such as ``no feature was missing, my experience was great'' and ``none, everything was clear.'' Finally, \textbf{Assessment \& Exploration Value} captured comments in which participants recognized the system's worth for self-assessment and for exploring their options, even at the foundation phase when no predictions were yet available; participants described it as a tool for ``career exploration'' and noted that ``the assessment is fun and helpful to me.''
+
+Alongside the student pilot, the project also received informal feedback from academic advisors. Advisors agreed that the system addresses a real need and viewed it as a promising direction, while noting that its full value depends on the prediction capability that the foundation phase has not yet produced. They also indicated that the system could help students arrive better prepared for advising meetings, and that consolidating its captured information into a single advising hub would further strengthen its value to advising workflows.
+
+% __ALT_PHRASING__: Advisor feedback final sentence (the second sentence of the
+% paragraph above is the recommended Option A). Alternative phrasings retained
+% for reviewer consideration:
+%
+% Option B (drops the template idea entirely; keeps preparedness and hub as
+% separate observations):
+%   They also observed that the system could encourage student preparedness
+%   for advising meetings and that consolidating its captured information into
+%   a single advising hub would strengthen its fit with existing advising
+%   workflows.
+%
+% Option C (closest to the advisor's own framing, with "for example" softening
+% the template):
+%   They also suggested that the system could help students prepare for
+%   advising meetings, for example through a preparation template, and noted
+%   that consolidating its captured information into a single advising hub
+%   would strengthen its fit with advising workflows.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % SECTION 5: CONCLUSION AND FUTURE WORK
@@ -716,10 +784,10 @@ Personalization & 1 & ``Make it tailored more towards individual users'' \\
 This paper presented ACOSUS, an AI-driven counseling system designed for transfer students in computing majors. The system addresses two problems that often limit transfer advising: fragmented information and limited institutional data for prediction.
 
 %\textbf{Summary of Contributions.} 
-Our primary contributions are: (1) a dual-survey architecture that separates outcome measurement from predictor collection while providing advisors with structured student profiles through a unified dashboard; (2) a modular prediction architecture with configuration support for survey linkage, phase transitions, and hyperparameters, allowing institutions to adapt the system to their own settings; and (3) a pilot evaluation with transfer students ($N=4$) showing strong usability, including a perfect Perceived Ease of Use score.
+Our primary contributions are: (1) a dual-survey architecture that separates outcome measurement from predictor collection while providing advisors with structured student profiles through a unified dashboard; (2) a modular prediction architecture with configuration support for survey linkage, phase transitions, and hyperparameters, allowing institutions to adapt the system to their own settings; and (3) a pilot evaluation with transfer students ($N=10$) showing that the system is perceived as moderately easy to use and useful, with Perceived Ease of Use ($M=3.83$) the strongest of the TAM constructs, alongside notable variance in behavioral intention.
 
 %\textbf{Limitations and Current Status.} 
-The system is currently operational and collecting observations during the foundation phase, but its predictive components still need to be evaluated as the dataset grows. The pilot's small sample size ($N=4$), single-institution setting, voluntary enrollment, and cross-sectional design limit generalizability, and longitudinal outcome tracking was beyond the scope of the present study.
+The system is currently operational and collecting observations during the foundation phase, but its predictive components still need to be evaluated as the dataset grows. The pilot's small sample size ($N=10$), single-institution setting, voluntary enrollment, and cross-sectional design limit generalizability, and longitudinal outcome tracking was beyond the scope of the present study.
 
 %\textbf{Future Work.} 
 Future work includes: (1) evaluating the full progressive pipeline once sufficient observations have been collected, including accuracy, calibration, and fairness; (2) deploying the system across multiple institutions to test generalizability; (3) incorporating advisor feedback into the prediction process and evaluating dashboard use in practice; and (4) exploring LLM-based narrative explanations and intervention recommendations.
