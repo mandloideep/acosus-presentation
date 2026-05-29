@@ -107,7 +107,7 @@ An AI-driven transfer student advising system: Design, implementation, and evalu
 % typically trained on native-cohort students. We present ACOSUS, an advising
 % platform that combines a dual-survey design separating outcome measurement from
 % predictor collection with a progressive learning framework for low-data
-% settings. A pilot with ten transfer students at a public urban university
+% settings. A pilot with ten transfer students at six public U.S. universities
 % provides initial evidence that the platform operates as intended; participants
 % endorsed the system positively on ease of use and usefulness. The evaluation
 % demonstrates design feasibility; the system is now collecting data for later
@@ -122,11 +122,22 @@ An AI-driven transfer student advising system: Design, implementation, and evalu
 %   perceived usefulness, with the lower usefulness rating consistent with the
 %   foundation-phase context in which no predictions had yet been generated,
 %   and the survey workflow operated correctly.
+%
+% __ALT_PHRASING__: Abstract participating-institutions framing (active version
+% below is recommended Option A: "six public universities in the United
+% States"). Alternative phrasing for reviewer consideration:
+%
+% Option B (leverages the MSI/HSI alignment with the paper's underrepresented-
+% students framing; replace "six public universities in the United States" with):
+%   six public U.S. universities, several of them minority-serving institutions
+%
+% Option C would name each institution explicitly in the Study Design section
+% rather than in the abstract; the abstract phrasing would remain as Option A.
 \begin{center}
 \textbf{ABSTRACT}
 \end{center}
 
-Transfer students, particularly those from underrepresented backgrounds in computing, face advising challenges that conventional systems do not address well. Their records are split across institutions, receiving universities often have limited visibility into pre-transfer coursework, and many predictive models are trained on students who entered as freshmen. We present ACOSUS (AI-driven counseling system for transfer students), an advising platform built for transfer student populations. This paper describes the design rationale, architecture, and implementation of the system. The system combines a dual-survey design that separates outcome measurement from predictor collection with a progressive learning framework for settings where little institutional data are available at the start. A controlled pilot study with transfer students at a public urban university provides initial evidence that the design works as intended: participants endorsed the system positively on perceived ease of use and perceived usefulness, and the survey workflow operated correctly. The evaluation demonstrates design feasibility rather than validated predictive performance; the system is now deployed and collecting data for later evaluation at scale.
+Transfer students, particularly those from underrepresented backgrounds in computing, face advising challenges that conventional systems do not address well. Their records are split across institutions, receiving universities often have limited visibility into pre-transfer coursework, and many predictive models are trained on students who entered as freshmen. We present ACOSUS (AI-driven counseling system for transfer students), an advising platform built for transfer student populations. This paper describes the design rationale, architecture, and implementation of the system. The system combines a dual-survey design that separates outcome measurement from predictor collection with a progressive learning framework for settings where little institutional data are available at the start. A controlled pilot study with transfer students at six public universities in the United States provides initial evidence that the design works as intended: participants endorsed the system positively on perceived ease of use and perceived usefulness, and the survey workflow operated correctly. The evaluation demonstrates design feasibility rather than validated predictive performance; the system is now deployed and collecting data for later evaluation at scale.
 
 \bigskip
 
@@ -635,7 +646,24 @@ To assess the usability and perceived value of ACOSUS, we conducted a pilot stud
 
 % \subsubsection{Participants}
 
-Ten transfer students ($N=10$) from Northeastern Illinois University participated in the study. Participants were recruited by email and enrolled after providing informed consent. All were active transfer students in computing-related majors. The evaluation took place during the foundation phase of the progressive learning pipeline (Section~\ref{subsec:progressive}), when the system was still collecting labeled observations for the initial training corpus. At that stage, no predictive model had yet been trained, so the system's main function was structured data collection rather than prediction. Participants completed the Factor and Target Survey instruments described in Sections~\ref{subsec:dualsurvey} and~\ref{subsec:dataprocessing}, then completed a feedback survey through Qualtrics. The study protocol received Institutional Review Board (IRB) approval before data collection began.
+% __ALT_PHRASING__: Study Design participating-institutions sentence (active
+% version below is recommended Option A: "from six public universities in the
+% United States"). Alternative phrasings retained for reviewer consideration:
+%
+% Option B (leverages the MSI/HSI alignment with the paper's underrepresented-
+% students framing):
+%   Ten transfer students ($N=10$) participated, recruited from six public
+%   universities in the United States, several of which are designated
+%   minority-serving institutions whose student populations align with the
+%   underrepresented groups the system is designed to support.
+%
+% Option C (names institutions explicitly):
+%   Ten transfer students ($N=10$) participated, drawn from six public
+%   universities in the United States: Northeastern Illinois University,
+%   the University of Houston-Downtown, Texas A\&M University-Victoria,
+%   SUNY Old Westbury, Cal Poly Humboldt, and the University of Texas at
+%   El Paso.
+Ten transfer students ($N=10$) from six public universities in the United States participated in the study. Participants were recruited by email and enrolled after providing informed consent. All were active transfer students in computing-related majors. The evaluation took place during the foundation phase of the progressive learning pipeline (Section~\ref{subsec:progressive}), when the system was still collecting labeled observations for the initial training corpus. At that stage, no predictive model had yet been trained, so the system's main function was structured data collection rather than prediction. Participants completed the Factor and Target Survey instruments described in Sections~\ref{subsec:dualsurvey} and~\ref{subsec:dataprocessing}, then completed a feedback survey through Qualtrics. The study protocol received Institutional Review Board (IRB) approval before data collection began.
 
 \subsection{Evaluation Instruments}\label{subsec:instruments}
 
@@ -787,7 +815,11 @@ This paper presented ACOSUS, an AI-driven counseling system designed for transfe
 Our primary contributions are: (1) a dual-survey architecture that separates outcome measurement from predictor collection while providing advisors with structured student profiles through a unified dashboard; (2) a modular prediction architecture with configuration support for survey linkage, phase transitions, and hyperparameters, allowing institutions to adapt the system to their own settings; and (3) a pilot evaluation with transfer students ($N=10$) showing that the system is perceived as moderately easy to use and useful, with Perceived Ease of Use ($M=3.83$) the strongest of the TAM constructs, alongside notable variance in behavioral intention.
 
 %\textbf{Limitations and Current Status.} 
-The system is currently operational and collecting observations during the foundation phase, but its predictive components still need to be evaluated as the dataset grows. The pilot's small sample size ($N=10$), single-institution setting, voluntary enrollment, and cross-sectional design limit generalizability, and longitudinal outcome tracking was beyond the scope of the present study.
+The system is currently operational and collecting observations during the foundation phase, but its predictive components still need to be evaluated as the dataset grows. % __ALT_PHRASING__: Conclusion limitations clause about participating
+% institutions (active version below uses "small number of participating
+% institutions" per recommended Option A). Alternative phrasing:
+%   limited number of participating institutions (Option B wording).
+The pilot's small sample size ($N=10$), small number of participating institutions, voluntary enrollment, and cross-sectional design limit generalizability, and longitudinal outcome tracking was beyond the scope of the present study.
 
 %\textbf{Future Work.} 
 Future work includes: (1) evaluating the full progressive pipeline once sufficient observations have been collected, including accuracy, calibration, and fairness; (2) deploying the system across multiple institutions to test generalizability; (3) incorporating advisor feedback into the prediction process and evaluating dashboard use in practice; and (4) exploring LLM-based narrative explanations and intervention recommendations.
