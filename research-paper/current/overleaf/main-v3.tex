@@ -25,6 +25,16 @@
 \usepackage[hidelinks, pdftex]{hyperref}
 \usepackage{float}
 
+% Float placement: let large figures/tables share a page with text instead of
+% being banished to their own near-empty float pages.
+\renewcommand{\topfraction}{0.9}
+\renewcommand{\bottomfraction}{0.9}
+\renewcommand{\textfraction}{0.08}
+\renewcommand{\floatpagefraction}{0.75}
+\setcounter{topnumber}{3}
+\setcounter{bottomnumber}{2}
+\setcounter{totalnumber}{4}
+
 % TikZ packages for diagrams
 \usepackage{tikz}
 \usetikzlibrary{shapes.geometric, arrows.meta, positioning, fit, backgrounds, calc}
@@ -148,7 +158,7 @@ An AI-driven Transfer Student Advising System: Design, Implementation, and Evalu
 \textbf{ABSTRACT}
 \end{center}
 
-Transfer students, particularly those from underrepresented backgrounds in computing, face advising challenges that conventional systems do not address well. Their records are split across institutions, receiving universities often have limited visibility into pre-transfer coursework, and many predictive models are trained on students who entered as freshmen. We present ACOSUS (AI-driven counseling system for transfer students), an advising platform built for transfer student populations. This paper describes the design rationale, architecture, and implementation of the system. The system combines a dual-survey design that separates outcome measurement from predictor collection with a progressive learning framework for settings where little institutional data are available at the start. A controlled pilot study with transfer students at public universities in the United States provides initial evidence that the design works as intended: participants endorsed the system positively on perceived ease of use and perceived usefulness, and the survey workflow operated effectively. The evaluation demonstrates design feasibility rather than validated predictive performance; the system is now deployed and collecting data for later evaluation at scale.
+Transfer students face advising challenges that conventional systems do not address well: records are split across institutions, and predictive models are typically trained on students who entered as freshmen. We present ACOSUS, an AI-driven advising platform designed specifically for transfer students. The system incorporates a dual-survey approach that separates outcome measurement from predictor collection and a progressive learning framework suitable for institutions with limited data. A pilot study found positive participant ratings of perceived usefulness and ease of use, supporting the feasibility of the system and its survey workflow. The platform is now deployed and collecting data for future evaluation.
 
 \bigskip
 
@@ -405,10 +415,10 @@ This type-aware processing preserves the meaning of the responses during feature
 % Figure 3 - Survey Data Processing Pipeline diagram
 \begin{figure}[htbp]
 \centering
-\resizebox{0.95\textwidth}{!}{%
+\resizebox{0.84\textwidth}{!}{%
 \begin{tikzpicture}[
     node distance=0.35cm,
-    inner/.style={rectangle, dashed, thick, rounded corners=3pt, align=center, inner sep=10pt, font=\normalsize},
+    inner/.style={rectangle, dashed, thick, rounded corners=3pt, align=center, inner sep=10pt, font=\footnotesize},
     outer/.style={rectangle, thick, rounded corners=3pt, inner sep=6pt},
     arrow/.style={-{Stealth[scale=0.9]}, black!60, thick, rounded corners=6pt},
     arrowline/.style={black!60, thick, rounded corners=6pt}
@@ -421,7 +431,7 @@ This type-aware processing preserves the meaning of the responses during feature
 \node[inner, fill=surveyboxfill, draw=surveyblue!70, text width=4cm, minimum height=0.5cm, below=0.2cm of qdots] (qn) {Question N (Continuous)};
 
 % Survey Collection title and outer box
-\node[above=0.3cm of q1, font=\normalsize\bfseries, text=surveyblue!80!black] (survey-title) {SURVEY COLLECTION};
+\node[above=0.3cm of q1, font=\footnotesize\bfseries, text=surveyblue!80!black] (survey-title) {SURVEY COLLECTION};
 \node[outer, draw=surveyblue, fit=(survey-title)(q1)(q2)(qdots)(qn), inner sep=10pt] (survey-box) {};
 
 % Data Processing inner boxes
@@ -429,7 +439,7 @@ This type-aware processing preserves the meaning of the responses during feature
 \node[inner, fill=processboxfill, draw=processboxborder, text width=3cm, minimum height=1cm, below=0.8cm of priority] (normalize) {Type-Aware\\Normalization};
 
 % Data Processing title and outer box
-\node[above=0.3cm of priority, font=\normalsize\bfseries, text=processorange!80!black] (process-title) {DATA PROCESSING};
+\node[above=0.3cm of priority, font=\footnotesize\bfseries, text=processorange!80!black] (process-title) {DATA PROCESSING};
 \node[outer, draw=processorange, fit=(process-title)(priority)(normalize), inner sep=10pt] (process-box) {};
 
 % Model Input inner box (centered with process box)
@@ -437,7 +447,7 @@ This type-aware processing preserves the meaning of the responses during feature
 \node[inner, fill=modelboxfill, draw=modelboxborder, text width=3cm, minimum height=1cm, right=1.5cm of process-box.east, anchor=west] (feature) {Normalized\\Feature Vector};
 
 % Model Input title and outer box
-\node[above=0.3cm of feature, font=\normalsize\bfseries, text=modelgreen] (model-title) {MODEL INPUT};
+\node[above=0.3cm of feature, font=\footnotesize\bfseries, text=modelgreen] (model-title) {MODEL INPUT};
 \node[outer, draw=modelgreen, fit=(model-title)(feature), inner sep=10pt] (model-box) {};
 
 % Arrows from Survey to Priority Weighting (converging)
@@ -579,9 +589,9 @@ The modular design described in Section~\ref{subsec:progressive} is implemented 
 % Figure 5 - Dual-Survey Architecture with Linkage
 \begin{figure}[htbp]
 \centering
-\resizebox{0.95\textwidth}{!}{%
+\resizebox{0.70\textwidth}{!}{%
 \begin{tikzpicture}[
-  box/.style={draw,dashed,rounded corners=5pt,align=center,font=\small},
+  box/.style={draw,dashed,rounded corners=5pt,align=center,font=\footnotesize},
   container/.style={draw,rounded corners=5pt,inner sep=4mm},
   % Training flow styles (warm/salmon hues)
   trainbox/.style={box,draw=red!40,fill=red!8},
@@ -597,22 +607,22 @@ The modular design described in Section~\ref{subsec:progressive} is implemented 
 \node[trainbox,minimum width=32mm,minimum height=12mm,right=18mm of target.south east,anchor=north west] (weighted) {Weighted Calculation\\(if multi-question)};
 \node[trainbox,minimum width=32mm,minimum height=12mm,below=4mm of weighted] (normtrain) {Feature Normalization\\(Training)};
 \node[predbox,minimum width=32mm,minimum height=12mm,below=4mm of normtrain] (normpred) {Feature Normalization\\(Prediction)};
-\node[container,draw=blue!70,fit=(weighted)(normtrain)(normpred),label={[font=\small\bfseries]above:DATA PROCESSING}] (dbox) {};
+\node[container,draw=blue!70,fit=(weighted)(normtrain)(normpred),label={[font=\footnotesize\bfseries]above:DATA PROCESSING}] (dbox) {};
 
 % Left column - Factor Surveys (aligned to dbox bottom)
 \node[box,draw=blue!50,fill=blue!15,minimum width=32mm,minimum height=20mm,anchor=south] at ([yshift=3mm]target.south|-dbox.south) (factors) {Factor Survey $X_1$\\Factor Survey $X_2$\\...\\Factor Survey $X_N$};
-\node[font=\small\bfseries,align=center,above=1mm of factors] (flabel) {FACTOR SURVEYS\\(Features)};
+\node[font=\footnotesize\bfseries,align=center,above=1mm of factors] (flabel) {FACTOR SURVEYS\\(Features)};
 \node[container,draw=blue!70,inner sep=3mm,fit=(factors)(flabel)] (fbox) {};
 
 % Link between target and factor surveys
-\draw[black!60,dashed,thick] (target.south) -- node[right,font=\small,black]{Link} (fbox.north);
+\draw[black!60,dashed,thick] (target.south) -- node[right,font=\footnotesize,black]{Link} (fbox.north);
 
 % Right column - ML Model (Training flow on top, Prediction flow on bottom)
 \node[trainbox,minimum width=32mm,minimum height=8mm,right=18mm of weighted.north east,anchor=north west] (train) {Train Model};
 \node[trainbox,minimum width=32mm,minimum height=8mm,below=4mm of train] (save) {Save Model};
 \node[predbox,minimum width=32mm,minimum height=8mm,below=4mm of save] (load) {Load Trained Model};
 \node[predbox,minimum width=32mm,minimum height=8mm,below=4mm of load] (predict) {Predict Readiness};
-\node[container,draw=purple!70,fit=(train)(save)(load)(predict),label={[font=\small\bfseries]above:ML MODEL}] (mbox) {};
+\node[container,draw=purple!70,fit=(train)(save)(load)(predict),label={[font=\footnotesize\bfseries]above:ML MODEL}] (mbox) {};
 
 % Training Flow Arrows (gray)
 \draw[trainarr] (target.east) to[out=0,in=180] (weighted.west);
@@ -626,10 +636,10 @@ The modular design described in Section~\ref{subsec:progressive} is implemented 
 \draw[predarr] (load.south) -- (predict.north);
 
 % Legend (horizontal layout)
-\node[below=5mm of fbox.south west,anchor=north west,font=\small\bfseries] (legendlabel) {Legend:};
-\draw[trainarr] ([xshift=2mm]legendlabel.east) -- ++(10mm,0) node[right,font=\small,black] {Training Flow};
+\node[below=5mm of fbox.south west,anchor=north west,font=\footnotesize\bfseries] (legendlabel) {Legend:};
+\draw[trainarr] ([xshift=2mm]legendlabel.east) -- ++(10mm,0) node[right,font=\footnotesize,black] {Training Flow};
 \node[right=50mm of legendlabel.east,anchor=west] (predlegendstart) {};
-\draw[predarr] (predlegendstart.west) -- ++(10mm,0) node[right,font=\small,black] {Prediction Flow};
+\draw[predarr] (predlegendstart.west) -- ++(10mm,0) node[right,font=\footnotesize,black] {Prediction Flow};
 \end{tikzpicture}
 }%
 \caption{Dual-Survey Architecture with survey linkage. Gray arrows indicate training flow (Target Survey through model training), while green arrows indicate prediction flow (Factor Surveys through inference). Dashed lines show linkage relationships between Target and Factor Surveys.}
@@ -735,45 +745,46 @@ The TAM-based measures showed favorable responses on perceived ease of use and p
 \toprule
 \textbf{Metric} & \textbf{Mean} & \textbf{SD} & \textbf{Min} & \textbf{Max} \\
 \midrule
-Perceived Usefulness (PU) & 3.27 & 1.44 & 1 & 5 \\
-Perceived Ease of Use (PEOU) & 3.83 & 1.47 & 1 & 5 \\
-Likelihood to Continue & 3.00 & 2.07 & 0 & 5 \\
-Likelihood to Recommend & 2.88 & 1.96 & 0 & 5 \\
+Perceived Usefulness (PU) & 3.37 & 1.29 & 1 & 5 \\
+Perceived Ease of Use (PEOU) & 4.13 & 1.05 & 1 & 5 \\
+Likelihood to Continue & 3.12 & 1.89 & 1 & 5 \\
+Likelihood to Recommend & 3.00 & 1.77 & 1 & 5 \\
 \bottomrule
+\multicolumn{5}{@{}p{0.92\columnwidth}@{}}{\footnotesize\textit{Note.} Behavioral-intention items have $N=8$; two participants did not provide a usable rating.} \\
 \end{tabular}
 \end{table}
 
 % Figure 6 - TAM construct scores
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.9\textwidth]{infographics/fig1_tam_metrics.png}
-\caption{TAM construct scores ($N=10$). Perceived Ease of Use was the highest-rated TAM construct ($M=3.83$), while Perceived Usefulness was lower and showed similar variance ($M=3.27$).}
+\includegraphics[width=0.72\textwidth]{infographics/fig1_tam_metrics.png}
+\caption{TAM construct scores ($N=10$). Perceived Ease of Use was the highest-rated TAM construct ($M=4.13$), while Perceived Usefulness was lower and more dispersed ($M=3.37$).}
 \label{fig:tam}
 \end{figure}
 
-Perceived Ease of Use received the highest mean among the TAM constructs ($M=3.83$, $SD=1.47$), indicating moderate, positive-leaning agreement that the system is easy to learn and use, though the wide spread points to uneven experiences across participants. Perceived Usefulness was lower and similarly dispersed ($M=3.27$, $SD=1.44$), suggesting that participants saw the system as easy to operate but were less uniformly convinced of its usefulness for their own advising needs.
+Perceived Ease of Use received the highest mean among the TAM constructs ($M=4.13$, $SD=1.05$), indicating positive agreement that the system is easy to learn and use, with relatively consistent responses across participants. Perceived Usefulness was lower and more dispersed ($M=3.37$, $SD=1.29$), suggesting that participants saw the system as easy to operate but were less uniformly convinced of its usefulness for their own advising needs.
 
 \subsubsection{Behavioral Intention}
 
 % Figure 7 - Behavioral intention metrics
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.9\textwidth]{infographics/fig4_behavioral_intention.png}
-\caption{Behavioral intention ($N=10$). Likelihood to Continue ($M=3.00$) was slightly higher than Likelihood to Recommend ($M=2.88$); both showed substantial variance across respondents ($SD\approx2$).}
+\includegraphics[width=0.78\textwidth]{infographics/fig4_behavioral_intention.png}
+\caption{Behavioral intention ($N=8$). Likelihood to Continue ($M=3.12$) was slightly higher than Likelihood to Recommend ($M=3.00$); both showed substantial variance across respondents ($SD\approx1.8$).}
 \label{fig:behavioral}
 \end{figure}
 
-Behavioral intention was the weakest dimension in the evaluation. Likelihood to Continue using the system was moderate on average ($M=3.00$, $SD=2.07$), and Likelihood to Recommend was slightly lower and similarly dispersed ($M=2.88$, $SD=1.96$). Both distributions are bimodal: several respondents scored 5/5 while others scored 0--2, with few intermediate ratings. This pattern suggests that the system appeals strongly to a subset of transfer students but not to others, rather than producing uniform mild enthusiasm. We read this cautiously: with only ten respondents at the foundation phase, when no predictions had yet been generated, low recommendation scores may reflect limited current utility rather than rejection of the design.
+Behavioral intention was the weakest dimension in the evaluation. Likelihood to Continue using the system was moderate on average ($M=3.12$, $SD=1.89$), and Likelihood to Recommend was slightly lower and similarly dispersed ($M=3.00$, $SD=1.77$). Two participants did not provide a usable rating for these items and are excluded from the behavioral-intention means ($N=8$). Both distributions are bimodal: several respondents scored 5/5 while others scored 1--2, with few intermediate ratings. This pattern suggests that the system appeals strongly to a subset of transfer students but not to others, rather than producing uniform mild enthusiasm. We read this cautiously: with only a small number of respondents at the foundation phase, when no predictions had yet been generated, low recommendation scores may reflect limited current utility rather than rejection of the design.
 
 \subsection{Qualitative Findings}\label{subsec:qualfindings}
 
-Open-ended responses yielded four main themes.
+Open-ended responses yielded five main themes.
 
 % Figure 8 - Qualitative theme distribution
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.9\textwidth]{infographics/fig6_qualitative_themes.png}
-\caption{Qualitative theme distribution ($N$=10). Feature Requests was the most frequent theme (8 mentions), followed by UI/Navigation Positive (7), No Issues Reported (5), and Assessment \& Exploration Value (4).}
+\includegraphics[width=0.72\textwidth]{infographics/fig6_qualitative_themes.png}
+\caption{Qualitative theme distribution ($N$=10). Feature Requests was the most frequent theme (7 mentions), followed by UI/Navigation Positive (6), No Issues Reported (5), Assessment \& Exploration Value (4), and a single expression of Preference for Human Advising (1).}
 \label{fig:themes}
 \end{figure}
 
@@ -785,15 +796,16 @@ Open-ended responses yielded four main themes.
 \toprule
 \textbf{Theme} & \textbf{Count} & \textbf{Representative Quote} \\
 \midrule
-Feature Requests & 8 & ``Make it tailored more towards individual users and their specific situation''; ``Better analysis of prerequisites to allow for registration'' \\
-UI/Navigation Positive & 7 & ``The UI navigation is very user friendly''; ``All the interface of the website was very intuitive to interact with'' \\
+Feature Requests & 7 & ``Make it tailored more towards individual users and their specific situation''; ``Better analysis of prerequisites to allow for registration'' \\
+UI/Navigation Positive & 6 & ``The UI navigation is very user friendly''; ``All the interface of the website was very intuitive to interact with'' \\
 No Issues Reported & 5 & ``No feature was missing, my experience was great''; ``None, everything was clear'' \\
 Assessment \& Exploration Value & 4 & ``The assessment is fun and helpful to me''; ``Career exploration'' \\
+Preference for Human Advising & 1 & ``I have never had a problem with a human advisor. Please don't replace a human being with AI'' \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\textbf{Feature Requests} was the most frequent theme. Rather than indicating dissatisfaction, the pattern suggests that participants engaged closely enough with the system to want it to do more. Several asked for tighter personalization, with one participant writing that they would ``make it tailored more towards individual users and their specific situation,'' while others requested deeper academic functionality, such as ``better analysis of prerequisites to allow for registration'' and ``more answer choices besides the ones provided.'' \textbf{UI/Navigation Positive} was the next most common theme; participants consistently described the interface as easy to navigate, with one writing that ``the UI navigation is very user friendly'' and another that ``all the interface of the website was very intuitive to interact with,'' which is consistent with PEOU being the highest-rated TAM construct ($M=3.83$). \textbf{No Issues Reported} formed a third cluster: when asked about missing features or interface difficulties, several participants responded with comments such as ``no feature was missing, my experience was great'' and ``none, everything was clear.'' Finally, \textbf{Assessment \& Exploration Value} captured comments in which participants recognized the system's worth for self-assessment and for exploring their options, even at the foundation phase when no predictions were yet available; participants described it as a tool for ``career exploration'' and noted that ``the assessment is fun and helpful to me.''
+\textbf{Feature Requests} was the most frequent theme. Rather than indicating dissatisfaction, the pattern suggests that participants engaged closely enough with the system to want it to do more. Several asked for tighter personalization, with one participant writing that they would ``make it tailored more towards individual users and their specific situation,'' while others requested deeper academic functionality, such as ``better analysis of prerequisites to allow for registration'' and ``more answer choices besides the ones provided.'' \textbf{UI/Navigation Positive} was the next most common theme; participants consistently described the interface as easy to navigate, with one writing that ``the UI navigation is very user friendly'' and another that ``all the interface of the website was very intuitive to interact with,'' which is consistent with PEOU being the highest-rated TAM construct ($M=4.13$). \textbf{No Issues Reported} formed a third cluster: when asked about missing features or interface difficulties, several participants responded with comments such as ``no feature was missing, my experience was great'' and ``none, everything was clear.'' Finally, \textbf{Assessment \& Exploration Value} captured comments in which participants recognized the system's worth for self-assessment and for exploring their options, even at the foundation phase when no predictions were yet available; participants described it as a tool for ``career exploration'' and noted that ``the assessment is fun and helpful to me.'' A fifth theme emerged from a single, more skeptical participant, who wrote that they ``have never had a problem with a human advisor'' and asking that the system ``not replace a human being with AI.'' Although isolated, this comment reflects a \textbf{Preference for Human Advising} and echoes the advisors' own view that the system should complement rather than substitute for human advising.
 
 Alongside the student pilot, the project also received informal feedback from academic advisors. Advisors agreed that the system addresses a real need and viewed it as a promising direction, while noting that its full value depends on the prediction capability that the foundation phase has not yet produced. They also indicated that the system could help students arrive better prepared for advising meetings, and that consolidating its captured information into a single advising hub would further strengthen its value to advising workflows.
 
@@ -823,7 +835,7 @@ Alongside the student pilot, the project also received informal feedback from ac
 This paper presented ACOSUS, an AI-driven counseling system designed for transfer students in computing majors. The system addresses two problems that often limit transfer advising: fragmented information and limited institutional data for prediction.
 
 %\textbf{Summary of Contributions.} 
-Our primary contributions are: (1) a dual-survey architecture that separates outcome measurement from predictor collection while providing advisors with structured student profiles through a unified dashboard; (2) a modular prediction architecture with configuration support for survey linkage, phase transitions, and hyperparameters, allowing institutions to adapt the system to their own settings; and (3) a pilot evaluation with transfer students ($N=10$) showing that the system is perceived as moderately easy to use and useful, with Perceived Ease of Use ($M=3.83$) the strongest of the TAM constructs, alongside notable variance in behavioral intention.
+Our primary contributions are: (1) a dual-survey architecture that separates outcome measurement from predictor collection while providing advisors with structured student profiles through a unified dashboard; (2) a modular prediction architecture with configuration support for survey linkage, phase transitions, and hyperparameters, allowing institutions to adapt the system to their own settings; and (3) a pilot evaluation with transfer students ($N=10$) showing that the system is perceived as moderately easy to use and useful, with Perceived Ease of Use ($M=4.13$) the strongest of the TAM constructs, alongside notable variance in behavioral intention.
 
 %\textbf{Limitations and Current Status.} 
 The system is currently operational and collecting observations during the foundation phase, but its predictive components still need to be evaluated as the dataset grows. % __ALT_PHRASING__: Conclusion limitations clause about participating
