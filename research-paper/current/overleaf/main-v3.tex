@@ -229,7 +229,7 @@ This architecture defines where the major system functions reside, but it does n
 % Figure 1 - System Architecture diagram
 \begin{figure}[htbp]
 \centering
-\resizebox{0.95\textwidth}{!}{%
+\resizebox{0.76\textwidth}{!}{%
 \begin{tikzpicture}[
     node distance=1.5mm,
     box/.style={draw, dashed, rounded corners=3pt, minimum width=32mm, minimum height=8mm, align=center, font=\scriptsize},
@@ -326,7 +326,7 @@ The architecture also supports flexible study designs through \textbf{survey lin
 % Figure 3 - Dual-Survey Architecture diagram
 \begin{figure}[htbp]
 \centering
-\resizebox{0.95\textwidth}{!}{%
+\resizebox{0.72\textwidth}{!}{%
 \begin{tikzpicture}[
   box/.style={draw,dashed,rounded corners=3pt,align=center,font=\small},
   target/.style={box,draw=orange!70,fill=orange!10,minimum width=28mm,minimum height=10mm},
@@ -415,7 +415,7 @@ This type-aware processing preserves the meaning of the responses during feature
 % Figure 3 - Survey Data Processing Pipeline diagram
 \begin{figure}[htbp]
 \centering
-\resizebox{0.84\textwidth}{!}{%
+\resizebox{0.80\textwidth}{!}{%
 \begin{tikzpicture}[
     node distance=0.35cm,
     inner/.style={rectangle, dashed, thick, rounded corners=3pt, align=center, inner sep=10pt, font=\footnotesize},
@@ -516,7 +516,7 @@ The framework is modular across all three stages. Any compatible predictive meth
 \node[outer, draw=stage1!70, fit=(s1-title)(s1-head)(s1-content)(s1-plug)] (stage1-box) {};
 
 % Stage 2 inner boxes
-\node[header=stage2, right=3cm of s1-head, text width=3cm, minimum height=0.8cm] (s2-head) {Synthetic Data\\Generation};
+\node[header=stage2, right=1.8cm of s1-head, text width=3cm, minimum height=0.8cm] (s2-head) {Synthetic Data\\Generation};
 \node[content=stage2, below=0.12cm of s2-head, text width=3cm, minimum height=1.4cm] (s2-content) {
     \textbullet\ Learn distributional characteristics\\
     \textbullet\ Synthesize training observations\\
@@ -527,7 +527,7 @@ The framework is modular across all three stages. Any compatible predictive meth
 \node[outer, draw=stage2!70, fit=(s2-title)(s2-head)(s2-content)(s2-plug)] (stage2-box) {};
 
 % Stage 3 inner boxes
-\node[header=stage3, right=3cm of s2-head, text width=3cm, minimum height=0.8cm] (s3-head) {Advanced Non-Linear\\Modeling};
+\node[header=stage3, right=1.8cm of s2-head, text width=3cm, minimum height=0.8cm] (s3-head) {Advanced Non-Linear\\Modeling};
 \node[content=stage3, below=0.12cm of s3-head, text width=3cm, minimum height=1.4cm] (s3-content) {
     \textbullet\ Train on augmented corpus\\
     \textbullet\ Capture complex relationships\\
@@ -589,7 +589,7 @@ The modular design described in Section~\ref{subsec:progressive} is implemented 
 % Figure 5 - Dual-Survey Architecture with Linkage
 \begin{figure}[htbp]
 \centering
-\resizebox{0.70\textwidth}{!}{%
+\resizebox{0.67\textwidth}{!}{%
 \begin{tikzpicture}[
   box/.style={draw,dashed,rounded corners=5pt,align=center,font=\footnotesize},
   container/.style={draw,rounded corners=5pt,inner sep=4mm},
