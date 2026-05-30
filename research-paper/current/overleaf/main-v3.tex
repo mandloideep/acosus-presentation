@@ -321,7 +321,7 @@ ACOSUS implements this framework through a Dual-Survey Architecture that separat
 
 Beyond their role as predictor vectors for the AI model, Factor Surveys also help advisors by standardizing the collection of transfer-specific information that would otherwise be gathered through lengthy and inconsistent interviews. Every transfer student answers the same set of questions, which supports cohort-level comparison and reduces the chance that important risk factors will be missed. Survey responses are immediately available in the advisor dashboard, which reduces the need to search through emails, notes, or follow-up conversations.
 
-The architecture also supports flexible study designs through \textbf{survey linkage}, that is, explicit associations between Target and Factor Surveys. This makes it possible to compare different predictor sets, add new factors over time, and customize the system for different cohorts without changing the core infrastructure. Once these surveys are linked and deployed, the next step is to transform raw responses into model-ready inputs. Section~\ref{subsec:config} returns to the linkage mechanism from an implementation perspective.
+The architecture also supports flexible study designs through \textbf{survey linkage}, that is, explicit associations between Target and Factor Surveys. This makes it possible to compare different predictor sets, add new factors over time, and customize the system for different cohorts without changing the core infrastructure. Once these surveys are linked and deployed, the next step is to transform raw responses into model-ready inputs. We return to the linkage mechanism from an implementation perspective when discussing configuration flexibility later in the paper.
 
 % Figure 2 - Dual-Survey Architecture diagram
 \begin{figure}[htbp]
@@ -355,7 +355,7 @@ The architecture also supports flexible study designs through \textbf{survey lin
 
 \subsection{Survey Data Processing}\label{subsec:dataprocessing}
 
-The survey instruments described in Section~\ref{subsec:dualsurvey} convert student responses into feature vectors for predictive modeling. Each question corresponds to a success-related factor identified in prior research. Our earlier factor-analysis work linked observable indicators such as scholarship status and commute distance to broader constructs such as financial stability and institutional commitment \parencite{factoranalysis2023}. The purpose of this stage is to move from survey design to a consistent numerical representation that later modeling stages can use.
+The Target and Factor Survey instruments convert student responses into feature vectors for predictive modeling. Each question corresponds to a success-related factor identified in prior research. Our earlier factor-analysis work linked observable indicators such as scholarship status and commute distance to broader constructs such as financial stability and institutional commitment \parencite{factoranalysis2023}. The purpose of this stage is to move from survey design to a consistent numerical representation that later modeling stages can use.
 
 \subsubsection{Priority Weighting}
 
@@ -576,9 +576,9 @@ The framework is modular across all three stages. Any compatible predictive meth
 
 \subsection{Configuration Flexibility}\label{subsec:config}
 
-The modular design described in Section~\ref{subsec:progressive} is implemented through a configuration system that allows researchers to adapt the framework without modifying the core infrastructure. Four categories of settings support this flexibility:
+The modular pipeline design described above is implemented through a configuration system that allows researchers to adapt the framework without modifying the core infrastructure. Four categories of settings support this flexibility:
 
-\textbf{Survey Linkage:} The dual-survey architecture described in Section~\ref{subsec:dualsurvey} uses explicit linkage settings. A single Target Survey (outcome $Y$) may be linked to multiple Factor Surveys (predictor sets $X_1, X_2, X_3$), which allows researchers to examine which predictor combinations perform best. This arrangement provides several practical advantages:
+\textbf{Survey Linkage:} The dual-survey architecture uses explicit linkage settings. A single Target Survey (outcome $Y$) may be linked to multiple Factor Surveys (predictor sets $X_1, X_2, X_3$), which allows researchers to examine which predictor combinations perform best. This arrangement provides several practical advantages:
 
 \begin{enumerate}
     \item \textbf{Comparative predictor analysis:} researchers can deploy alternative Factor Surveys to the same cohort and compare predictive validity across predictor sets;
@@ -684,7 +684,7 @@ To assess the usability and perceived value of ACOSUS, we conducted a pilot stud
 %   the University of Houston-Downtown, Texas A\&M University-Victoria,
 %   SUNY Old Westbury, Cal Poly Humboldt, and the University of Texas at
 %   El Paso.
-Ten transfer students ($N=10$) from public universities in the United States participated in the study. Participants were recruited by email and enrolled after providing informed consent. All were active transfer students in computing-related majors. The evaluation took place during the foundation phase of the progressive learning pipeline (Section~\ref{subsec:progressive}), when the system was still collecting labeled observations for the initial training corpus. At that stage, no predictive model had yet been trained, so the system's main function was structured data collection rather than prediction. Participants completed the Factor and Target Survey instruments described in Sections~\ref{subsec:dualsurvey} and~\ref{subsec:dataprocessing}, then completed a feedback survey through Qualtrics. The study protocol received Institutional Review Board (IRB) approval before data collection began.
+Ten transfer students ($N=10$) from public universities in the United States participated in the study. Participants were recruited by email and enrolled after providing informed consent. All were active transfer students in computing-related majors. The evaluation took place during the foundation phase of the progressive learning pipeline, when the system was still collecting labeled observations for the initial training corpus. At that stage, no predictive model had yet been trained, so the system's main function was structured data collection rather than prediction. Participants completed the Factor and Target Survey instruments, then completed a feedback survey through Qualtrics. The study protocol received Institutional Review Board (IRB) approval before data collection began.
 
 \subsection{Evaluation Instruments}\label{subsec:instruments}
 
