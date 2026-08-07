@@ -20,7 +20,8 @@
 \setlength{\headheight}{14pt}
 \pagestyle{fancy}
 \fancyhf{}
-\fancyhead[CO]{\makebox[\textwidth]{Mandloi et al.\hfill ACOSUS design and feasibility evaluation}}
+\fancyhead[L]{Mandloi et al.}
+\fancyhead[R]{ACOSUS design and feasibility evaluation}
 \renewcommand{\headrulewidth}{0.4pt}
 \renewcommand{\footrulewidth}{0pt}
 
@@ -241,10 +242,10 @@ The \textbf{Business Logic Layer} manages application workflows and is designed 
 
 The \textbf{Data Layer} stores users, surveys, responses, and model metadata in a document-oriented format. This structure allows researchers to revise survey instruments without repeated database migrations.
 
-The \textbf{Model Layer} runs as a separate service for data normalization, training, and prediction. The pushed implementation contains priority-weighted readiness measurement and a post-pilot KNN path. The augmentation and refinement components described later are part of the progressive design and have not yet been implemented or evaluated.
+The \textbf{Model Layer} runs as a separate service for data normalization, training, and prediction. The prototype includes a transparent priority-weighted readiness calculation and supports exploratory similarity-based modeling. The augmentation and refinement components described later are part of the progressive design and have not yet been implemented or evaluated.
 
 % REV-STATUS-001 BEGIN: implementation and evaluation boundary.
-Table~\ref{tab:status} distinguishes what the pilot evaluated, what was added to the pushed implementation after the pilot, and what remains aspirational.
+Table~\ref{tab:status} distinguishes what the pilot evaluated, what the broader prototype supports, and what remains aspirational.
 
 \begin{table}[htbp]
 \caption{Implementation and evaluation status at revision time.}
@@ -255,7 +256,7 @@ Table~\ref{tab:status} distinguishes what the pilot evaluated, what was added to
 \textbf{Status} & \textbf{Functions} & \textbf{Evidence boundary} \\
 \midrule
 Implemented and pilot-evaluated & Target and Factor Survey workflow; structured response collection & Student pilot evaluated the survey workflow and perceptions; no predictions were shown \\
-Implemented after the pilot & Advisor dashboard and profiles; deterministic readiness measure; KNN training and prediction path & Verified in pushed source; not evaluated in the student pilot or in a formal advisor study \\
+Implemented beyond the pilot scope & Advisor dashboard and profiles; deterministic readiness measure; exploratory modeling path & Available in the prototype; not evaluated in the student pilot or in a formal advisor study \\
 Future work & Synthetic augmentation; advanced models; automatic stage transitions; longitudinal outcome validation; fairness analysis; multi-institutional validation & Proposed only; recruiting participants from six universities does not constitute institutional validation \\
 \bottomrule
 \end{tabular}
@@ -327,7 +328,7 @@ This architecture defines where the major system functions reside, but it does n
     \textbullet\ Data Normalizer\\
     \textbullet\ Prediction Service\\
     \textbullet\ Training Pipeline\\
-    \textbullet\ KNN Model Artifacts
+    \textbullet\ Model Artifacts
 };
 
 % Arrows
@@ -412,34 +413,34 @@ S = \frac{\sum_{i=1}^{n} \left(\frac{w_i^{\text{selected}}}{w_i^{\text{max}}} \t
 \label{eq:priority}
 \end{equation}
 
-This yields a normalized score in $[0, 1]$ that reflects both the selected response and the priority of the corresponding question. The pushed Priority-Weighted Readiness Scoring (PWRS) implementation then applies a logistic calibration curve with steepness 6. PWRS aggregates questions within a multi-question Target Survey to produce the readiness measure. In the post-pilot hybrid KNN path, the same calculation is also applied to Factor Survey responses as a transparent factor-side summary supplied alongside the normalized predictor vector.
+This yields a normalized score in $[0, 1]$ that reflects both the selected response and the priority of the corresponding question. A bounded calibration step converts the result to the readiness-score scale. The same priority-weighted calculation can aggregate a multi-question Target Survey and provide a transparent summary of Factor Survey responses for later exploratory modeling.
 
 \begin{table}[htbp]
-\caption{Priority scores in the pushed V2 Factor Survey.}
+\caption{Literature-informed priority structure used in the prototype.}
 \label{tab:priority}
 \centering
-\begin{tabular}{@{}p{3.4cm}p{8.0cm}c@{}}
+\begin{tabular}{@{}p{3.4cm}p{8.0cm}p{2.4cm}@{}}
 \toprule
-\textbf{Factor Category} & \textbf{Question Topic} & \textbf{Priority} \\
+\textbf{Factor Category} & \textbf{Question Topics} & \textbf{Emphasis} \\
 \midrule
-Academic background & GPA; SAT score; completed credits; courses per semester & 9; 8; 8; 7 \\
+Academic background & GPA, prior academic preparation, completed credits, and course load & Higher \\
 \addlinespace[2pt]
-Program timeline & Program start date; expected graduation date & 8; 8 \\
+Program timeline & Program start and expected completion & Higher \\
 \addlinespace[2pt]
-Financial support & Scholarship; family income support & 4; 4 \\
+Financial support & Scholarship and family support & Lower \\
 \addlinespace[2pt]
-Logistics and commitments & Commute distance; work status & 6; 8 \\
+Logistics and commitments & Commute and work commitments & Moderate to higher \\
 \addlinespace[2pt]
-Interests and experience & Career aspiration; course interest; prior experience & 7; 4; 9 \\
+Interests and experience & Career goals, course interest, and prior experience & Varies by factor \\
 \bottomrule
 \end{tabular}
 \end{table}
 
 % REV-WEIGHT-001 BEGIN: aggregate sensitivity analysis, not weight validation.
-To show how the starting priorities affect the result, we recalculated scores for the ten available deidentified profiles under three alternative scenarios. The analysis used the 11 non-date Factor Survey questions available in all ten profiles and the same normalization and logistic calibration as the pushed implementation.
+To show how the starting priorities affect the result, we recalculated scores for the available deidentified pilot profiles under three alternative scenarios. The analysis used the factor responses represented across those profiles and the same priority-weighted calculation in each scenario.
 
 \begin{table}[htbp]
-\caption{Priority-weight sensitivity across the ten available profiles.}
+\caption{Priority-weight sensitivity across the available pilot profiles.}
 \label{tab:sensitivity}
 \centering
 \begin{tabular}{@{}p{4.1cm}rrrr@{}}
@@ -482,7 +483,7 @@ This type-aware processing preserves the meaning of the responses during feature
 
 % Figure 3 - Survey Data Processing Pipeline diagram
 \begin{figure}[htbp]
-\caption{Survey data processing pipeline. Raw responses undergo priority weighting and type-aware normalization to produce standardized feature vectors for readiness scoring and post-pilot model experiments.}
+\caption{Survey data processing pipeline. Raw responses undergo priority weighting and type-aware normalization to produce standardized feature vectors for readiness scoring and exploratory model evaluation.}
 \label{fig:processing}
 \centering
 \resizebox{0.80\textwidth}{!}{%
@@ -549,7 +550,7 @@ After survey responses have been standardized, the remaining challenge is how to
 
 As observations accumulate, the system is designed to move through a three-stage pipeline (Figure~\ref{fig:pipeline}):
 
-\textbf{Foundation Stage.} The system focuses on collecting high-quality labeled observations through surveys that capture both the readiness measure and predictors. Once a minimum corpus exists, lightweight methods (e.g., k-nearest neighbors or cosine similarity matching) can generate initial predictions. At this stage, data quality matters more than model complexity.
+\textbf{Foundation Stage.} The system focuses on collecting high-quality labeled observations through surveys that capture both the readiness measure and predictors. Once a minimum corpus exists, lightweight similarity-based methods can generate initial estimates. At this stage, data quality matters more than model complexity.
 
 \textbf{Augmentation Stage.} As the corpus grows, the framework can evaluate generative methods (e.g., SMOTE, generative adversarial networks, or variational autoencoders) for synthesizing additional training observations. Such methods would need to preserve the main statistical properties of the real data while also being evaluated for fidelity, privacy, bias, and utility.
 
@@ -557,17 +558,15 @@ As observations accumulate, the system is designed to move through a three-stage
 
 The framework is modular across all three stages. Any compatible predictive method may be used in the foundation stage, any suitable generative technique may be used for augmentation, and any supervised learning architecture may be used in refinement. This design allows researchers to compare algorithms on their own student populations and to adopt new methods as they become available without redesigning the full system. Because those choices may differ across institutions and studies, the next subsection describes the configuration layer that controls how surveys, stages, and algorithms are connected in practice.
 
-The survey workflow, PWRS calculation, advisor-visible profiles, and a post-pilot KNN path are implemented foundation components. Augmentation, refinement, and automatic transitions between stages remain future work.
+The survey workflow, priority-weighted readiness calculation, advisor-visible profiles, and an exploratory modeling path are implemented foundation components. Augmentation, refinement, and automatic transitions between stages remain future work.
 
 % REV-MODEL-001 BEGIN: active cautious numeric treatment.
-We reproduced a leakage-safe leave-one-out diagnostic for the post-pilot KNN using the ten committed deidentified profiles, 17 encoded features, three distance-weighted neighbors, Euclidean distance, and fold-specific standardization. The KNN produced MAE 4.63, RMSE 5.91, and $R^2=-0.26$. A leave-one-out mean baseline produced MAE 4.38, RMSE 5.85, and $R^2=-0.24$. The KNN therefore did not outperform the baseline. These labels are self-reported readiness measures, not persistence, credit accumulation, degree completion, or another longitudinal outcome, so the diagnostic does not support a predictive-validity claim.
-% Alternative A, methods without metrics: The pushed post-pilot implementation contains a distance-weighted KNN path with standardized inputs. Because the available labels are ten self-reported readiness measures rather than longitudinal outcomes, model performance is not treated as evidence of student-success prediction.
-% Alternative B, complete deferral: Predictive model evaluation is deferred until longitudinal outcomes and a sufficiently large independent sample are available.
+We also conducted an exploratory cross-validated diagnostic with a lightweight similarity-based estimator and compared it with a simple mean estimate. The model produced MAE 4.63 and RMSE 5.91, compared with MAE 4.38 and RMSE 5.85 for the baseline, and therefore did not improve on the simpler estimate. The target values are self-reported readiness measures, not persistence, credit accumulation, degree completion, or another longitudinal outcome. This result is reported as a feasibility diagnostic rather than evidence of predictive validity.
 % REV-MODEL-001 END
 
 % Figure 4 - Three-Stage Progressive Pipeline diagram
 \begin{figure}[htbp]
-\caption{The Three-Stage Progressive Pipeline. Each stage represents a pluggable component that can be substituted with alternative algorithms. The framework progresses from data acquisition through augmentation to refined prediction. The survey workflow, PWRS, and post-pilot KNN are foundation components; augmentation and refinement remain future work.}
+\caption{The Three-Stage Progressive Pipeline. Each stage represents a pluggable component that can be substituted with alternative algorithms. The framework progresses from data acquisition through augmentation to refined prediction. The survey workflow, readiness calculation, and exploratory model path are foundation components; augmentation and refinement remain future work.}
 \label{fig:pipeline}
 \centering
 \resizebox{\textwidth}{!}{%
@@ -589,7 +588,7 @@ We reproduced a leakage-safe leave-one-out diagnostic for the post-pilot KNN usi
     \textbullet\ Establish ground truth corpus\\
     \textbullet\ Lightweight similarity-based
 };
-\node[plug=stage1, below=0.12cm of s1-content, text width=3cm, minimum height=0.9cm] (s1-plug) {Pluggable: Any\\similarity-based method\\(e.g., k-NN, cosine similarity)};
+\node[plug=stage1, below=0.12cm of s1-content, text width=3cm, minimum height=0.9cm] (s1-plug) {Pluggable: Any\\lightweight similarity-based method};
 \node[above=0.08cm of s1-head, font=\scriptsize\bfseries, text=stage1!80!black] (s1-title) {STAGE 1: FOUNDATION};
 \node[outer, draw=stage1!70, fit=(s1-title)(s1-head)(s1-content)(s1-plug)] (stage1-box) {};
 
@@ -728,7 +727,7 @@ Survey linkage is implemented. The remaining settings describe how the later pip
 
 \textbf{Algorithm Selection:} Each pipeline stage is designed to accept any algorithm that matches the expected interface. The \textbf{foundation stage} requires a predictor that works with minimal training data. The \textbf{augmentation stage} requires a generative model that can synthesize observations while preserving the main properties of the data. The \textbf{refinement stage} accepts supervised learning architectures that can capture non-linear relationships. This modularity allows researchers to compare alternatives on their own student populations rather than rely on fixed defaults.
 
-\textbf{Hyperparameter Tuning:} Within each algorithm, configurable parameters can support fine-tuning for institutional context. The current KNN path exposes settings such as distance metrics and neighbor counts. Generation multipliers, network architectures, and training schedules are proposed settings for later stages, together with logging that can support systematic model comparison.
+\textbf{Hyperparameter Tuning:} Within each algorithm, configurable parameters can support fine-tuning for institutional context. The foundation path exposes model-specific settings, while generation, architecture, and training settings are proposed for later stages. These configurations can be logged to support systematic model comparison.
 
 This configuration structure is intended to allow institutions to adopt improved few-shot learning techniques, stronger data augmentation strategies, or newer model architectures by updating settings rather than reengineering the full system. These later capabilities still require implementation and evaluation.
 
