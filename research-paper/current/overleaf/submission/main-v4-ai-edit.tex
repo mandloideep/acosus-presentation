@@ -1,0 +1,861 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% ACOSUS Paper: An AI-driven Transfer Student Advising System
+% Document Class: Article with ACM-style formatting
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[letterpaper,11pt]{article}
+\usepackage[margin=1in]{geometry}
+\pagestyle{empty}
+\usepackage{xurl}
+\usepackage{graphicx}
+\usepackage{alltt}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage[hidelinks, pdftex]{hyperref}
+\usepackage{float}
+
+% Float placement: let large figures/tables share a page with text instead of
+% being banished to their own near-empty float pages.
+\renewcommand{\topfraction}{0.9}
+\renewcommand{\bottomfraction}{0.9}
+\renewcommand{\textfraction}{0.08}
+\renewcommand{\floatpagefraction}{0.75}
+\setcounter{topnumber}{3}
+\setcounter{bottomnumber}{2}
+\setcounter{totalnumber}{4}
+
+% TikZ packages for diagrams
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, arrows.meta, positioning, fit, backgrounds, calc}
+
+% Define colors for diagrams
+\definecolor{targetsurvey}{HTML}{FFF3E0}
+\definecolor{factorsurvey}{HTML}{E3F2FD}
+\definecolor{processing}{HTML}{F3E5F5}
+\definecolor{outputgreen}{HTML}{E8F5E9}
+\definecolor{stage1green}{HTML}{D4EDDA}
+\definecolor{stage1border}{HTML}{28A745}
+\definecolor{stage2yellow}{HTML}{FFF3CD}
+\definecolor{stage2border}{HTML}{FFC107}
+\definecolor{stage3blue}{HTML}{CCE5FF}
+\definecolor{stage3border}{HTML}{007BFF}
+\definecolor{framegray}{HTML}{F8F9FA}
+\definecolor{frameborder}{HTML}{6C757D}
+\definecolor{modelpink}{HTML}{FCE4EC}
+% Colors for fig2 (Three-Stage Pipeline)
+\definecolor{stage1}{RGB}{76,175,80}
+\definecolor{stage2}{RGB}{255,152,0}
+\definecolor{stage3}{RGB}{100,149,237}
+\definecolor{inputred}{RGB}{183,28,28}
+\definecolor{outputviolet}{RGB}{103,58,183}
+\definecolor{pipelineborder}{RGB}{120,60,60}
+% Colors for fig3 (Survey Processing)
+\definecolor{surveyblue}{RGB}{66,133,244}
+\definecolor{surveyboxfill}{RGB}{215,232,252}
+\definecolor{processorange}{RGB}{234,67,53}
+\definecolor{processboxfill}{RGB}{253,232,226}
+\definecolor{processboxborder}{RGB}{230,150,100}
+\definecolor{modelgreen}{RGB}{15,100,80}
+\definecolor{modelboxfill}{RGB}{200,230,225}
+\definecolor{modelboxborder}{RGB}{100,180,170}
+% Colors for fig4 (System Architecture)
+\definecolor{dblue}{RGB}{60,100,180}
+
+% TikZ styles
+\tikzset{
+    surveybox/.style={rectangle, rounded corners=3pt, minimum width=2.2cm, minimum height=0.8cm, text centered, draw=black!60, font=\scriptsize, text width=2cm, align=center},
+    groupbox/.style={rectangle, rounded corners=5pt, draw=black!40, thick},
+    arrow/.style={-{Stealth[length=2mm]}, thick, black!70},
+    dashedarrow/.style={-{Stealth[length=2mm]}, thick, black!50, dashed},
+    stagebox/.style={rectangle, rounded corners=5pt, minimum width=3cm, minimum height=1.8cm, draw, thick, text width=2.8cm, align=center, font=\scriptsize},
+    layerbox/.style={rectangle, rounded corners=3pt, minimum width=2cm, minimum height=0.6cm, text centered, draw=black!60, font=\tiny, text width=1.8cm, align=center},
+}
+\urlstyle{same}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{helvet}
+\renewcommand{\familydefault}{\sfdefault}
+\usepackage{csquotes}
+\usepackage[style=apa, backend=biber, sortcites=true, sorting=nyt]{biblatex}
+\DeclareLanguageMapping{english}{english-apa}
+\addbibresource{references.bib}
+
+\usepackage[english]{babel}
+
+\usepackage{ragged2e}
+\setlength{\RaggedRightParindent}{0pt}
+%\RaggedRight
+\linespread{1.0}
+\setlength{\parskip}{5pt}
+
+\usepackage{titlesec}
+% Level 1: ALL CAPS, bold, left-aligned, no displayed number
+\titleformat{\section}{\normalfont\bfseries\MakeUppercase}{}{0pt}{}
+% Level 2: bold, sentence case, no displayed number
+\titleformat{\subsection}{\normalfont\bfseries}{}{0pt}{}
+% Level 3: underlined, sentence case, not bold, no displayed number
+\titleformat{\subsubsection}{\normalfont}{}{0pt}{\underline}
+\titlespacing*{\section}{0pt}{1.5\baselineskip}{0.5\baselineskip}
+\titlespacing*{\subsection}{0pt}{1\baselineskip}{0.5\baselineskip}
+\titlespacing*{\subsubsection}{0pt}{0.5\baselineskip}{0.5\baselineskip}
+
+\begin{document}
+
+\begin{center}
+\textbf{DECISION SCIENCES INSTITUTE}\\[6pt]
+An AI-driven Transfer Student Advising System: Design, Implementation, and Evaluation
+\end{center}
+
+\bigskip
+
+% DSI compliance: the current abstract below is ~180 words; DSI requires <=100 words.
+% Proposed trimmed rewrite (97 words) for discussion -- review and replace the
+% paragraph below with this version if you want to adopt it:
+%
+% Transfer students face advising challenges that conventional systems do not
+% address well: records are split across institutions, and predictive models are
+% typically trained on native-cohort students. We present ACOSUS, an advising
+% platform that combines a dual-survey design separating outcome measurement from
+% predictor collection with a progressive learning framework for low-data
+% settings. A pilot with ten transfer students at six public U.S. universities
+% provides initial evidence that the platform operates as intended; participants
+% endorsed the system positively on ease of use and usefulness. The evaluation
+% demonstrates design feasibility; the system is now collecting data for later
+% predictive evaluation.
+%
+% __ALT_PHRASING__: Abstract evaluation sentence (alternative form that adds the
+% foundation-phase caveat; longer but more cautious). To use, replace the
+% sentence "participants endorsed the system positively on perceived ease of use
+% and perceived usefulness, and the survey workflow operated correctly" below
+% with:
+%   participants endorsed the system positively on perceived ease of use and
+%   perceived usefulness, with the lower usefulness rating consistent with the
+%   foundation-phase context in which no predictions had yet been generated,
+%   and the survey workflow operated correctly.
+%
+% __ALT_PHRASING__: Abstract participating-institutions framing (active version
+% below is recommended Option A: "six public universities in the United
+% States"). Alternative phrasing for reviewer consideration:
+%
+% Option B (leverages the MSI/HSI alignment with the paper's underrepresented-
+% students framing; replace "six public universities in the United States" with):
+%   six public U.S. universities, several of them minority-serving institutions
+%
+% Option C would name each institution explicitly in the Study Design section
+% rather than in the abstract; the abstract phrasing would remain as Option A.
+\begin{center}
+\textbf{ABSTRACT}
+\end{center}
+
+%Transfer students, particularly those from underrepresented backgrounds in computing, face advising challenges that conventional systems do not address well. Their records are split across institutions, receiving universities often have limited visibility into pre-transfer coursework, and many predictive models are trained on students who entered as freshmen. We present ACOSUS (AI-driven counseling system for transfer students), an advising platform built for transfer student populations. This paper describes the design rationale, architecture, and implementation of the system. The system combines a dual-survey design that separates outcome measurement from predictor collection with a progressive learning framework for settings where little institutional data are available at the start. A controlled pilot study with transfer students at public universities in the United States provides initial evidence that the design works as intended: participants endorsed the system positively on perceived ease of use and perceived usefulness, and the survey workflow operated effectively. The evaluation demonstrates design feasibility rather than validated predictive performance; the system is now deployed and collecting data for later evaluation at scale.
+
+Transfer students face advising challenges that conventional systems do not address well: records are split across institutions, and predictive models are typically trained on students who entered as freshmen. We present ACOSUS, an AI-driven advising platform designed specifically for transfer students. The system incorporates a dual-survey approach that separates outcome measurement from predictor collection and a progressive learning framework suitable for institutions with limited data. A pilot study found positive participant ratings of perceived usefulness and ease of use, supporting the feasibility of the system and its survey workflow. The platform is now deployed and collecting data for future evaluation.
+
+\bigskip
+
+\noindent\textbf{KEYWORDS:}\quad transfer students, intelligent advising, machine learning, higher education, student success prediction
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% SECTION 1: INTRODUCTION
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Introduction}\label{sec:introduction}
+
+Many students begin at community colleges and later transfer to four-year universities to complete their degrees. National studies estimate that more than one-third of undergraduates follow this route \parencite{monaghan2015}, and the proportion is even higher in computing and other STEM majors and among first-generation, low-income, and racially minoritized students \parencite{computingtransfer2024,wali2025transfer}. Although this pathway offers a more affordable route to a bachelor's degree \parencite{factoranalysis2023}, it also creates coordination problems between sending and receiving institutions \parencite{nguyen2025school}. Advisors must work with articulation agreements, uneven credit recognition, and limited access to students' pre-transfer coursework \parencite{nguyen2024community,roksa2008credits}. For students from groups already underrepresented in STEM, these academic challenges often overlap with financial pressure and a weaker sense of belonging in a new institutional setting \parencite{computingtransfer2024,nguyen2025school}.
+
+Persistence and timely graduation remain major concerns. Transfer students are more likely than native students to experience ``transfer shock,'' a decline in GPA and sense of belonging during the first two semesters after matriculation \parencite{jaggars2025}, and they show higher attrition rates overall. Quantitative studies identify several measurable factors associated with retention and completion, including cumulative GPA, accepted credits, standardized test scores, distance between institutions, and financial aid \parencite{jaggars2025,roksa2008credits,factoranalysis2023}. These variables are useful, but they do not capture the full transfer experience \parencite{nguyen2025school}. Qualitative work repeatedly points to social support, faculty mentorship, and campus engagement opportunities such as research assistantships and hackathons, all of which are difficult to represent in standard student-information systems \parencite{thiry2023}.
+
+Advising is consistently identified as an important factor in transfer-student success \parencite{thiry2023,lukszo2020}. Students want clear, timely, and individualized guidance, but large caseloads leave many advisors with limited time to understand each student's background, goals, and constraints \parencite{preposttransfer2014,nguyen2025school}. Existing advising dashboards mostly reproduce registrar data and early-alert measures developed for native cohorts; they rarely include pre-transfer trajectories, articulation details, or information students typically share in advising conversations \parencite{nguyen2024community,nguyen2025school}. As a result, predictive models may misclassify student risk and reproduce existing inequities \parencite{computingtransfer2024,socialcognitive2022}. What is needed is an advising approach that combines administrative data with information about how transfer students actually experience the move between institutions \parencite{nguyen2025school}.
+
+To address this gap, we designed and evaluated an intelligent advising system that combines academic records with social, financial, and experiential data collected before and after transfer. This is primarily a design paper; the pilot study provides evidence that the design works in controlled settings, while large-scale predictive evaluation is deferred to future work. Our contributions are as follows:
+
+\begin{enumerate}
+    \item We built an advising platform for transfer students that combines academic records with student-provided background information to create a unified longitudinal profile.
+    \item We developed a dual-survey architecture that separates outcome measurement (Target Surveys) from predictor collection (Factor Surveys), allowing consistent capture of transfer-specific variables while providing advisors with structured student profiles through one dashboard.
+    \item We implemented a modular prediction architecture with configuration support for survey linkage, phase transitions, and hyperparameters, so researchers can adapt the system to different institutional settings without changing code.
+    \item We evaluated the system design in a controlled pilot study with transfer students, providing initial evidence that the platform operates as intended and is perceived as useful, easy to use, and supportive of self-advising.
+\end{enumerate}
+
+The remainder of the paper is organized as follows. LITERATURE REVIEW discusses related work on transfer-student success and intelligent advising. METHODOLOGY AND IMPLEMENTATION describes our system design and methodology, as well as implementation details. EVALUATION reports empirical findings from our pilot study. The last section concludes and outlines directions for future research.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% SECTION 2: LITERATURE REVIEW
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Literature Review}\label{sec:literature}
+
+Research on transfer-student outcomes can be grouped into two related areas \parencite{factoranalysis2023}. The first examines the personal and academic characteristics that shape transfer experiences. The second examines institutional practices, especially advising, that influence those outcomes.
+
+Early models, including \textcite{computingtransfer2024}'s use of Social-Cognitive Career Theory, describe transfer success in terms of ``person inputs'' (e.g., socioeconomic status and self-efficacy) and ``transfer receptivity,'' or the extent to which the receiving institution is prepared to support transfer students. Studies across STEM programs show that self-efficacy and goal-setting often improve after transfer, even as students adjust to unfamiliar academic expectations \parencite{socialcognitive2022}. Factor-analysis studies further show that financial considerations, institutional reputation, distance from home, and family expectations shape students' decisions to transfer \parencite{factoranalysis2023}. Regression analyses connect post-transfer GPA to race/ethnicity and first-generation status \parencite{computingtransfer2024}. Topic modeling of open-ended survey responses and social-media discussions adds further detail, especially around frustration with credit evaluation, commuting, and limited opportunities for campus engagement \parencite{standfast2024reddit}.
+
+Advising research often uses the idea of ``transfer student capital'' to describe the knowledge and networks students develop while moving across institutions \parencite{lukszo2020}. When formal advising falls short, many students turn to Reddit, Discord, or peer forums for help with financial aid, housing, and course selection \parencite{standfast2024reddit}. Qualitative interviews show that relationship-based advising can ease transfer shock and strengthen students' sense of belonging \parencite{thiry2023}. At the same time, advisors report difficulty keeping up with changing articulation rules and program maps while managing large caseloads \parencite{nguyen2024community,nguyen2025school}.
+
+Technology tools for advising have begun to appear, but most were built for native student populations \parencite{nguyen2024community}. These systems usually rely on registrar data and LMS (Learning Management Systems) clickstreams, and they often miss transfer-specific variables such as credit-transfer friction, completion patterns, and belonging-related indicators \parencite{nguyen2024community,nguyen2025school}. Prior studies warn that models trained on narrow student populations can produce biased predictions and disadvantage students from underrepresented groups \parencite{socialcognitive2022,computingtransfer2024}. Only a small number of prototype systems focus specifically on transfer students, and most remain at the pilot stage \parencite{topicmodeling2024}.
+
+Researchers have therefore called for mixed-methods approaches that combine quantitative data with qualitative evidence \parencite{nguyen2025school}. Topic modeling is one useful approach because it can identify recurring themes in narrative responses that do not appear in structured records. \textcite{deng2021} applied Revealed Causal Mapping to survey narratives to examine how social media use shapes the academic experiences and social capital of first-generation students, and \textcite{thiry2023} used mixed-methods case studies to develop support strategies for STEM transfer students. Even so, few studies have incorporated these kinds of unstructured findings into automated advising systems. This points to a broader systems problem: even when researchers identify the right factors, institutions often do not have a reliable way to collect, preserve, and reuse that information for advising or prediction.
+
+Data scarcity follows directly from that limitation. The issue is not a lack of transfer students, but the fact that their records are split across institutions \parencite{roksa2008credits}. When students transfer, only part of the academic record usually moves with them: credits earned, GPA, and course equivalencies. The broader context that community college advisors often know (family obligations, financial stress, career goals, and early warning signs) rarely follows the student to the receiving institution \parencite{nguyen2024community}. Much of this information remains undocumented or stored in systems that the receiving university cannot access \parencite{preposttransfer2014}. Advisors then have to reconstruct that context through time-consuming intake conversations. Prediction systems face the same problem: each institution must build its own labeled dataset over time, one student at a time \parencite{coleman2019coldstart}. This cold-start problem is especially serious in small-cohort settings, where the factors most predictive of success are often the least available in institutional records \parencite{coleman2019coldstart}.
+
+Our work addresses these gaps from a systems perspective. We combine standard academic records (e.g., transfer credits, GPA history, and enrollment status) with information students provide about their own experiences. The system uses these data to support advising through a lightweight, interpretable prediction process and a dashboard that organizes transfer-relevant information in one place. Early pilot feedback suggests that this approach addresses a practical need in transfer-student support and merits further evaluation at larger scale.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% SECTION 3: METHODOLOGY AND IMPLEMENTATION
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Methodology and Implementation}\label{sec:methodology}
+
+This section presents the design and implementation of ACOSUS. We first describe the overall system architecture, then the dual-survey data collection approach, the processing of survey responses, the progressive learning framework for small-data settings, and the configuration options that support institutional adaptation.
+
+\subsection{System Architecture}\label{subsec:sysarch}
+
+ACOSUS uses a four-layer architecture that separates presentation, business logic, data storage, and predictive modeling (Figure~\ref{fig:architecture}). This structure allows each layer to scale independently and supports both student-facing prediction and advisor-facing information management.
+
+The \textbf{Presentation Layer} provides role-specific interfaces through a web application. Students complete surveys, view predictions, and submit feedback. Advisors use a dashboard that organizes student profiles by the same categories used in the Factor Surveys, which reduces the need to assemble information from multiple sources. Administrators configure survey instruments, trigger model training, and monitor system activity.
+
+The \textbf{Business Logic Layer} manages application workflows and controls transitions between phases of the progressive learning framework. It determines which interface the student sees at a given time: data collection only during the foundation phase, and prediction with feedback in later phases.
+
+The \textbf{Data Layer} stores users, surveys, responses, and model metadata in a document-oriented format. This structure allows researchers to revise survey instruments without repeated database migrations.
+
+The \textbf{Model Layer} runs as a separate service for data normalization, prediction across all three pipeline stages, and model training. Asynchronous job queues keep training tasks from blocking prediction requests. Model versioning ensures that updated models are deployed only after they perform better on held-out real student data.
+
+This architecture defines where the major system functions reside, but it does not yet explain how transfer-specific information enters the platform. We address that next through the dual-survey design.
+
+% Figure 1 - System Architecture diagram
+\begin{figure}[htbp]
+\centering
+\resizebox{0.76\textwidth}{!}{%
+\begin{tikzpicture}[
+    node distance=1.5mm,
+    box/.style={draw, dashed, rounded corners=3pt, minimum width=32mm, minimum height=8mm, align=center, font=\scriptsize},
+    layer/.style={draw, rounded corners=5pt, inner sep=3mm},
+    student/.style={box, draw=teal!70, fill=teal!15},
+    advisor/.style={box, draw=cyan!70, fill=cyan!15},
+    admin/.style={box, draw=magenta!50, fill=magenta!10},
+    lbl/.style={font=\footnotesize\bfseries, align=center},
+    >=Stealth
+]
+
+% Column 2: Business Logic Layer (reference)
+\node[student] (auth) {Authentication};
+\node[student, below=of auth] (surv) {Survey Management};
+\node[advisor, below=of surv] (stage) {Stage Orchestration};
+\node[admin, below=of stage] (train) {Training Trigger};
+
+\begin{scope}[on background layer]
+\node[layer, draw=dblue, fit=(auth)(surv)(stage)(train), label={[lbl]above:BUSINESS LOGIC\\[-2pt]LAYER (Backend)}] (biz) {};
+\end{scope}
+
+% Column 1: Presentation Layer - create outer box first, then place inner boxes
+\path let \p1=(biz.north), \p2=(biz.south), \p3=(biz.west) in
+    node[layer, draw=orange,
+         minimum height={\y1-\y2},
+         minimum width=38mm,
+         anchor=north east,
+         label={[lbl]above:PRESENTATION\\[-2pt]LAYER (Frontend)}] (pres) at ($(\x3,\y1)+(-14mm,0)$) {};
+
+% Place boxes centered inside pres
+\node[student, anchor=north] at ($(pres.north)+(0,-3mm)$) (sp) {Student Portal\\[-1pt]\tiny Profile \textbar{} Survey\\[-1pt]\tiny Prediction \textbar{} Feedback};
+\node[advisor] at (pres.center) (ap) {Advisor Portal\\[-1pt]\tiny Search \textbar{} Manage\\[-1pt]\tiny Student Profiles};
+\node[admin, anchor=south] at ($(pres.south)+(0,3mm)$) (adm) {Admin Portal\\[-1pt]\tiny Configure Survey \textbar{} \\[-1pt]\tiny Train \textbar{} Analytics};
+
+% Column 3: Data Layer (top) + ML Layer (bottom)
+% Position Data Layer at top, aligned with Business Logic Layer outer box
+\path let \p1=(biz.north east) in
+    node[font=\scriptsize, align=left, anchor=north west] (dlist) at ($(\x1,\y1)+(12mm,0)$) {
+        \textbullet\ Users\\
+        \textbullet\ Surveys (Target + Factor)\\
+        \textbullet\ Responses\\
+        \textbullet\ Model Metadata\\
+        \textbullet\ Feedback Records
+    };
+
+\begin{scope}[on background layer]
+\node[layer, draw=purple, fit=(dlist), inner sep=2.5mm, label={[lbl]above:DATA LAYER}] (data) {};
+\end{scope}
+
+% Predictive Modeling Layer - align bottom with Business Logic Layer
+\path let \p1=(data.west), \p2=(data.east), \p3=(biz.south) in
+    node[layer, draw=purple, minimum width={\x2-\x1}, minimum height=18mm, anchor=south west, label={[lbl]above:PREDICTIVE MODELING}] (ml) at (\x1,\y3) {};
+
+\node[font=\scriptsize, align=left, anchor=north west] at ($(ml.north west)+(2.5mm,-2.5mm)$) {
+    \textbullet\ Data Normalizer\\
+    \textbullet\ Prediction Service\\
+    \textbullet\ Training Pipeline\\
+    \textbullet\ Model Versioning
+};
+
+% Arrows
+\draw[->, thick, black!60] (pres.east) -- (biz.west) node[midway, above, font=\tiny, align=center] {HTTPS\\REST API};
+\coordinate (split) at ($(biz.east)+(4mm,0)$);
+\draw[thick, black!60] (biz.east) -- (split);
+\draw[->, thick, black!60, rounded corners=3pt] (split) |- (data.west);
+\draw[->, thick, black!60, rounded corners=3pt] (split) |- (ml.west);
+
+\end{tikzpicture}
+}%
+\caption{ACOSUS system architecture. Four layers separate presentation, business logic, data persistence, and predictive modeling, enabling independent scaling and clear separation of responsibilities.}
+\label{fig:architecture}
+\end{figure}
+
+\subsection{Dual-Survey Architecture}\label{subsec:dualsurvey}
+
+This section introduces the terms used throughout the paper. ACOSUS treats transfer student success prediction as a supervised learning problem in which an outcome is predicted from a set of input variables. Because the platform separates what is being predicted from the information used to make that prediction, three terms are central to the design:
+
+\begin{itemize}
+    \item \textbf{Target Survey / Outcome ($Y$)}: The survey instrument that measures what we want to predict, namely the student's likelihood of academic success. In machine learning terminology, this is the \emph{label} or \emph{dependent variable}.
+    \item \textbf{Factor Survey / Predictors ($X$)}: The survey instruments that collect information used to make predictions, including academic background, financial circumstances, and logistical constraints. In machine learning terminology, these are \emph{features} or \emph{independent variables}.
+    \item \textbf{Constructs}: Psychological or educational concepts (e.g., self-efficacy, institutional commitment) that we operationalize through survey questions. A single Factor Survey may measure multiple constructs.
+\end{itemize}
+
+These definitions matter because many of the factors that shape transfer success do not map cleanly onto the information universities already store. Variables such as credit articulation outcomes, transfer shock, belonging, and financial precarity are rarely captured in standard institutional systems \parencite{nguyen2025school}. Advisors also often lack one place to access the information they need; prior work shows that they spend substantial time gathering student data from multiple sources before they can offer useful guidance \parencite{preposttransfer2014}. ACOSUS addresses both issues through a dual-survey architecture that supports prediction while also consolidating advisor-facing information.
+
+Prior research identifies several dimensions of transfer success, including academic self-efficacy, institutional commitment, social integration, and career clarity \parencite{factoranalysis2023}. Our earlier factor-analysis work grouped related variables into clusters such as academic confidence, time management, financial stability, and support systems \parencite{factoranalysis2023}. Building on those findings, ACOSUS treats ``success'' as a student's likelihood of doing well across these dimensions and ``factors'' as the conditions that affect that likelihood.
+
+ACOSUS implements this framework through a Dual-Survey Architecture that separates outcome collection from predictor collection (Figure~\ref{fig:dualsurvey}). \textbf{Target Surveys} (measuring $Y$) capture success through two supported modes: (1) a single direct self-assessment question where students rate their success on a 0--100 scale, or (2) a multi-question instrument measuring constructs such as academic confidence, commitment, time management self-efficacy, and career motivation, which are aggregated into a single score via weighted calculation. \textbf{Factor Surveys} (measuring $X$) collect the predictor variables used for prediction, organized into categories such as academic background, financial circumstances, logistical constraints, and prior interests or experiences.
+
+Beyond their role as predictor vectors for the AI model, Factor Surveys also help advisors by standardizing the collection of transfer-specific information that would otherwise be gathered through lengthy and inconsistent interviews. Every transfer student answers the same set of questions, which supports cohort-level comparison and reduces the chance that important risk factors will be missed. Survey responses are immediately available in the advisor dashboard, which reduces the need to search through emails, notes, or follow-up conversations.
+
+The architecture also supports flexible study designs through \textbf{survey linkage}, that is, explicit associations between Target and Factor Surveys. This makes it possible to compare different predictor sets, add new factors over time, and customize the system for different cohorts without changing the core infrastructure. Once these surveys are linked and deployed, the next step is to transform raw responses into model-ready inputs. We return to the linkage mechanism from an implementation perspective when discussing configuration flexibility later in the paper.
+
+% Figure 2 - Dual-Survey Architecture diagram
+\begin{figure}[htbp]
+\centering
+\resizebox{0.72\textwidth}{!}{%
+\begin{tikzpicture}[
+  box/.style={draw,dashed,rounded corners=3pt,align=center,font=\small},
+  target/.style={box,draw=orange!70,fill=orange!10,minimum width=28mm,minimum height=10mm},
+  factor/.style={box,draw=blue!50,fill=blue!10,minimum width=48mm,minimum height=10mm,text width=46mm},
+  container/.style={draw,rounded corners=5pt,inner sep=4mm}
+]
+% Target surveys
+\node[target] (sq) {Single-Question};
+\node[target,below=3mm of sq] (mq) {Multi-Question};
+\node[container,draw=purple!70,fit=(sq)(mq),label={[font=\small\bfseries]above:TARGET SURVEYS (Label)}] (tbox) {};
+
+% Factor surveys
+\node[factor,right=25mm of sq] (lc) {Logistics \& Commitment\\\footnotesize Distance, Work Hours};
+\node[factor,right=3mm of lc] (fs) {Financial Support\\\footnotesize Scholarship, Family Income};
+\node[factor,below=3mm of lc] (ab) {Academic Background\\\footnotesize GPA, SAT, Credits};
+\node[factor,right=3mm of ab] (fu) {[Future Surveys]\\\footnotesize Adaptable to New Predictors};
+\node[container,draw=blue!70,fit=(lc)(fs)(ab)(fu),label={[font=\small\bfseries]above:FACTOR SURVEYS (Features)}] (fbox) {};
+
+% Connection
+\draw[black!60,dashed,thick] (tbox.east) -- (fbox.west);
+\end{tikzpicture}
+}%
+\caption{Dual-Survey Architecture. Target Surveys collect the outcome ($Y$), Factor Surveys collect predictors ($X$). Dashed lines show linkage relationships enabling flexible study configurations.}
+\label{fig:dualsurvey}
+\end{figure}
+
+\subsection{Survey Data Processing}\label{subsec:dataprocessing}
+
+The Target and Factor Survey instruments convert student responses into feature vectors for predictive modeling, following the pipeline shown in Figure~\ref{fig:processing}. Each question corresponds to a success-related factor identified in prior research. Our earlier factor-analysis work linked observable indicators such as scholarship status and commute distance to broader constructs such as financial stability and institutional commitment \parencite{factoranalysis2023}. The purpose of this stage is to move from survey design to a consistent numerical representation that later modeling stages can use.
+
+\subsubsection{Priority Weighting}
+
+Not all factors contribute equally to student success. Without an explicit weighting mechanism, a prediction model would treat every survey question as equally informative, giving commute distance the same influence as academic self-efficacy. This contradicts retention research showing that certain constructs are substantially stronger predictors of persistence than logistical variables \parencite{factoranalysis2023}. A flat weighting would also make the system less interpretable for advisors, who need to understand why a particular risk score was generated. Prior research consistently identifies some variables (academic self-efficacy, financial stability, and institutional fit, for example) as more predictive than others \parencite{computingtransfer2024}. ACOSUS accounts for this through \textbf{priority scores}. These scores are based on empirical evidence such as effect sizes and factor loadings from prior studies, and they can be adjusted as advisor feedback clarifies which factors matter most in a given institutional context (Table~\ref{tab:priority}).
+
+The priority-weighted aggregation follows a straightforward formulation. For a survey with $n$ questions, where question $i$ has priority score $p_i$, the student selects an option with weightage $w_i^{\text{selected}}$ from a maximum possible $w_i^{\text{max}}$:
+
+\begin{equation}
+S = \frac{\sum_{i=1}^{n} \left(\frac{w_i^{\text{selected}}}{w_i^{\text{max}}} \times p_i\right)}{\sum_{i=1}^{n} p_i}
+\label{eq:priority}
+\end{equation}
+
+This yields a normalized score in $[0, 1]$ that reflects both the selected response and the importance of the corresponding question. We then apply a logistic calibration curve to reduce overconfident predictions at the extremes.
+
+\begin{table}[htbp]
+\centering
+\caption{Example priority score assignments based on literature-informed importance.}
+\label{tab:priority}
+\begin{tabular}{@{}p{3.1cm}p{4.5cm}cp{3.5cm}@{}}
+\toprule
+\textbf{Factor Category} & \textbf{Example Question} & \textbf{Priority} & \textbf{Rationale} \\
+\midrule
+Academic ~ ~ ~ ~ ~ ~ ~ ~ ~ Self-Efficacy & How confident in your ability to succeed? & 9 & Strong predictor (\parencite{bandura1997}) \\
+\midrule
+Financial Stability & Expected financial stress impact? & 8 & Affects retention (\parencite{socialcognitive2022}) \\
+\midrule
+Institutional Commitment & How committed to completing this program? & 9 & Persistence indicator (\parencite{tinto1993}) \\
+\midrule
+Logistics & Commute distance to university? & 6 & Practical barrier \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+These priority weights also remain useful in later modeling stages. When ACOSUS moves to probabilistic methods, the weights can be used as informative priors or as a principled starting point, so that features with higher priorities have greater initial influence before the model updates them using observed data. This preserves a link between expert knowledge and learned parameters. The next step in processing is to ensure that different kinds of survey responses are normalized appropriately.
+
+\subsubsection{Data Type Handling}
+
+Survey responses include different data types, and each type requires an appropriate normalization step before modeling, as summarized in Table~\ref{tab:normalization}. The distinction between \textbf{ordinal} and \textbf{cardinal} data is especially important: ordinal responses (e.g., ``Not confident'' $<$ ``Somewhat confident'' $<$ ``Very confident'') have a meaningful order, whereas cardinal responses (e.g., career aspiration categories) do not imply ranking.
+
+\begin{table}[htbp]
+\centering
+\caption{Normalization strategies for different data types.}
+\label{tab:normalization}
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Data Type} & \textbf{Example} & \textbf{Normalization Method} \\
+\midrule
+Ordinal & GPA range: ``3.0--3.5'' & Direct option weightage (e.g., 8/10) \\
+Cardinal & Career: ``Industry/Corporate'' & Equal weightage or domain-specific mapping \\
+Continuous & SAT score: 1250 & Min-max scaling: $(x - \min)/(\max - \min)$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+This type-aware processing preserves the meaning of the responses during feature engineering: ordinal relationships remain ordered, nominal categories are not treated as ranked, and continuous values are scaled appropriately. With this processing in place, ACOSUS can pass standardized inputs to the prediction pipeline. The next subsection explains how that pipeline is designed for settings where only a small amount of institutional data is available at first.
+
+% Figure 3 - Survey Data Processing Pipeline diagram
+\begin{figure}[htbp]
+\centering
+\resizebox{0.80\textwidth}{!}{%
+\begin{tikzpicture}[
+    node distance=0.35cm,
+    inner/.style={rectangle, dashed, thick, rounded corners=3pt, align=center, inner sep=10pt, font=\footnotesize},
+    outer/.style={rectangle, thick, rounded corners=3pt, inner sep=6pt},
+    arrow/.style={-{Stealth[scale=0.9]}, black!60, thick, rounded corners=6pt},
+    arrowline/.style={black!60, thick, rounded corners=6pt}
+]
+
+% Survey Collection inner boxes
+\node[inner, fill=surveyboxfill, draw=surveyblue!70, text width=4cm, minimum height=0.5cm] (q1) {Question 1 (Ordinal)};
+\node[inner, fill=surveyboxfill, draw=surveyblue!70, text width=4cm, minimum height=.5cm, below=0.2cm of q1] (q2) {Question 2 (Cardinal)};
+\node[inner, fill=surveyboxfill!40, draw=surveyblue!40, densely dotted, text width=4cm, minimum height=.5cm, below=0.2cm of q2] (qdots) {\textit{...}};
+\node[inner, fill=surveyboxfill, draw=surveyblue!70, text width=4cm, minimum height=0.5cm, below=0.2cm of qdots] (qn) {Question N (Continuous)};
+
+% Survey Collection title and outer box
+\node[above=0.3cm of q1, font=\footnotesize\bfseries, text=surveyblue!80!black] (survey-title) {SURVEY COLLECTION};
+\node[outer, draw=surveyblue, fit=(survey-title)(q1)(q2)(qdots)(qn), inner sep=10pt] (survey-box) {};
+
+% Data Processing inner boxes
+\node[inner, fill=processboxfill, draw=processboxborder, text width=3cm, minimum height=1cm, right=1.8cm of q1.east |- q1.south east] (priority) {Priority\\Weighting};
+\node[inner, fill=processboxfill, draw=processboxborder, text width=3cm, minimum height=1cm, below=0.8cm of priority] (normalize) {Type-Aware\\Normalization};
+
+% Data Processing title and outer box
+\node[above=0.3cm of priority, font=\footnotesize\bfseries, text=processorange!80!black] (process-title) {DATA PROCESSING};
+\node[outer, draw=processorange, fit=(process-title)(priority)(normalize), inner sep=10pt] (process-box) {};
+
+% Model Input inner box (centered with process box)
+\path (priority.center) -- (normalize.center) coordinate[midway] (process-center);
+\node[inner, fill=modelboxfill, draw=modelboxborder, text width=3cm, minimum height=1cm, right=1.5cm of process-box.east, anchor=west] (feature) {Normalized\\Feature Vector};
+
+% Model Input title and outer box
+\node[above=0.3cm of feature, font=\footnotesize\bfseries, text=modelgreen] (model-title) {MODEL INPUT};
+\node[outer, draw=modelgreen, fit=(model-title)(feature), inner sep=10pt] (model-box) {};
+
+% Arrows from Survey to Priority Weighting (converging)
+% Merge point at Q2 level so Q2 has straight horizontal line
+\coordinate (merge-point) at ($(survey-box.east)!0.5!(process-box.west) |- q2$);
+
+% Curved lines from questions converging to merge point, then to priority
+\draw[arrowline] (q1.east) to[out=0, in=135] (merge-point);
+\draw[arrowline] (q2.east) -- (merge-point);
+\draw[arrowline] (qn.east) to[out=0, in=-135] (merge-point);
+\draw[arrow] (merge-point) to[out=45, in=180] (priority.west);
+
+% Arrow between Priority and Normalization
+\draw[arrow] (priority.south) -- (normalize.north);
+
+% Arrow from Normalization to Feature Vector
+\draw[arrowline] (normalize.east) -- (process-box.east |- normalize.east);
+\draw[arrow] (process-box.east |- normalize.east) to[out=0, in=180] (feature.west);
+
+\end{tikzpicture}
+}%
+\caption{Survey data processing pipeline. Raw responses undergo priority weighting and type-aware normalization to produce standardized feature vectors for model ingestion.}
+\label{fig:processing}
+\end{figure}
+
+\subsection{Progressive Learning Framework}\label{subsec:progressive}
+
+After survey responses have been standardized, the remaining challenge is how to make use of them when only a small amount of institutional data exists. ACOSUS is designed to work under limited-data conditions from the beginning. Rather than waiting until enough data exist to support prediction, the system provides value from the first student enrollment by giving advisors structured student profiles through standardized surveys. In this way, the early cold-start period still serves a useful advising and data-collection function.
+
+\subsubsection{Three-Stage Pipeline}
+
+As observations accumulate, the system moves through a three-stage pipeline (Figure~\ref{fig:pipeline}):
+
+\textbf{Foundation Stage.} The system focuses on collecting high-quality labeled observations through surveys that capture both outcomes and predictors. Once a minimum corpus exists, lightweight methods (e.g., k-nearest neighbors or cosine similarity matching) can generate initial predictions. At this stage, data quality matters more than model complexity.
+
+\textbf{Augmentation Stage.} As the corpus grows, the system uses generative methods (e.g., SMOTE, generative adversarial networks, or variational autoencoders) to synthesize additional training observations. These methods learn from the real data and produce synthetic samples that expand the training set while preserving its main statistical properties.
+
+\textbf{Refinement Stage.} Finally, the system transitions to more advanced non-linear models (e.g., deep neural networks, gradient boosting, or ensemble methods) that can capture complex relationships between features and outcomes.
+
+The framework is modular across all three stages. Any compatible predictive method may be used in the foundation stage, any suitable generative technique may be used for augmentation, and any supervised learning architecture may be used in refinement. This design allows researchers to compare algorithms on their own student populations and to adopt new methods as they become available without redesigning the full system. Because those choices may differ across institutions and studies, the next subsection describes the configuration layer that controls how surveys, stages, and algorithms are connected in practice.
+
+% Figure 4 - Three-Stage Progressive Pipeline diagram
+\begin{figure}[htbp]
+\centering
+\resizebox{\textwidth}{!}{%
+\begin{tikzpicture}[
+    node distance=0.3cm,
+    inner/.style={rectangle, dashed, thick, rounded corners=2pt, align=center, inner sep=5pt, font=\scriptsize},
+    outer/.style={rectangle, dashed, thick, rounded corners=3pt, inner sep=8pt},
+    header/.style={inner, fill=#1!20, draw=#1!70},
+    content/.style={inner, fill=#1!10, draw=#1!50},
+    plug/.style={inner, fill=#1!15, draw=#1!60},
+    arrow/.style={-{Stealth[scale=0.8]}, black!60, thick},
+    lbl/.style={font=\tiny\itshape, text=black!50, align=center}
+]
+
+% Stage 1 inner boxes
+\node[header=stage1, text width=3cm, minimum height=0.8cm] (s1-head) {Data Collection \& Initial\\Prediction};
+\node[content=stage1, below=0.12cm of s1-head, text width=3cm, minimum height=1.4cm] (s1-content) {
+    \textbullet\ Collect high-quality labeled observations\\
+    \textbullet\ Establish ground truth corpus\\
+    \textbullet\ Lightweight similarity-based
+};
+\node[plug=stage1, below=0.12cm of s1-content, text width=3cm, minimum height=0.9cm] (s1-plug) {Pluggable: Any\\similarity-based method\\(e.g., k-NN, cosine similarity)};
+\node[above=0.08cm of s1-head, font=\scriptsize\bfseries, text=stage1!80!black] (s1-title) {STAGE 1: FOUNDATION};
+\node[outer, draw=stage1!70, fit=(s1-title)(s1-head)(s1-content)(s1-plug)] (stage1-box) {};
+
+% Stage 2 inner boxes
+\node[header=stage2, right=1.8cm of s1-head, text width=3cm, minimum height=0.8cm] (s2-head) {Synthetic Data\\Generation};
+\node[content=stage2, below=0.12cm of s2-head, text width=3cm, minimum height=1.4cm] (s2-content) {
+    \textbullet\ Learn distributional characteristics\\
+    \textbullet\ Synthesize training observations\\
+    \textbullet\ Preserve statistical properties
+};
+\node[plug=stage2, below=0.12cm of s2-content, text width=3cm, minimum height=0.9cm] (s2-plug) {Pluggable: Any\\generative technique\\(e.g., SMOTE, GANs, VAEs)};
+\node[above=0.08cm of s2-head, font=\scriptsize\bfseries, text=stage2!80!black] (s2-title) {STAGE 2: AUGMENTATION};
+\node[outer, draw=stage2!70, fit=(s2-title)(s2-head)(s2-content)(s2-plug)] (stage2-box) {};
+
+% Stage 3 inner boxes
+\node[header=stage3, right=1.8cm of s2-head, text width=3cm, minimum height=0.8cm] (s3-head) {Advanced Non-Linear\\Modeling};
+\node[content=stage3, below=0.12cm of s3-head, text width=3cm, minimum height=1.4cm] (s3-content) {
+    \textbullet\ Train on augmented corpus\\
+    \textbullet\ Capture complex relationships\\
+    \textbullet\ Continuous improvement via feedback
+};
+\node[plug=stage3, below=0.12cm of s3-content, text width=3cm, minimum height=0.9cm] (s3-plug) {Pluggable: Any deep\\learning architecture\\(e.g., neural nets, gradient boosting)};
+\node[above=0.08cm of s3-head, font=\scriptsize\bfseries, text=stage3!80!black] (s3-title) {STAGE 3: REFINEMENT};
+\node[outer, draw=stage3!70, fit=(s3-title)(s3-head)(s3-content)(s3-plug)] (stage3-box) {};
+
+% Pipeline title (centered above stages)
+% \path (stage1-box.north west) -- (stage3-box.north east) coordinate[midway] (pipeline-center);
+% \node[above=0.6cm of pipeline-center, font=\small\bfseries, text=pipelineborder] (pipeline-title) {ACOSUS THREE-STAGE PROGRESSIVE PIPELINE};
+
+% Pipeline outer box
+% \begin{scope}[on background layer]
+% \node[outer, draw=pipelineborder, fit=(pipeline-title)(stage1-box)(stage2-box)(stage3-box), inner sep=12pt] (pipeline) {};
+% \end{scope}
+
+% Input box (outer box top aligned with Stage 1 outer box top)
+\node[font=\scriptsize\bfseries, text=inputred, anchor=north] (input-title) at ([xshift=-2.2cm, yshift=-8pt]stage1-box.north west) {DATA INPUT};
+\node[inner, fill=white, draw=inputred!80, text width=2.4cm, below=0.08cm of input-title] (input-inner) {Survey Responses\\(Features, Labels)};
+\node[outer, draw=inputred!80, fit=(input-title)(input-inner)] (input-box) {};
+
+% Output box (outer box bottom aligned with Stage 1 outer box bottom)
+\node[inner, fill=white, draw=outputviolet!80, text width=2.4cm, anchor=south] (output-inner) at ([xshift=-2.2cm, yshift=8pt]stage1-box.south west) {Readiness Score};
+\node[above=0.08cm of output-inner, font=\scriptsize\bfseries, text=outputviolet, align=center] (output-title) {PREDICTION\\ OUTPUT};
+\node[outer, draw=outputviolet!80, fit=(output-title)(output-inner)] (output-box) {};
+
+% Arrows
+\draw[arrow] (input-box.east) -- (stage1-box.west |- input-box.east);
+\draw[arrow] (stage1-box.east) -- node[lbl, above] {Minimal\\corpus\\established} (stage2-box.west);
+\draw[arrow] (stage2-box.east) -- node[lbl, above] {Sufficient\\volume\\achieved} (stage3-box.west);
+
+% Feedback arrow
+\coordinate (turn1) at ([yshift=-0.5cm]stage3-box.south);
+\coordinate (turn2) at (turn1 -| output-box.east);
+\coordinate (turn3) at ([xshift=0.4cm]output-box.east);
+\draw[black!60, thick, rounded corners=6pt] (stage3-box.south) -- (turn1) -- (turn1 -| turn3) -- (turn3);
+\draw[arrow] (turn3) -- (output-box.east);
+
+\end{tikzpicture}
+}%
+\caption{The Three-Stage Progressive Pipeline. Each stage represents a pluggable component that can be substituted with alternative algorithms. The framework progresses from data acquisition through augmentation to refined prediction, with feedback loops enabling continuous improvement.}
+\label{fig:pipeline}
+\end{figure}
+
+\subsection{Configuration Flexibility}\label{subsec:config}
+
+The modular pipeline design described above is implemented through a configuration system that allows researchers to adapt the framework without modifying the core infrastructure. Four categories of settings support this flexibility:
+
+\textbf{Survey Linkage:} The dual-survey architecture uses explicit linkage settings. A single Target Survey (outcome $Y$) may be linked to multiple Factor Surveys (predictor sets $X_1, X_2, X_3$), which allows researchers to examine which predictor combinations perform best. Figure~\ref{fig:linkage} shows how linked surveys flow into the model during training and prediction. This arrangement provides several practical advantages:
+
+\begin{enumerate}
+    \item \textbf{Comparative predictor analysis:} researchers can deploy alternative Factor Surveys to the same cohort and compare predictive validity across predictor sets;
+    \item \textbf{Longitudinal adaptability:} as research identifies new predictors of transfer success, new Factor Surveys can be added without disrupting existing data collection or invalidating earlier comparisons;
+    \item \textbf{Cohort customization:} different academic programs can deploy program-specific Factor Surveys while maintaining a common outcome measure through shared Target Surveys.
+\end{enumerate}
+
+% Figure 5 - Dual-Survey Architecture with Linkage
+\begin{figure}[htbp]
+\centering
+\resizebox{0.67\textwidth}{!}{%
+\begin{tikzpicture}[
+  box/.style={draw,dashed,rounded corners=5pt,align=center,font=\footnotesize},
+  container/.style={draw,rounded corners=5pt,inner sep=4mm},
+  % Training flow styles (warm/salmon hues)
+  trainbox/.style={box,draw=red!40,fill=red!8},
+  trainarr/.style={black!60,thick,-{Stealth[length=2.5mm]}},
+  % Prediction flow styles (cool/teal hues)
+  predbox/.style={box,draw=teal!60,fill=teal!12},
+  predarr/.style={green!60!black,thick,-{Stealth[length=2.5mm]}}
+]
+% Left column - Target Survey
+\node[box,draw=orange!70,fill=orange!10,minimum width=32mm,minimum height=8mm] (target) {Target Survey (Label)};
+
+% Middle column - Data Processing
+\node[trainbox,minimum width=32mm,minimum height=12mm,right=18mm of target.south east,anchor=north west] (weighted) {Weighted Calculation\\(if multi-question)};
+\node[trainbox,minimum width=32mm,minimum height=12mm,below=4mm of weighted] (normtrain) {Feature Normalization\\(Training)};
+\node[predbox,minimum width=32mm,minimum height=12mm,below=4mm of normtrain] (normpred) {Feature Normalization\\(Prediction)};
+\node[container,draw=blue!70,fit=(weighted)(normtrain)(normpred),label={[font=\footnotesize\bfseries]above:DATA PROCESSING}] (dbox) {};
+
+% Left column - Factor Surveys (aligned to dbox bottom)
+\node[box,draw=blue!50,fill=blue!15,minimum width=32mm,minimum height=20mm,anchor=south] at ([yshift=3mm]target.south|-dbox.south) (factors) {Factor Survey $X_1$\\Factor Survey $X_2$\\...\\Factor Survey $X_N$};
+\node[font=\footnotesize\bfseries,align=center,above=1mm of factors] (flabel) {FACTOR SURVEYS\\(Features)};
+\node[container,draw=blue!70,inner sep=3mm,fit=(factors)(flabel)] (fbox) {};
+
+% Link between target and factor surveys
+\draw[black!60,dashed,thick] (target.south) -- node[right,font=\footnotesize,black]{Link} (fbox.north);
+
+% Right column - ML Model (Training flow on top, Prediction flow on bottom)
+\node[trainbox,minimum width=32mm,minimum height=8mm,right=18mm of weighted.north east,anchor=north west] (train) {Train Model};
+\node[trainbox,minimum width=32mm,minimum height=8mm,below=4mm of train] (save) {Save Model};
+\node[predbox,minimum width=32mm,minimum height=8mm,below=4mm of save] (load) {Load Trained Model};
+\node[predbox,minimum width=32mm,minimum height=8mm,below=4mm of load] (predict) {Predict Readiness};
+\node[container,draw=purple!70,fit=(train)(save)(load)(predict),label={[font=\footnotesize\bfseries]above:ML MODEL}] (mbox) {};
+
+% Training Flow Arrows (gray)
+\draw[trainarr] (target.east) to[out=0,in=180] (weighted.west);
+\draw[trainarr] (weighted.south) -- (normtrain.north);
+\draw[trainarr] (normtrain.east) to[out=0,in=180] (train.west);
+\draw[trainarr] (train.south) -- (save.north);
+
+% Prediction Flow Arrows (green)
+\draw[predarr] (fbox.east) to[out=0,in=180] (normpred.west);
+\draw[predarr] (normpred.east) to[out=0,in=180] (load.west);
+\draw[predarr] (load.south) -- (predict.north);
+
+% Legend (horizontal layout)
+\node[below=5mm of fbox.south west,anchor=north west,font=\footnotesize\bfseries] (legendlabel) {Legend:};
+\draw[trainarr] ([xshift=2mm]legendlabel.east) -- ++(10mm,0) node[right,font=\footnotesize,black] {Training Flow};
+\node[right=50mm of legendlabel.east,anchor=west] (predlegendstart) {};
+\draw[predarr] (predlegendstart.west) -- ++(10mm,0) node[right,font=\footnotesize,black] {Prediction Flow};
+\end{tikzpicture}
+}%
+\caption{Dual-Survey Architecture with survey linkage. Gray arrows indicate training flow (Target Survey through model training), while green arrows indicate prediction flow (Factor Surveys through inference). Dashed lines show linkage relationships between Target and Factor Surveys.}
+\label{fig:linkage}
+\end{figure}
+
+The remaining three categories address the progressive learning pipeline:
+
+\textbf{Phase Transition Thresholds.} Administrators specify how many observations are required before the system moves from one pipeline stage to the next. Default thresholds reflect statistical considerations for each algorithm family, but institutions can adjust them based on enrollment patterns and the desired balance between prediction availability and model reliability.
+
+\textbf{Algorithm Selection:} Each pipeline stage accepts any algorithm that matches the expected interface. The \textbf{foundation stage} requires a predictor that works with minimal training data. The \textbf{augmentation stage} requires a generative model that can synthesize observations while preserving the main properties of the data. The \textbf{refinement stage} accepts supervised learning architectures that can capture non-linear relationships. This modularity allows researchers to compare alternatives on their own student populations rather than rely on fixed defaults.
+
+\textbf{Hyperparameter Tuning:} Within each algorithm, configurable parameters support fine-tuning for institutional context. Distance metrics, neighbor counts, generation multipliers, network architectures, and training schedules are all exposed as settings. The system logs each configuration together with model performance metrics to support systematic comparison.
+
+This configuration structure allows institutions to adopt newer methods, including improved few-shot learning techniques, stronger data augmentation strategies, or newer model architectures, by updating settings rather than reengineering the full system.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% SECTION 4: EVALUATION
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Evaluation}\label{sec:evaluation}
+
+To assess the usability and perceived value of ACOSUS, we conducted a pilot study with transfer students at a public urban university. This section describes the study design, evaluation instruments, quantitative results, and qualitative findings.
+
+\subsection{Study Design}\label{subsec:studydesign}
+
+% \subsubsection{Participants}
+
+% __ALT_PHRASING__: Study Design participating-institutions sentence (active
+% version below is recommended Option A: "from six public universities in the
+% United States"). Alternative phrasings retained for reviewer consideration:
+%
+% Option B (leverages the MSI/HSI alignment with the paper's underrepresented-
+% students framing):
+%   Ten transfer students ($N=10$) participated, recruited from six public
+%   universities in the United States, several of which are designated
+%   minority-serving institutions whose student populations align with the
+%   underrepresented groups the system is designed to support.
+%
+% Option C (names institutions explicitly):
+%   Ten transfer students ($N=10$) participated, drawn from six public
+%   universities in the United States: Northeastern Illinois University,
+%   the University of Houston-Downtown, Texas A\&M University-Victoria,
+%   SUNY Old Westbury, Cal Poly Humboldt, and the University of Texas at
+%   El Paso.
+Ten transfer students ($N=10$) from public universities in the United States participated in the study. Participants were recruited by email and enrolled after providing informed consent. All were active transfer students in computing-related majors. The evaluation took place during the foundation phase of the progressive learning pipeline, when the system was still collecting labeled observations for the initial training corpus. At that stage, no predictive model had yet been trained, so the system's main function was structured data collection rather than prediction. Participants completed the Factor and Target Survey instruments, then completed a feedback survey through Qualtrics. The study protocol received Institutional Review Board (IRB) approval before data collection began.
+
+\subsection{Evaluation Instruments}\label{subsec:instruments}
+
+The feedback survey was based on the Technology Acceptance Model (TAM) framework \parencite{davis1989} and was used to assess participants' perceptions of the data collection experience. It included 5-point Likert-scale items measuring Perceived Usefulness, Perceived Ease of Use, and Behavioral Intention, along with open-ended questions about interface difficulties, helpful features, missing capabilities, and redesign suggestions. Table~\ref{tab:constructs} presents the constructs and example items.
+
+\begin{table}[htbp]
+\centering
+\caption{Feedback survey constructs and items.}
+\label{tab:constructs}
+\begin{tabular}{@{}lp{8cm}@{}}
+\toprule
+\textbf{Construct} & \textbf{Example Item} \\
+\midrule
+Perceived Usefulness (PU) & ``Using this AI counseling system enables me to accomplish tasks more quickly than other advising methods.'' \\
+Perceived Ease of Use (PEOU) & ``Learning to operate this AI counseling system was easy for me.'' \\
+Behavioral Intention & ``How likely are you to continue using this system for academic planning?'' \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Open-ended questions captured qualitative feedback on interface difficulties, helpful features, missing capabilities, and redesign suggestions.
+
+\subsection{Quantitative Results}\label{subsec:quantresults}
+
+\subsubsection{TAM Construct Scores}
+
+% __ALT_PHRASING__: TAM Construct Scores opening paragraph. The active version
+% (recommended Option A) is below; alternative phrasings retained for reviewer
+% consideration:
+%
+% Option B (frames the spread as expected rather than as a weakness):
+%   The TAM-based measures showed positive endorsement on perceived ease of use
+%   and perceived usefulness, with the expected differences across respondents
+%   in how strongly each construct was endorsed. Because this evaluation was
+%   conducted during the foundation phase, before any predictive output had
+%   been generated for participants, the scores reflect participants'
+%   experience of the data-collection workflow and interface rather than the
+%   system's predictive utility. Lower ratings on usefulness should therefore
+%   be read as a reflection of the system's current functionality at the
+%   foundation phase rather than as evidence against the underlying design.
+%
+% Option C (most measured, fewest adjectives):
+%   Participants endorsed perceived ease of use and perceived usefulness
+%   positively across the TAM dimensions. Because this evaluation was conducted
+%   during the foundation phase, before any predictive output had been
+%   generated for participants, the scores reflect participants' experience of
+%   the data-collection workflow and interface rather than the system's
+%   predictive utility. Lower ratings on usefulness should therefore be read
+%   as a reflection of the system's current functionality at the foundation
+%   phase rather than as evidence against the underlying design.
+The TAM-based measures showed favorable responses on perceived ease of use and perceived usefulness across the participant group (Table~\ref{tab:results}). Because this evaluation was conducted during the foundation phase, before any predictive output had been generated for participants, the scores reflect participants' experience of the data-collection workflow and interface rather than the system's predictive utility. Lower ratings on usefulness should therefore be read as a reflection of the system's current functionality at the foundation phase rather than as evidence against the underlying design.
+
+\begin{table}[htbp]
+\centering
+\caption{Summary statistics for evaluation metrics (5-point Likert scale).}
+\label{tab:results}
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+\textbf{Metric} & \textbf{Mean} & \textbf{SD} & \textbf{Min} & \textbf{Max} \\
+\midrule
+Perceived Usefulness (PU) & 3.37 & 1.29 & 1 & 5 \\
+Perceived Ease of Use (PEOU) & 4.13 & 1.05 & 1 & 5 \\
+Likelihood to Continue & 3.12 & 1.89 & 1 & 5 \\
+Likelihood to Recommend & 3.00 & 1.77 & 1 & 5 \\
+\bottomrule
+\multicolumn{5}{@{}p{0.92\columnwidth}@{}}{\footnotesize\textit{Note.} Behavioral-intention items have $N=8$; two participants did not provide a usable rating.} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% Figure 6 - TAM construct scores
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.72\textwidth]{infographics/fig1_tam_metrics.png}
+\caption{TAM construct scores ($N=10$). Perceived Ease of Use was the highest-rated TAM construct ($M=4.13$), while Perceived Usefulness was lower and more dispersed ($M=3.37$).}
+\label{fig:tam}
+\end{figure}
+
+As Figure~\ref{fig:tam} shows, Perceived Ease of Use received the highest mean among the TAM constructs ($M=4.13$, $SD=1.05$), indicating positive agreement that the system is easy to learn and use, with relatively consistent responses across participants. Perceived Usefulness was lower and more dispersed ($M=3.37$, $SD=1.29$), suggesting that participants saw the system as easy to operate but were less uniformly convinced of its usefulness for their own advising needs.
+
+\subsubsection{Behavioral Intention}
+
+% Figure 7 - Behavioral intention metrics
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.78\textwidth]{infographics/fig4_behavioral_intention.png}
+\caption{Behavioral intention ($N=8$). Likelihood to Continue ($M=3.12$) was slightly higher than Likelihood to Recommend ($M=3.00$); both showed substantial variance across respondents ($SD\approx1.8$).}
+\label{fig:behavioral}
+\end{figure}
+
+Behavioral intention was the weakest dimension in the evaluation (Figure~\ref{fig:behavioral}). Likelihood to Continue using the system was moderate on average ($M=3.12$, $SD=1.89$), and Likelihood to Recommend was slightly lower and similarly dispersed ($M=3.00$, $SD=1.77$). Two participants did not provide a usable rating for these items and are excluded from the behavioral-intention means ($N=8$). Both distributions are bimodal: several respondents scored 5/5 while others scored 1--2, with few intermediate ratings. This pattern suggests that the system appeals strongly to a subset of transfer students but not to others, rather than producing uniform mild enthusiasm. We read this cautiously: with only a small number of respondents at the foundation phase, when no predictions had yet been generated, low recommendation scores may reflect limited current utility rather than rejection of the design.
+
+\subsection{Qualitative Findings}\label{subsec:qualfindings}
+
+Open-ended responses yielded five main themes, whose frequencies are shown in Figure~\ref{fig:themes} and whose representative quotes appear in Table~\ref{tab:themes}.
+
+% Figure 8 - Qualitative theme distribution
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.72\textwidth]{infographics/fig6_qualitative_themes.png}
+\caption{Qualitative theme distribution ($N$=10). Feature Requests was the most frequent theme (7 mentions), followed by UI/Navigation Positive (6), No Issues Reported (5), Assessment \& Exploration Value (4), and a single expression of Preference for Human Advising (1).}
+\label{fig:themes}
+\end{figure}
+
+\begin{table}[htbp]
+\centering
+\caption{Qualitative themes and representative responses ($N=10$).}
+\label{tab:themes}
+\begin{tabular}{@{}lcp{7cm}@{}}
+\toprule
+\textbf{Theme} & \textbf{Count} & \textbf{Representative Quote} \\
+\midrule
+Feature Requests & 7 & ``Make it tailored more towards individual users and their specific situation''; ``Better analysis of prerequisites to allow for registration'' \\
+UI/Navigation Positive & 6 & ``The UI navigation is very user friendly''; ``All the interface of the website was very intuitive to interact with'' \\
+No Issues Reported & 5 & ``No feature was missing, my experience was great''; ``None, everything was clear'' \\
+Assessment \& Exploration Value & 4 & ``The assessment is fun and helpful to me''; ``Career exploration'' \\
+Preference for Human Advising & 1 & ``I have never had a problem with a human advisor. Please don't replace a human being with AI'' \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{Feature Requests} was the most frequent theme. Rather than indicating dissatisfaction, the pattern suggests that participants engaged closely enough with the system to want it to do more. Several asked for tighter personalization, with one participant writing that they would ``make it tailored more towards individual users and their specific situation,'' while others requested deeper academic functionality, such as ``better analysis of prerequisites to allow for registration'' and ``more answer choices besides the ones provided.'' \textbf{UI/Navigation Positive} was the next most common theme; participants consistently described the interface as easy to navigate, with one writing that ``the UI navigation is very user friendly'' and another that ``all the interface of the website was very intuitive to interact with,'' which is consistent with PEOU being the highest-rated TAM construct ($M=4.13$). \textbf{No Issues Reported} formed a third cluster: when asked about missing features or interface difficulties, several participants responded with comments such as ``no feature was missing, my experience was great'' and ``none, everything was clear.'' Finally, \textbf{Assessment \& Exploration Value} captured comments in which participants recognized the system's worth for self-assessment and for exploring their options, even at the foundation phase when no predictions were yet available; participants described it as a tool for ``career exploration'' and noted that ``the assessment is fun and helpful to me.'' A fifth theme emerged from a single, more skeptical participant, who wrote that they ``have never had a problem with a human advisor'' and asking that the system ``not replace a human being with AI.'' Although isolated, this comment reflects a \textbf{Preference for Human Advising} and echoes the advisors' own view that the system should complement rather than substitute for human advising.
+
+Alongside the student pilot, the project also received informal feedback from academic advisors. Advisors agreed that the system addresses a real need and viewed it as a promising direction, while noting that its full value depends on the prediction capability that the foundation phase has not yet produced. They also indicated that the system could help students arrive better prepared for advising meetings, and that consolidating its captured information into a single advising hub would further strengthen its value to advising workflows.
+
+% __ALT_PHRASING__: Advisor feedback final sentence (the second sentence of the
+% paragraph above is the recommended Option A). Alternative phrasings retained
+% for reviewer consideration:
+%
+% Option B (drops the template idea entirely; keeps preparedness and hub as
+% separate observations):
+%   They also observed that the system could encourage student preparedness
+%   for advising meetings and that consolidating its captured information into
+%   a single advising hub would strengthen its fit with existing advising
+%   workflows.
+%
+% Option C (closest to the advisor's own framing, with "for example" softening
+% the template):
+%   They also suggested that the system could help students prepare for
+%   advising meetings, for example through a preparation template, and noted
+%   that consolidating its captured information into a single advising hub
+%   would strengthen its fit with advising workflows.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% SECTION 5: CONCLUSION AND FUTURE WORK
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Conclusion and Future Work}\label{sec:conclusion}
+
+This paper presented ACOSUS, an AI-driven counseling system designed for transfer students in computing majors. The system addresses two problems that often limit transfer advising: fragmented information and limited institutional data for prediction.
+
+%\textbf{Summary of Contributions.} 
+Our primary contributions are: (1) a dual-survey architecture that separates outcome measurement from predictor collection while providing advisors with structured student profiles through a unified dashboard; (2) a modular prediction architecture with configuration support for survey linkage, phase transitions, and hyperparameters, allowing institutions to adapt the system to their own settings; and (3) a pilot evaluation with transfer students ($N=10$) showing that the system is perceived as moderately easy to use and useful, with Perceived Ease of Use ($M=4.13$) the strongest of the TAM constructs, alongside notable variance in behavioral intention.
+
+%\textbf{Limitations and Current Status.} 
+The system is currently operational and collecting observations during the foundation phase, but its predictive components still need to be evaluated as the dataset grows. % __ALT_PHRASING__: Conclusion limitations clause about participating
+% institutions (active version below uses "small number of participating
+% institutions" per recommended Option A). Alternative phrasing:
+%   limited number of participating institutions (Option B wording).
+The pilot's small sample size ($N=10$), small number of participating institutions, voluntary enrollment, and cross-sectional design limit generalizability, and longitudinal outcome tracking was beyond the scope of the present study.
+
+%\textbf{Future Work.} 
+Future work includes: (1) evaluating the full progressive pipeline once sufficient observations have been collected, including accuracy, calibration, and fairness; (2) deploying the system across multiple institutions to test generalizability; (3) incorporating advisor feedback into the prediction process and evaluating dashboard use in practice; and (4) exploring LLM-based narrative explanations and intervention recommendations.
+
+Taken together, these design choices suggest a practical approach to deploying intelligent advising systems in educational settings where data are limited at the outset.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% ACKNOWLEDGMENT
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Acknowledgments}
+\small
+% This research was supported by the National Science Foundation (NSF) CISE-MSI award CNS-2219623 and an ASEE CyBR-MSI mini-grant under NSF award CNS-2139136. 
+
+This material is based upon work supported by the National Science Foundation under Grant No. CNS-2219623.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% BIBLIOGRAPHY
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{sloppypar}
+\printbibliography[title={REFERENCES}]
+\end{sloppypar}
+
+\end{document}
