@@ -303,7 +303,7 @@ This architecture defines where the major system functions reside, but it does n
          label={[lbl]above:PRESENTATION\\[-2pt]LAYER (Frontend)}] (pres) at ($(\x3,\y1)+(-14mm,0)$) {};
 
 % Place boxes centered inside pres
-\node[student, anchor=north] at ($(pres.north)+(0,-3mm)$) (sp) {Student Portal\\[-1pt]\tiny Profile \textbar{} Survey\\[-1pt]\tiny Prediction \textbar{} Feedback};
+\node[student, anchor=north] at ($(pres.north)+(0,-3mm)$) (sp) {Student Portal\\[-1pt]\tiny Profile \textbar{} Survey\\[-1pt]\tiny Readiness \textbar{} Feedback};
 \node[advisor] at (pres.center) (ap) {Advisor Portal\\[-1pt]\tiny Search \textbar{} Manage\\[-1pt]\tiny Student Profiles};
 \node[admin, anchor=south] at ($(pres.south)+(0,3mm)$) (adm) {Admin Portal\\[-1pt]\tiny Configure Survey \textbar{} \\[-1pt]\tiny Train \textbar{} Analytics};
 
@@ -385,14 +385,14 @@ The architecture also supports flexible study designs through \textbf{survey lin
 % Target surveys
 \node[target] (sq) {Single-Question};
 \node[target,below=3mm of sq] (mq) {Multi-Question};
-\node[container,draw=purple!70,fit=(sq)(mq),label={[font=\small\bfseries]above:TARGET SURVEYS (Label)}] (tbox) {};
+\node[container,draw=purple!70,fit=(sq)(mq),label={[font=\small\bfseries,align=center]above:TARGET SURVEYS\\READINESS MEASURE ($Y$)}] (tbox) {};
 
 % Factor surveys
-\node[factor,right=25mm of sq] (lc) {Logistics \& Commitment\\\footnotesize Distance, Work Hours};
+\node[factor,right=25mm of sq] (lc) {Logistics \& Work Commitments\\\footnotesize Distance, Work Hours};
 \node[factor,right=3mm of lc] (fs) {Financial Support\\\footnotesize Scholarship, Family Income};
 \node[factor,below=3mm of lc] (ab) {Academic Background\\\footnotesize GPA, SAT, Credits};
 \node[factor,right=3mm of ab] (fu) {[Future Surveys]\\\footnotesize Adaptable to New Predictors};
-\node[container,draw=blue!70,fit=(lc)(fs)(ab)(fu),label={[font=\small\bfseries]above:FACTOR SURVEYS (Features)}] (fbox) {};
+\node[container,draw=blue!70,fit=(lc)(fs)(ab)(fu),label={[font=\small\bfseries,align=center]above:FACTOR SURVEYS\\PREDICTORS ($X$)}] (fbox) {};
 
 % Connection
 \draw[black!60,dashed,thick] (tbox.east) -- (fbox.west);
@@ -464,7 +464,7 @@ These priority weights can also serve as informative priors or principled starti
 
 \subsubsection{Data type handling}
 
-Survey responses include different data types, and each type requires an appropriate normalization step before modeling, as summarized in Table~\ref{tab:normalization}. The distinction between \textbf{ordinal} and \textbf{cardinal} data is especially important: ordinal responses (e.g., ``Not confident'' $<$ ``Somewhat confident'' $<$ ``Very confident'') have a meaningful order, whereas cardinal responses (e.g., career aspiration categories) do not imply ranking.
+Survey responses include different data types, and each type requires an appropriate normalization step before modeling, as summarized in Table~\ref{tab:normalization}. The distinction between \textbf{ordinal} and \textbf{nominal} data is especially important: ordinal responses (e.g., ``Not confident'' $<$ ``Somewhat confident'' $<$ ``Very confident'') have a meaningful order, whereas nominal responses (e.g., career aspiration categories) do not imply ranking.
 
 \begin{table}[htbp]
 \caption{Normalization strategies for different data types.}
@@ -475,7 +475,7 @@ Survey responses include different data types, and each type requires an appropr
 \textbf{Data Type} & \textbf{Example} & \textbf{Normalization Method} \\
 \midrule
 Ordinal & GPA range: ``3.0--3.5'' & Direct option weightage (e.g., 8/10) \\
-Cardinal & Career: ``Industry/Corporate'' & Equal weightage or domain-specific mapping \\
+Nominal & Career: ``Industry/Corporate'' & Equal weightage or domain-specific mapping \\
 Continuous & SAT score: 1250 & Min-max scaling: $(x - \min)/(\max - \min)$ \\
 \bottomrule
 \end{tabular}
@@ -485,7 +485,7 @@ This type-aware processing preserves the meaning of the responses during feature
 
 % Figure 3 - Survey Data Processing Pipeline diagram
 \begin{figure}[htbp]
-\caption{Survey data processing pipeline. Raw responses undergo priority weighting and type-aware normalization to produce standardized feature vectors for readiness scoring and exploratory model evaluation.}
+\caption{Survey data processing pipeline. Raw responses undergo type-aware encoding and scaling followed by priority-weighted aggregation to produce standardized feature vectors for readiness scoring and exploratory model evaluation.}
 \label{fig:processing}
 \centering
 \resizebox{0.80\textwidth}{!}{%
@@ -499,7 +499,7 @@ This type-aware processing preserves the meaning of the responses during feature
 
 % Survey Collection inner boxes
 \node[inner, fill=surveyboxfill, draw=surveyblue!70, text width=4cm, minimum height=0.5cm] (q1) {Question 1 (Ordinal)};
-\node[inner, fill=surveyboxfill, draw=surveyblue!70, text width=4cm, minimum height=.5cm, below=0.2cm of q1] (q2) {Question 2 (Cardinal)};
+\node[inner, fill=surveyboxfill, draw=surveyblue!70, text width=4cm, minimum height=.5cm, below=0.2cm of q1] (q2) {Question 2 (Nominal)};
 \node[inner, fill=surveyboxfill!40, draw=surveyblue!40, densely dotted, text width=4cm, minimum height=.5cm, below=0.2cm of q2] (qdots) {\textit{...}};
 \node[inner, fill=surveyboxfill, draw=surveyblue!70, text width=4cm, minimum height=0.5cm, below=0.2cm of qdots] (qn) {Question N (Continuous)};
 
@@ -508,37 +508,37 @@ This type-aware processing preserves the meaning of the responses during feature
 \node[outer, draw=surveyblue, fit=(survey-title)(q1)(q2)(qdots)(qn), inner sep=10pt] (survey-box) {};
 
 % Data Processing inner boxes
-\node[inner, fill=processboxfill, draw=processboxborder, text width=3cm, minimum height=1cm, right=1.8cm of q1.east |- q1.south east] (priority) {Priority\\Weighting};
-\node[inner, fill=processboxfill, draw=processboxborder, text width=3cm, minimum height=1cm, below=0.8cm of priority] (normalize) {Type-Aware\\Normalization};
+\node[inner, fill=processboxfill, draw=processboxborder, text width=3cm, minimum height=1cm, right=1.8cm of q1.east |- q1.south east] (normalize) {Response Encoding\\and Scaling};
+\node[inner, fill=processboxfill, draw=processboxborder, text width=3cm, minimum height=1cm, below=0.8cm of normalize] (priority) {Priority-Weighted\\Aggregation};
 
 % Data Processing title and outer box
-\node[above=0.3cm of priority, font=\footnotesize\bfseries, text=processorange!80!black] (process-title) {DATA PROCESSING};
-\node[outer, draw=processorange, fit=(process-title)(priority)(normalize), inner sep=10pt] (process-box) {};
+\node[above=0.3cm of normalize, font=\footnotesize\bfseries, text=processorange!80!black] (process-title) {DATA PROCESSING};
+\node[outer, draw=processorange, fit=(process-title)(normalize)(priority), inner sep=10pt] (process-box) {};
 
 % Model Input inner box (centered with process box)
-\path (priority.center) -- (normalize.center) coordinate[midway] (process-center);
+\path (normalize.center) -- (priority.center) coordinate[midway] (process-center);
 \node[inner, fill=modelboxfill, draw=modelboxborder, text width=3cm, minimum height=1cm, right=1.5cm of process-box.east, anchor=west] (feature) {Normalized\\Feature Vector};
 
 % Model Input title and outer box
 \node[above=0.3cm of feature, font=\footnotesize\bfseries, text=modelgreen] (model-title) {MODEL INPUT};
 \node[outer, draw=modelgreen, fit=(model-title)(feature), inner sep=10pt] (model-box) {};
 
-% Arrows from Survey to Priority Weighting (converging)
+% Arrows from Survey Collection to Response Encoding and Scaling (converging)
 % Merge point at Q2 level so Q2 has straight horizontal line
 \coordinate (merge-point) at ($(survey-box.east)!0.5!(process-box.west)$ |- q2);
 
-% Curved lines from questions converging to merge point, then to priority
+% Curved lines from questions converging to merge point, then to encoding
 \draw[arrowline] (q1.east) to[out=0, in=135] (merge-point);
 \draw[arrowline] (q2.east) -- (merge-point);
 \draw[arrowline] (qn.east) to[out=0, in=-135] (merge-point);
-\draw[arrow] (merge-point) to[out=45, in=180] (priority.west);
+\draw[arrow] (merge-point) to[out=45, in=180] (normalize.west);
 
-% Arrow between Priority and Normalization
-\draw[arrow] (priority.south) -- (normalize.north);
+% Arrow between response encoding and priority-weighted aggregation
+\draw[arrow] (normalize.south) -- (priority.north);
 
-% Arrow from Normalization to Feature Vector
-\draw[arrowline] (normalize.east) -- (process-box.east |- normalize.east);
-\draw[arrow] (process-box.east |- normalize.east) to[out=0, in=180] (feature.west);
+% Arrow from priority-weighted aggregation to Feature Vector
+\draw[arrowline] (priority.east) -- (process-box.east |- priority.east);
+\draw[arrow] (process-box.east |- priority.east) to[out=0, in=180] (feature.west);
 
 \end{tikzpicture}
 }%
@@ -584,13 +584,13 @@ We also conducted an exploratory cross-validated diagnostic with a lightweight s
 ]
 
 % Stage 1 inner boxes
-\node[header=stage1, text width=3cm, minimum height=0.8cm] (s1-head) {Data Collection \& Initial\\Prediction};
+\node[header=stage1, text width=3cm, minimum height=0.8cm] (s1-head) {Data Collection \& Exploratory\\Estimation};
 \node[content=stage1, below=0.12cm of s1-head, text width=3cm, minimum height=1.4cm] (s1-content) {
     \textbullet\ Collect high-quality labeled observations\\
-    \textbullet\ Establish ground truth corpus\\
+    \textbullet\ Establish labeled readiness dataset\\
     \textbullet\ Lightweight similarity-based
 };
-\node[plug=stage1, below=0.12cm of s1-content, text width=3cm, minimum height=0.9cm] (s1-plug) {Pluggable: Any\\lightweight similarity-based method};
+\node[plug=stage1, below=0.12cm of s1-content, text width=3cm, minimum height=0.9cm] (s1-plug) {Pluggable: Any\\compatible lightweight method};
 \node[above=0.08cm of s1-head, font=\scriptsize\bfseries, text=stage1!80!black] (s1-title) {STAGE 1: FOUNDATION};
 \node[outer, draw=stage1!70, fit=(s1-title)(s1-head)(s1-content)(s1-plug)] (stage1-box) {};
 
@@ -602,7 +602,7 @@ We also conducted an exploratory cross-validated diagnostic with a lightweight s
     \textbullet\ Preserve statistical properties
 };
 \node[plug=stage2, below=0.12cm of s2-content, text width=3cm, minimum height=0.9cm] (s2-plug) {Pluggable: Any\\generative technique\\(e.g., SMOTE, GANs, VAEs)};
-\node[above=0.08cm of s2-head, font=\scriptsize\bfseries, text=stage2!80!black] (s2-title) {STAGE 2: AUGMENTATION};
+\node[above=0.08cm of s2-head, font=\scriptsize\bfseries, text=stage2!80!black, align=center] (s2-title) {STAGE 2: AUGMENTATION\\[-1pt](PROPOSED)};
 \node[outer, draw=stage2!70, fit=(s2-title)(s2-head)(s2-content)(s2-plug)] (stage2-box) {};
 
 % Stage 3 inner boxes
@@ -612,8 +612,8 @@ We also conducted an exploratory cross-validated diagnostic with a lightweight s
     \textbullet\ Capture complex relationships\\
     \textbullet\ Continuous improvement via feedback
 };
-\node[plug=stage3, below=0.12cm of s3-content, text width=3cm, minimum height=0.9cm] (s3-plug) {Pluggable: Any deep\\learning architecture\\(e.g., neural nets, gradient boosting)};
-\node[above=0.08cm of s3-head, font=\scriptsize\bfseries, text=stage3!80!black] (s3-title) {STAGE 3: REFINEMENT};
+\node[plug=stage3, below=0.12cm of s3-content, text width=3cm, minimum height=0.9cm] (s3-plug) {Pluggable: Any\\supervised learning method\\(e.g., neural nets, gradient boosting)};
+\node[above=0.08cm of s3-head, font=\scriptsize\bfseries, text=stage3!80!black, align=center] (s3-title) {STAGE 3: REFINEMENT\\[-1pt](PROPOSED)};
 \node[outer, draw=stage3!70, fit=(s3-title)(s3-head)(s3-content)(s3-plug)] (stage3-box) {};
 
 % Pipeline title (centered above stages)
@@ -631,8 +631,8 @@ We also conducted an exploratory cross-validated diagnostic with a lightweight s
 \node[outer, draw=inputred!80, fit=(input-title)(input-inner)] (input-box) {};
 
 % Output box (outer box bottom aligned with Stage 1 outer box bottom)
-\node[inner, fill=white, draw=outputviolet!80, text width=2.4cm, anchor=south] (output-inner) at ([xshift=-2.2cm, yshift=8pt]stage1-box.south west) {Readiness Score};
-\node[above=0.08cm of output-inner, font=\scriptsize\bfseries, text=outputviolet, align=center] (output-title) {PREDICTION\\ OUTPUT};
+\node[inner, fill=white, draw=outputviolet!80, text width=2.4cm, anchor=south] (output-inner) at ([xshift=-2.2cm, yshift=8pt]stage1-box.south west) {Readiness Estimate};
+\node[above=0.08cm of output-inner, font=\scriptsize\bfseries, text=outputviolet, align=center] (output-title) {EXPLORATORY\\OUTPUT};
 \node[outer, draw=outputviolet!80, fit=(output-title)(output-inner)] (output-box) {};
 
 % Arrows
@@ -665,7 +665,7 @@ The modular pipeline design described above is supported by a configuration syst
 
 % Figure 5 - Dual-Survey Architecture with Linkage
 \begin{figure}[htbp]
-\caption{Dual-Survey Architecture with survey linkage. Gray arrows indicate training flow (Target Survey through model training), while green arrows indicate prediction flow (Factor Surveys through inference). Dashed lines show linkage relationships between Target and Factor Surveys.}
+\caption{Dual-Survey Architecture with survey linkage. Gray arrows show the Target Survey readiness measure and Factor Survey predictors entering model training, while green arrows show Factor Survey predictors passing through inference. Dashed lines show linkage relationships between Target and Factor Surveys.}
 \label{fig:linkage}
 \centering
 \resizebox{0.67\textwidth}{!}{%
@@ -680,17 +680,17 @@ The modular pipeline design described above is supported by a configuration syst
   predarr/.style={green!60!black,thick,-{Stealth[length=2.5mm]}}
 ]
 % Left column - Target Survey
-\node[box,draw=orange!70,fill=orange!10,minimum width=32mm,minimum height=8mm] (target) {Target Survey (Label)};
+\node[box,draw=orange!70,fill=orange!10,minimum width=32mm,minimum height=10mm] (target) {Target Survey\\Readiness Measure ($Y$)};
 
 % Middle column - Data Processing
-\node[trainbox,minimum width=32mm,minimum height=12mm,right=18mm of target.south east,anchor=north west] (weighted) {Weighted Calculation\\(if multi-question)};
+\node[trainbox,minimum width=32mm,minimum height=12mm,right=18mm of target.south east,anchor=north west] (weighted) {Readiness Measure\\Calculation\\(if multi-question)};
 \node[trainbox,minimum width=32mm,minimum height=12mm,below=4mm of weighted] (normtrain) {Feature Normalization\\(Training)};
 \node[predbox,minimum width=32mm,minimum height=12mm,below=4mm of normtrain] (normpred) {Feature Normalization\\(Prediction)};
 \node[container,draw=blue!70,fit=(weighted)(normtrain)(normpred),label={[font=\footnotesize\bfseries]above:DATA PROCESSING}] (dbox) {};
 
 % Left column - Factor Surveys (aligned to dbox bottom)
 \node[box,draw=blue!50,fill=blue!15,minimum width=32mm,minimum height=20mm,anchor=south] at ([yshift=3mm]target.south|-dbox.south) (factors) {Factor Survey $X_1$\\Factor Survey $X_2$\\...\\Factor Survey $X_N$};
-\node[font=\footnotesize\bfseries,align=center,above=1mm of factors] (flabel) {FACTOR SURVEYS\\(Features)};
+\node[font=\footnotesize\bfseries,align=center,above=1mm of factors] (flabel) {FACTOR SURVEYS\\PREDICTORS ($X$)};
 \node[container,draw=blue!70,inner sep=3mm,fit=(factors)(flabel)] (fbox) {};
 
 % Link between target and factor surveys
@@ -700,17 +700,20 @@ The modular pipeline design described above is supported by a configuration syst
 \node[trainbox,minimum width=32mm,minimum height=8mm,right=18mm of weighted.north east,anchor=north west] (train) {Train Model};
 \node[trainbox,minimum width=32mm,minimum height=8mm,below=4mm of train] (save) {Save Model};
 \node[predbox,minimum width=32mm,minimum height=8mm,below=4mm of save] (load) {Load Trained Model};
-\node[predbox,minimum width=32mm,minimum height=8mm,below=4mm of load] (predict) {Predict Readiness};
+\node[predbox,minimum width=32mm,minimum height=8mm,below=4mm of load] (predict) {Estimate Readiness};
 \node[container,draw=purple!70,fit=(train)(save)(load)(predict),label={[font=\footnotesize\bfseries]above:ML MODEL}] (mbox) {};
 
 % Training Flow Arrows (gray)
 \draw[trainarr] (target.east) to[out=0,in=180] (weighted.west);
-\draw[trainarr] (weighted.south) -- (normtrain.north);
-\draw[trainarr] (normtrain.east) to[out=0,in=180] (train.west);
+\draw[trainarr] (fbox.east |- normtrain.west) -- (normtrain.west);
+\coordinate (trainmerge) at ($(normtrain.east)!0.55!(train.west)$ |- train.west);
+\draw[trainarr] (weighted.east) -- (trainmerge);
+\draw[trainarr] (normtrain.east) to[out=0,in=-90] (trainmerge);
+\draw[trainarr] (trainmerge) -- (train.west);
 \draw[trainarr] (train.south) -- (save.north);
 
 % Prediction Flow Arrows (green)
-\draw[predarr] (fbox.east) to[out=0,in=180] (normpred.west);
+\draw[predarr] (fbox.east |- normpred.west) -- (normpred.west);
 \draw[predarr] (normpred.east) to[out=0,in=180] (load.west);
 \draw[predarr] (load.south) -- (predict.north);
 
