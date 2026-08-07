@@ -240,7 +240,7 @@ ACOSUS uses a four-layer architecture that separates presentation, business logi
 
 The \textbf{Presentation Layer} provides role-specific interfaces through a web application. Students complete surveys, view available predictions, and submit feedback. Advisors use a dashboard that organizes student profiles by the same categories used in the Factor Surveys, which reduces the need to assemble information from multiple sources. Administrators configure survey instruments, trigger supported model training, and monitor system activity.
 
-The \textbf{Business Logic Layer} manages application workflows and is designed to control transitions between phases of the progressive learning framework. The current implementation manages survey and prediction workflows; automatic transitions into the later proposed stages remain future work.
+The \textbf{Business Logic Layer} manages application workflows and is designed to control transitions between phases of the progressive learning framework. It determines which interface the student sees at a given time: data collection only during the foundation phase, and prediction with feedback in later phases.
 
 The \textbf{Data Layer} stores users, surveys, responses, and model metadata in a document-oriented format. This structure allows researchers to revise survey instruments without repeated database migrations.
 
