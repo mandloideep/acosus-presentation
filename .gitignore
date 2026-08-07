@@ -79,3 +79,12 @@ $RECYCLE.BIN/
 
 # Local planning and audit artifacts
 scratchpad/
+
+# LaTeX intermediates for the DSI submission sources
+research-paper/current/overleaf/submission/*.aux
+research-paper/current/overleaf/submission/*.bcf
+research-paper/current/overleaf/submission/*.blg
+research-paper/current/overleaf/submission/*.log
+research-paper/current/overleaf/submission/*.out
+research-paper/current/overleaf/submission/*.run.xml
+research-paper/current/overleaf/submission/*.synctex*
