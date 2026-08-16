@@ -87,6 +87,7 @@
 %\RaggedRight
 \linespread{1.0}
 \setlength{\parskip}{5pt}
+\setlength{\emergencystretch}{0.5em}
 
 \usepackage{titlesec}
 % Level 1: ALL CAPS, bold, left-aligned, no displayed number
@@ -103,7 +104,7 @@
 
 \begin{center}
 \textbf{DECISION SCIENCES INSTITUTE}\\[6pt]
-An AI-driven Transfer Student Advising System: Design, Implementation, and Evaluation
+ACOSUS: Design and Feasibility Evaluation of an AI-Driven Advising Platform for Transfer Students
 \end{center}
 
 \bigskip
@@ -195,7 +196,7 @@ Technology tools for advising have begun to appear, but most were built for nati
 Transfer-oriented technologies address different parts of the advising process. ASSIST provides official articulation and transferability information for California public institutions and participating Association of Independent California Colleges and Universities institutions \parencite{assistResource2026}. Transferology allows students to explore how courses, standardized exams, and military credits may transfer to participating institutions, while TES supports staff who research transfer credit, route evaluations, manage equivalencies, and publish results \parencite{transferologySupport2026,collegeSourceTES2026}. Navigate360 documents a broader institutional platform with student profiles, surveys, advising, alerts, and embedded AI workflows \parencite{navigate3602026}. Table~\ref{tab:comparison} compares these documented purposes with ACOSUS. These purposes suggest that the systems are complementary rather than interchangeable.
 
 \begin{table}[htbp]
-\caption{Transfer-specific comparison of documented system purposes.}
+\caption{Transfer-specific comparison of documented system purposes}
 \label{tab:comparison}
 \centering
 {\renewcommand{\arraystretch}{1.16}
@@ -203,13 +204,13 @@ Transfer-oriented technologies address different parts of the advising process. 
 \toprule
 \textbf{System} & \textbf{Documented purpose} & \textbf{Documented capability} & \textbf{Documented scope relative to ACOSUS} \\
 \midrule
-ASSIST & Official articulation and transferability repository for California public institutions and participating independent institutions & Authoritative course, general-education, and major-agreement information within its covered system & The cited source documents articulation information, not broader advising-context collection \\
+ASSIST & Official articulation and transferability repository for California public institutions and participating independent institutions & Authoritative course, general-education, and major-agreement information within its covered system & The cited source documents articulation information, not broader advising-context collection. \\
 \addlinespace[3pt]
-Transferology & Student-facing exploration of how courses, standardized exams, and military credits may transfer & Transfer-credit results based on courses and other credit entered by the student & The cited workflow depends on participating-institution evaluations and centers on transfer-credit decisions \\
+Transferology & Student-facing exploration of how courses, standardized exams, and military credits may transfer & Transfer-credit results based on courses and other credit entered by the student & The cited workflow depends on participating-institution evaluations and centers on transfer-credit decisions. \\
 \addlinespace[3pt]
-TES & Staff-facing research, evaluation routing, equivalency management, and publication & Documented workflow for institutional transfer-credit review and communication & The cited source documents articulation and equivalency workflows, not transfer-experience data collection \\
+TES & Staff-facing research, evaluation routing, equivalency management, and publication & Documented workflow for institutional transfer-credit review and communication & The cited source documents articulation and equivalency workflows, not transfer-experience data collection. \\
 \addlinespace[3pt]
-Navigate360 & Institution-wide student-success CRM with profiles, surveys, advising, alerts, and AI-assisted workflows & Combines institutional and engagement signals across student and staff workflows & The cited page does not document a dual-survey architecture that separates readiness measurement from predictor collection \\
+Navigate360 & Institution-wide student-success CRM with profiles, surveys, advising, alerts, and AI-assisted workflows & Combines institutional and engagement signals across student and staff workflows & The cited page does not document a dual-survey architecture that separates readiness measurement from predictor collection. \\
 \addlinespace[3pt]
 ACOSUS & Dual-survey architecture that separates readiness measurement from predictor collection, with advisor-visible profiles and an exploratory AI path & Structures academic and nonacademic transfer context while keeping Target and Factor Surveys separate & Does not evaluate or determine course-transfer equivalencies; advisor usability and predictive validity have not been established. \\
 \bottomrule
@@ -249,7 +250,7 @@ The \textbf{Model Layer} runs as a separate service for data normalization, pred
 Table~\ref{tab:status} distinguishes what the pilot evaluated, what the broader prototype supports, and what remains aspirational.
 
 \begin{table}[htbp]
-\caption{Implementation and evaluation status at revision time.}
+\caption{Implementation and evaluation status}
 \label{tab:status}
 \centering
 \begin{tabular}{@{}p{3.0cm}p{5.0cm}p{4.5cm}@{}}
@@ -258,7 +259,7 @@ Table~\ref{tab:status} distinguishes what the pilot evaluated, what the broader 
 \midrule
 Implemented and pilot-evaluated & Target and Factor Survey workflow; structured response collection & Student pilot evaluated the survey workflow and perceptions; no predictions were shown \\
 Implemented beyond the pilot scope & Advisor dashboard and profiles; deterministic readiness measure; exploratory modeling path & Available in the prototype; not evaluated in the student pilot or in a formal advisor study \\
-Future work & Synthetic augmentation; advanced models; automatic stage transitions; longitudinal outcome validation; fairness analysis; multi-institutional validation & Proposed only; recruiting participants from six universities does not constitute institutional validation \\
+Future work & Synthetic augmentation; advanced models; automatic stage transitions; longitudinal outcome validation; fairness analysis; multi-institutional validation & Proposed; recruiting participants from six universities does not constitute institutional validation \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -415,7 +416,7 @@ S = \frac{\sum_{i=1}^{n} \left(\frac{w_i^{\text{selected}}}{w_i^{\text{max}}} \t
 This yields a normalized score in $[0, 1]$ that reflects both the selected response and the priority of the corresponding question. A bounded calibration step converts the result to the readiness-score scale. The same priority-weighted calculation can aggregate a multi-question Target Survey and provide a transparent summary of Factor Survey responses for later exploratory modeling.
 
 \begin{table}[htbp]
-\caption{Literature-informed priority structure used in the prototype.}
+\caption{Literature-informed priority structure used in the prototype}
 \label{tab:priority}
 \centering
 \begin{tabular}{@{}p{3.4cm}p{8.0cm}p{2.4cm}@{}}
@@ -436,10 +437,10 @@ Interests and experience & Career goals, course interest, and prior experience &
 \end{table}
 
 % REV-WEIGHT-001 BEGIN: aggregate sensitivity analysis, not weight validation.
-To show how the starting priorities affect the result, we recalculated scores for the available deidentified pilot profiles under three alternative scenarios. The analysis used the factor responses represented across those profiles and the same priority-weighted calculation in each scenario.
+To show how the starting priorities affect the result, we recalculated scores for the available deidentified pilot profiles under three alternative scenarios. The analysis used the factor responses represented across those profiles and the same priority-weighted calculation in each scenario. Table~\ref{tab:sensitivity} reports the resulting sensitivity comparison.
 
 \begin{table}[htbp]
-\caption{Priority-weight sensitivity across the available pilot profiles.}
+\caption{Priority-weight sensitivity across the available pilot profiles}
 \label{tab:sensitivity}
 \centering
 \begin{tabular}{@{}p{4.1cm}rrrr@{}}
@@ -465,7 +466,7 @@ Survey responses include different data types, and each type requires an appropr
 
 \begin{table}[htbp]
 \centering
-\caption{Normalization strategies for different data types.}
+\caption{Normalization strategies for different data types}
 \label{tab:normalization}
 \begin{tabular}{@{}lll@{}}
 \toprule
@@ -755,7 +756,7 @@ To assess the usability and perceived value of ACOSUS, we conducted a pilot stud
 %   the University of Houston-Downtown, Texas A\&M University-Victoria,
 %   SUNY Old Westbury, Cal Poly Humboldt, and the University of Texas at
 %   El Paso.
-Ten transfer students ($N=10$) from public universities in the United States participated in the study. Participants were recruited by email and enrolled after providing informed consent. All were active transfer students in computing-related majors. The evaluation took place during the foundation phase of the progressive learning pipeline, when the system was still collecting labeled observations for the initial training corpus. At that stage, no predictive model had yet been trained, so the system's main function was structured data collection rather than prediction. Participants completed the Factor and Target Survey instruments, then completed a feedback survey through Qualtrics. The study protocol received Institutional Review Board (IRB) approval before data collection began. The pilot evaluated the student-facing interface and survey workflow, not predictive validity, advisor-dashboard usability, longitudinal outcomes, fairness, or institutional deployment.
+Ten transfer students ($N=10$) from public universities in the United States participated in the study. Participants were recruited by email and enrolled after providing informed consent. All were active transfer students in computing-related majors. The evaluation took place during the foundation phase of the progressive learning pipeline, when the system was still collecting labeled observations for the initial training corpus. At that stage, no predictive model had yet been trained, so the system's main function was structured data collection rather than prediction. Participants completed the Factor and Target Survey instruments, then completed a feedback survey through Qualtrics. The study protocol received Institutional Review Board (IRB) approval before data collection began. The pilot evaluated the student-facing interface and survey workflow, rather than predictive validity, advisor-dashboard usability, longitudinal outcomes, fairness, or institutional deployment.
 
 \subsection{Evaluation Instruments}\label{subsec:instruments}
 
@@ -763,7 +764,7 @@ The feedback survey was based on the Technology Acceptance Model (TAM) framework
 
 \begin{table}[htbp]
 \centering
-\caption{Feedback survey constructs and items.}
+\caption{Feedback survey constructs and items}
 \label{tab:constructs}
 \begin{tabular}{@{}lp{8cm}@{}}
 \toprule
@@ -810,7 +811,7 @@ The TAM-based measures showed favorable responses on perceived ease of use and p
 
 \begin{table}[htbp]
 \centering
-\caption{Summary statistics for evaluation metrics (5-point Likert scale).}
+\caption{Summary statistics for evaluation metrics (5-point Likert scale)}
 \label{tab:results}
 \begin{tabular}{@{}lcccc@{}}
 \toprule
@@ -846,13 +847,15 @@ As Figure~\ref{fig:tam} shows, Perceived Ease of Use received the highest mean a
 \label{fig:behavioral}
 \end{figure}
 
-Behavioral intention was the weakest dimension in the evaluation (Figure~\ref{fig:behavioral}). Likelihood to Continue using the system was moderate on average ($M=3.12$, $SD=1.89$), and Likelihood to Recommend was slightly lower and similarly dispersed ($M=3.00$, $SD=1.77$). Two participants did not provide a usable rating for these items and are excluded from the behavioral-intention means ($N=8$). Both distributions are bimodal: several respondents scored 5/5 while others scored 1--2, with few intermediate ratings. This pattern suggests that the system appeals strongly to a subset of transfer students but not to others, rather than producing uniform mild enthusiasm. We read this cautiously: with only a small number of respondents at the foundation phase, when no predictions had yet been generated, low recommendation scores may reflect limited current utility rather than rejection of the design.
+Behavioral intention was the weakest dimension in the evaluation (Figure~\ref{fig:behavioral}). Likelihood to Continue using the system was moderate on average ($M=3.12$, $SD=1.89$), and Likelihood to Recommend was slightly lower and similarly dispersed ($M=3.00$, $SD=1.77$). Two participants lacked usable ratings for these items, so the behavioral-intention means use $N=8$.
+
+Both distributions are bimodal: several respondents scored 5/5 while others scored 1--2, with few intermediate ratings. This pattern suggests that the system appeals strongly to a subset of transfer students but not to others, rather than producing uniform mild enthusiasm. We read this cautiously: with only a small number of respondents at the foundation phase, when no predictions had yet been generated, low recommendation scores may reflect limited current utility rather than rejection of the design.
 
 % REV-BIMODAL-001 BEGIN: aggregate exploratory subgroup analysis.
 For each respondent, we averaged the available behavioral-intention items. We classified means of 4 or higher as high intention, 2 or lower as low intention, and values between those thresholds as intermediate. One respondent was missing both items. Table~\ref{tab:subgroups} reports aggregate means only.
 
 \begin{table}[htbp]
-\caption{Exploratory behavioral-intention subgroup means.}
+\caption{Exploratory behavioral-intention subgroup means}
 \label{tab:subgroups}
 \centering
 \begin{tabular}{@{}lrrrrrrr@{}}
